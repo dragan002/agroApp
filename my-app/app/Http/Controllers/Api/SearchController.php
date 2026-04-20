@@ -15,13 +15,13 @@ class SearchController extends Controller
         $request->validate([
             'q'        => 'nullable|string|max:100',
             'category' => 'nullable|string|in:' . implode(',', \App\Enums\ProductCategory::VALUES),
-            'location' => 'nullable|string|max:100',
+            'city'     => 'nullable|string|in:' . implode(',', \App\Enums\City::VALUES),
             'freshOnly'=> 'nullable|in:0,1,true,false',
         ]);
 
         $q         = $request->query('q');
         $category  = $request->query('category');
-        $location  = $request->query('location');
+        $city      = $request->query('city');
         $freshOnly = $request->boolean('freshOnly');
 
         // Search farmers
@@ -34,8 +34,8 @@ class SearchController extends Controller
             $farmerQuery->searchName($q);
         }
 
-        if ($location) {
-            $farmerQuery->inLocation($location);
+        if ($city) {
+            $farmerQuery->inCity($city);
         }
 
         $farmers = $farmerQuery->limit(10)->get()
@@ -59,6 +59,10 @@ class SearchController extends Controller
 
         if ($freshOnly) {
             $productQuery->freshToday();
+        }
+
+        if ($city) {
+            $productQuery->inCity($city);
         }
 
         $products = $productQuery->limit(20)->get()

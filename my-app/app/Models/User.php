@@ -72,6 +72,11 @@ class User extends Authenticatable
         return $this->role === 'farmer';
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
     public function toApiArray(): array
     {
         return [

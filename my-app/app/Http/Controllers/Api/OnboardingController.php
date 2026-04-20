@@ -33,7 +33,8 @@ class OnboardingController extends Controller
     {
         $data = $request->validate([
             'farmName'    => 'required|string|max:255',
-            'location'    => 'nullable|string|max:255',
+            'city'        => 'required|string|in:' . implode(',', \App\Enums\City::VALUES),
+            'address'     => 'nullable|string|max:255',
             'description' => 'nullable|string|max:2000',
         ]);
 
@@ -43,7 +44,8 @@ class OnboardingController extends Controller
             ['user_id' => $user->id],
             [
                 'farm_name'   => $data['farmName'],
-                'location'    => $data['location'] ?? null,
+                'city'        => $data['city'],
+                'address'     => $data['address'] ?? null,
                 'description' => $data['description'] ?? null,
                 'is_active'   => false,
             ]

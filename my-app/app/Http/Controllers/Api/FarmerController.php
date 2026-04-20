@@ -22,8 +22,8 @@ class FarmerController extends Controller
             $query->searchName($search);
         }
 
-        if ($location = $request->query('location')) {
-            $query->inLocation($location);
+        if ($city = $request->query('city')) {
+            $query->inCity($city);
         }
 
         $paginated = $query->paginate(20);
@@ -62,14 +62,16 @@ class FarmerController extends Controller
 
         $data = $request->validate([
             'farmName'    => 'nullable|string|max:255',
-            'location'    => 'nullable|string|max:255',
+            'city'        => 'nullable|string|in:' . implode(',', \App\Enums\City::VALUES),
+            'address'     => 'nullable|string|max:255',
             'description' => 'nullable|string|max:2000',
             'avatar'      => 'nullable|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
         $updateData = array_filter([
             'farm_name'   => $data['farmName'] ?? null,
-            'location'    => $data['location'] ?? null,
+            'city'        => $data['city'] ?? null,
+            'address'     => $data['address'] ?? null,
             'description' => $data['description'] ?? null,
         ], fn($v) => $v !== null);
 

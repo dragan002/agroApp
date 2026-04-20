@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\FarmerProfile;
+use App\Enums\City;
 use App\Enums\ProductCategory;
 use Illuminate\Http\JsonResponse;
 
@@ -28,6 +29,7 @@ class StateController extends Controller
             'auth'       => $user ? $user->load('farmerProfile.photos')->toApiArray() : null,
             'farmers'    => $farmers,
             'categories' => ProductCategory::all(),
+            'cities'     => City::all(),
         ]);
     }
 }

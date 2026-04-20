@@ -28,7 +28,8 @@ class FarmerSeeder extends Seeder
             'user_id'     => $marko->id,
             'farm_name'   => 'Organsko imanje Petrović',
             'description' => 'Uzgajamo organsko povrće bez pesticida na 3 hektara u okolici Prnjavora. Svježe ubrano svako jutro.',
-            'location'    => 'Prnjavor',
+            'city'        => 'prnjavor',
+            'address'     => null,
             'is_active'   => true,
         ]);
 
@@ -81,7 +82,8 @@ class FarmerSeeder extends Seeder
             'user_id'     => $ana->id,
             'farm_name'   => 'Mljekara Kovačević',
             'description' => 'Porodična farma sa 12 krava, svakog jutra svježe mlijeko i domaći sir. Tradicija od 1985. godine.',
-            'location'    => 'Prnjavor - Konjuhovci',
+            'city'        => 'prnjavor',
+            'address'     => 'Konjuhovci',
             'is_active'   => true,
         ]);
 
@@ -123,7 +125,8 @@ class FarmerSeeder extends Seeder
             'user_id'     => $dragan->id,
             'farm_name'   => 'Eko gazdinstov Vujić',
             'description' => 'Pčelarstvo, živinarstvo i povrtlarstvo. Sve što vam treba sa jednog mjesta — med, jaja i krompir.',
-            'location'    => 'Prnjavor - Lišnja',
+            'city'        => 'prnjavor',
+            'address'     => 'Lišnja',
             'is_active'   => true,
         ]);
 

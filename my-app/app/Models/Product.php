@@ -66,6 +66,11 @@ class Product extends Model
         return $query->where('name', 'like', "%{$term}%");
     }
 
+    public function scopeInCity($query, string $city)
+    {
+        return $query->whereHas('user.farmerProfile', fn($q) => $q->where('city', $city));
+    }
+
     // Accessors
 
     public function getThumbnailUrlAttribute(): ?string
@@ -106,7 +111,8 @@ class Product extends Model
             'farmer'        => $farmerProfile ? [
                 'id'        => $farmerProfile->id,
                 'farmName'  => $farmerProfile->farm_name,
-                'location'  => $farmerProfile->location,
+                'city'      => $farmerProfile->city,
+                'address'   => $farmerProfile->address,
                 'avatarUrl' => $farmerProfile->avatar_url,
                 'user'      => $user ? [
                     'id'       => $user->id,

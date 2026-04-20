@@ -15,7 +15,8 @@ class FarmerProfile extends Model
         'user_id',
         'farm_name',
         'description',
-        'location',
+        'city',
+        'address',
         'avatar_path',
         'is_active',
     ];
@@ -46,9 +47,9 @@ class FarmerProfile extends Model
         return $query->where('is_active', true);
     }
 
-    public function scopeInLocation($query, string $location)
+    public function scopeInCity($query, string $city)
     {
-        return $query->where('location', 'like', "%{$location}%");
+        return $query->where('city', $city);
     }
 
     public function scopeSearchName($query, string $term)
@@ -77,7 +78,8 @@ class FarmerProfile extends Model
             'userId'      => $this->user_id,
             'farmName'    => $this->farm_name,
             'description' => $this->description,
-            'location'    => $this->location,
+            'city'        => $this->city,
+            'address'     => $this->address,
             'avatarUrl'   => $this->avatar_url,
             'isActive'    => $this->is_active,
             'createdAt'   => $this->created_at?->toDateString(),
@@ -103,7 +105,9 @@ class FarmerProfile extends Model
             'id'           => $this->id,
             'userId'       => $this->user_id,
             'farmName'     => $this->farm_name,
-            'location'     => $this->location,
+            'description'  => $this->description,
+            'city'         => $this->city,
+            'address'      => $this->address,
             'avatarUrl'    => $this->avatar_url,
             'isActive'     => $this->is_active,
             'createdAt'    => $this->created_at?->toDateString(),

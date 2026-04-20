@@ -152,10 +152,16 @@
             <button class="chip" data-cat="zitarice" onclick="selectHomeCategory(this,'zitarice')">Žitarice</button>
             <button class="chip" data-cat="zimnica" onclick="selectHomeCategory(this,'zimnica')">Zimnica</button>
             <button class="chip" data-cat="ostalo" onclick="selectHomeCategory(this,'ostalo')">Ostalo</button>
+            <button id="home-fresh-chip" class="chip" style="background:#FEF3C7;border-color:#F59E0B;color:#92400E;flex-shrink:0;" onclick="toggleHomeFresh(this)">🌞 Svježe danas</button>
+        </div>
+
+        <!-- City filter chips -->
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 16px 10px;display:flex;gap:8px;scrollbar-width:none;" id="home-city-chips">
+            <button class="chip active" data-city="" onclick="selectHomeCity(this,'')">Svi gradovi</button>
         </div>
 
         <!-- Fresh today banner -->
-        <div id="fresh-banner" onclick="showFreshFilter()" style="display:none;margin:0 16px 4px;background:#FEF3C7;border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+        <div id="fresh-banner" onclick="showFreshFilter()" style="display:none;margin:0 16px 4px;background:#FEF3C7;border-radius:12px;padding:12px 16px;align-items:center;justify-content:space-between;cursor:pointer;">
             <div style="display:flex;align-items:center;gap:8px;">
                 <span style="font-size:20px;">🌞</span>
                 <div>
@@ -364,8 +370,33 @@
                 <div class="form-error hidden" id="farm-name-err"></div>
             </div>
             <div class="form-group">
-                <label class="form-label">Lokacija</label>
-                <input id="farm-location" type="text" class="form-input" placeholder="Prnjavor, selo...">
+                <label class="form-label">Grad *</label>
+                <select id="farm-city" class="select-input">
+                    <option value="">-- Odaberite grad --</option>
+                    <option value="prnjavor">Prnjavor</option>
+                    <option value="doboj">Doboj</option>
+                    <option value="banja_luka">Banja Luka</option>
+                    <option value="bijeljina">Bijeljina</option>
+                    <option value="trebinje">Trebinje</option>
+                    <option value="prijedor">Prijedor</option>
+                    <option value="zvornik">Zvornik</option>
+                    <option value="srbac">Srbac</option>
+                    <option value="celinac">Čelinac</option>
+                    <option value="laktasi">Laktaši</option>
+                    <option value="derventa">Derventa</option>
+                    <option value="gradiska">Gradiška</option>
+                    <option value="modrica">Modriča</option>
+                    <option value="kotor_varos">Kotor Varoš</option>
+                    <option value="foca">Foča</option>
+                    <option value="istocno_sarajevo">Istočno Sarajevo</option>
+                    <option value="brcko">Brčko</option>
+                    <option value="mrkonjic_grad">Mrkonjić Grad</option>
+                </select>
+                <div class="form-error hidden" id="farm-city-err"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Adresa / Selo</label>
+                <input id="farm-address" type="text" class="form-input" placeholder="npr. Lišnja, Ul. Kralja Petra 5">
             </div>
             <div class="form-group">
                 <label class="form-label">Opis gazdinstva</label>
@@ -553,6 +584,114 @@
     </div>
 
     <!-- ============================================================ -->
+    <!-- SCREEN: FARMER PROFILE EDIT                                -->
+    <!-- ============================================================ -->
+    <div id="screen-farmer-profile-edit" class="screen">
+        <div class="top-bar">
+            <button class="icon-btn" onclick="goBack()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <div class="top-bar-title">Uredi profil</div>
+        </div>
+
+        <div style="padding:16px 16px 100px;">
+            <!-- Avatar -->
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+                <div id="fpe-avatar-preview" class="avatar-circle" style="width:80px;height:80px;font-size:32px;cursor:pointer;" onclick="document.getElementById('fpe-avatar-input').click()">
+                    🧑‍🌾
+                </div>
+                <div>
+                    <div style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;">Profilna slika</div>
+                    <button type="button" onclick="document.getElementById('fpe-avatar-input').click()"
+                        class="btn-ghost" style="width:auto;padding:8px 16px;font-size:13px;">Promijeni</button>
+                </div>
+                <input type="file" id="fpe-avatar-input" accept="image/*" style="display:none;" onchange="handleAvatarSelected()">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Naziv farme *</label>
+                <input id="fpe-farmname" type="text" class="form-input" placeholder="npr. Organska farma Petrović">
+                <div class="form-error hidden" id="fpe-farmname-err"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Grad *</label>
+                <select id="fpe-city" class="select-input">
+                    <option value="">-- Odaberite grad --</option>
+                    <option value="prnjavor">Prnjavor</option>
+                    <option value="doboj">Doboj</option>
+                    <option value="banja_luka">Banja Luka</option>
+                    <option value="bijeljina">Bijeljina</option>
+                    <option value="trebinje">Trebinje</option>
+                    <option value="prijedor">Prijedor</option>
+                    <option value="zvornik">Zvornik</option>
+                    <option value="srbac">Srbac</option>
+                    <option value="celinac">Čelinac</option>
+                    <option value="laktasi">Laktaši</option>
+                    <option value="derventa">Derventa</option>
+                    <option value="gradiska">Gradiška</option>
+                    <option value="modrica">Modriča</option>
+                    <option value="kotor_varos">Kotor Varoš</option>
+                    <option value="foca">Foča</option>
+                    <option value="istocno_sarajevo">Istočno Sarajevo</option>
+                    <option value="brcko">Brčko</option>
+                    <option value="mrkonjic_grad">Mrkonjić Grad</option>
+                </select>
+                <div class="form-error hidden" id="fpe-city-err"></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Adresa / Selo</label>
+                <input id="fpe-address" type="text" class="form-input" placeholder="npr. Lišnja, Ul. Kralja Petra 5">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">O farmi (neobavezno)</label>
+                <textarea id="fpe-description" class="form-input form-textarea" rows="4"
+                    placeholder="Kratki opis vaše farme, šta uzgajate, tradicija..."></textarea>
+            </div>
+
+            <button class="btn-primary" onclick="saveProfileEdit()" id="fpe-save-btn">Sačuvaj promjene</button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN: ADMIN                                               -->
+    <!-- ============================================================ -->
+    <div id="screen-admin" class="screen" style="bottom:0;">
+        <!-- Top bar -->
+        <div class="top-bar">
+            <div class="top-bar-logo" style="font-size:16px;">🔐 Admin Panel</div>
+            <button class="btn-danger" style="font-size:13px;padding:6px 12px;" onclick="adminLogout()">Odjava</button>
+        </div>
+
+        <!-- Tabs -->
+        <div style="display:flex;border-bottom:1px solid var(--color-border);background:#fff;">
+            <button id="admin-tab-farmers" onclick="switchAdminTab('farmers')"
+                style="flex:1;padding:12px;font-size:14px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid var(--color-primary);color:var(--color-primary);">
+                Farmeri
+            </button>
+            <button id="admin-tab-products" onclick="switchAdminTab('products')"
+                style="flex:1;padding:12px;font-size:14px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-muted);">
+                Proizvodi
+            </button>
+        </div>
+
+        <!-- Farmers tab -->
+        <div id="admin-farmers-panel">
+            <div id="admin-farmers-list" style="padding-bottom:20px;">
+                <div style="color:var(--color-text-muted);font-size:14px;padding:24px 16px;">Učitavam...</div>
+            </div>
+        </div>
+
+        <!-- Products tab -->
+        <div id="admin-products-panel" style="display:none;">
+            <div id="admin-products-list" style="padding-bottom:20px;">
+                <div style="color:var(--color-text-muted);font-size:14px;padding:24px 16px;">Učitavam...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
     <!-- LOADING OVERLAY                                              -->
     <!-- ============================================================ -->
     <div id="loading-overlay" class="spinner-overlay hidden">
@@ -583,8 +722,14 @@ const state = {
     editingProduct: null,
     homeProducts: [],
     homeCategory: '',
+    homeCity: '',
+    homeFreshOnly: false,
+    cities: {},
     pendingFarmPhotos: [],
     pendingProductPhotos: [],
+    adminFarmers: [],
+    adminProducts: [],
+    adminTab: 'farmers',
 };
 
 const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -650,15 +795,15 @@ function showScreen(name, pushHistory = true) {
     state.currentScreen = name;
 
     // Show correct nav
+    const isAdmin  = state.auth && state.auth.role === 'admin';
     const isFarmer = state.auth && state.auth.role === 'farmer' && !state.auth.onboardingStep;
-    const farmerScreens = ['screen-farmer-dashboard', 'screen-product-edit', 'screen-farmer-settings'];
-    const noNav = ['screen-farmer-signup', 'screen-login'];
+    const farmerScreens = ['screen-farmer-dashboard', 'screen-product-edit', 'screen-farmer-settings', 'screen-farmer-profile-edit'];
+    const noNav = ['screen-farmer-signup', 'screen-login', 'screen-admin'];
 
     document.getElementById('nav-customer').classList.add('hidden');
     document.getElementById('nav-farmer').classList.add('hidden');
 
     if (noNav.includes(name)) {
-        // no nav — screen occupies full height
         if (target) target.style.bottom = '0';
     } else {
         if (target) target.style.bottom = '64px';
@@ -696,6 +841,7 @@ async function init() {
             state.auth = c.auth || null;
             state.farmers = c.farmers || [];
             state.categories = c.categories || [];
+            state.cities = c.cities || {};
         } catch(e) {}
     }
 
@@ -708,12 +854,24 @@ async function init() {
         state.auth = data.auth || null;
         state.farmers = data.farmers || [];
         state.categories = data.categories || {};
-        localStorage.setItem('agroapp_state', JSON.stringify({ auth: state.auth, farmers: state.farmers, categories: state.categories }));
+        state.cities = data.cities || {};
+        localStorage.setItem('agroapp_state', JSON.stringify({ auth: state.auth, farmers: state.farmers, categories: state.categories, cities: state.cities }));
         renderHomeFarmers(state.farmers);
+        renderCityChips();
         updateAuthButton();
+        if (state.auth && state.auth.role === 'admin') {
+            showAdminScreen();
+            return;
+        }
     } catch(e) {
         console.warn('State load failed', e);
     }
+
+    // Deep link: open a specific farmer profile if URL was /farmer/{id}
+    @isset($openFarmerId)
+    loadFarmerProfile({{ $openFarmerId }});
+    return;
+    @endisset
 
     // Load products for home
     loadHomeProducts();
@@ -775,12 +933,14 @@ function renderHomeFarmers(farmers) {
 function farmerCardHtml(f) {
     const img = f.coverPhoto ? `<img src="${esc(f.coverPhoto.url)}" alt="${esc(f.farmName)}" style="width:100%;height:100px;object-fit:cover;">`
         : `<div style="width:100%;height:100px;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:32px;">🌿</div>`;
+    const bio = f.description ? `<div style="font-size:10px;color:var(--color-text-muted);margin-top:3px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${esc(f.description)}</div>` : '';
     return `<div class="farmer-card-h" onclick="loadFarmerProfile(${f.id})">
         ${img}
         <div style="padding:8px;">
             <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(f.farmName)}</div>
-            <div style="font-size:11px;color:var(--color-text-muted);">${esc(f.location || 'Prnjavor')}</div>
+            <div style="font-size:11px;color:var(--color-text-muted);">${esc(formatLocation(f))}</div>
             <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">${f.productCount || 0} proizvoda</div>
+            ${bio}
         </div>
     </div>`;
 }
@@ -788,12 +948,16 @@ function farmerCardHtml(f) {
 // =====================================================================
 // HOME — PRODUCTS
 // =====================================================================
-async function loadHomeProducts(category = '') {
+async function loadHomeProducts(category = '', city = '', freshOnly = false) {
     const el = document.getElementById('home-products-list');
+    if (!el) return;
     el.innerHTML = '<div style="color:var(--color-text-muted);font-size:14px;padding:8px 0;">Učitavam...</div>';
     try {
-        let url = '/api/products?';
-        if (category) url += `category=${category}&`;
+        const params = new URLSearchParams();
+        if (category)  params.set('category', category);
+        if (city)      params.set('city', city);
+        if (freshOnly) params.set('freshOnly', '1');
+        const url = '/api/products?' + params.toString();
         const data = await api('GET', url);
         state.homeProducts = data.data || [];
         renderHomeProducts(state.homeProducts);
@@ -804,6 +968,7 @@ async function loadHomeProducts(category = '') {
 
 function renderHomeProducts(products) {
     const el = document.getElementById('home-products-list');
+    if (!el) return;
     if (!products.length) {
         el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🛒</div><div class="empty-state-text">Nema proizvoda</div></div>`;
         return;
@@ -849,10 +1014,47 @@ function showFreshFilter() {
 }
 
 function selectHomeCategory(btn, cat) {
-    document.querySelectorAll('#home-category-chips .chip').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('#home-category-chips .chip:not(#home-fresh-chip)').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
     state.homeCategory = cat;
-    loadHomeProducts(cat);
+    loadHomeProducts(cat, state.homeCity, state.homeFreshOnly);
+}
+
+function selectHomeCity(btn, city) {
+    document.querySelectorAll('#home-city-chips .chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    state.homeCity = city;
+    loadHomeProducts(state.homeCategory, city, state.homeFreshOnly);
+    loadHomeFarmersByCity(city);
+}
+
+function toggleHomeFresh(btn) {
+    state.homeFreshOnly = !state.homeFreshOnly;
+    btn.style.background     = state.homeFreshOnly ? '#F59E0B' : '#FEF3C7';
+    btn.style.color          = state.homeFreshOnly ? '#fff'    : '#92400E';
+    btn.style.borderColor    = '#F59E0B';
+    loadHomeProducts(state.homeCategory, state.homeCity, state.homeFreshOnly);
+}
+
+function renderCityChips() {
+    const container = document.getElementById('home-city-chips');
+    if (!container || !Object.keys(state.cities).length) return;
+    const allBtn = `<button class="chip ${state.homeCity === '' ? 'active' : ''}" data-city="" onclick="selectHomeCity(this,'')">Svi gradovi</button>`;
+    const cityBtns = Object.entries(state.cities)
+        .map(([slug, label]) => `<button class="chip ${state.homeCity === slug ? 'active' : ''}" data-city="${slug}" onclick="selectHomeCity(this,'${slug}')">${label}</button>`)
+        .join('');
+    container.innerHTML = allBtn + cityBtns;
+}
+
+async function loadHomeFarmersByCity(city) {
+    const el = document.getElementById('home-farmers-list');
+    if (!el) return;
+    try {
+        const params = city ? `?city=${city}` : '';
+        const data = await api('GET', `/api/farmers${params}`);
+        state.farmers = data.data || data;
+        renderHomeFarmers(state.farmers);
+    } catch(e) {}
 }
 
 // =====================================================================
@@ -905,6 +1107,9 @@ function renderFarmerProfile(f) {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="m15 18-6-6 6-6"/></svg>
             </button>
             <div style="font-size:17px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(f.farmName)}</div>
+            <button class="icon-btn" onclick="shareFarmerProfile(${f.id}, '${esc(f.farmName)}')" title="Podijeli">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </button>
         </div>
         <div class="farmer-profile-hero">
             ${galleryHtml}
@@ -914,14 +1119,18 @@ function renderFarmerProfile(f) {
             <div style="font-size:22px;font-weight:700;">${esc(f.farmName)}</div>
             <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span style="font-size:13px;color:var(--color-text-muted);">${esc(f.location || 'Prnjavor')}</span>
+                <span style="font-size:13px;color:var(--color-text-muted);">${esc(formatLocation(f))}</span>
                 <span style="font-size:12px;color:var(--color-text-muted);margin-left:8px;">Član od ${f.createdAt ? f.createdAt.substring(0,7) : '—'}</span>
             </div>
         </div>
+        ${f.description ? `
+        <div style="margin:0 16px 16px;background:var(--color-primary-subtle);border-radius:12px;padding:14px 16px;">
+            <div style="font-size:12px;font-weight:700;color:var(--color-primary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">O farmi</div>
+            <div style="font-size:14px;line-height:1.65;color:var(--color-text-secondary);">${esc(f.description)}</div>
+        </div>` : ''}
         <div style="padding:0 16px 16px;display:flex;gap:10px;">
             ${contactBtns}
         </div>
-        ${f.description ? `<div style="padding:0 16px 16px;font-size:14px;line-height:1.6;color:var(--color-text-secondary);">${esc(f.description)}</div>` : ''}
         <div class="section-title">Proizvodi (${products.length})</div>
         ${productsHtml}
         <div style="height:80px;"></div>
@@ -1179,7 +1388,9 @@ async function submitLogin() {
         localStorage.setItem('agroapp_state', JSON.stringify({ auth: state.auth, farmers: state.farmers, categories: state.categories }));
         updateAuthButton();
         showToast(`Dobrodošli, ${user.name}!`);
-        if (user.role === 'farmer' && !user.onboardingStep) {
+        if (user.role === 'admin') {
+            showAdminScreen();
+        } else if (user.role === 'farmer' && !user.onboardingStep) {
             showFarmerDashboard();
         } else if (user.onboardingStep) {
             resumeOnboarding();
@@ -1285,15 +1496,17 @@ async function submitSignupStep2() {
 }
 
 async function submitSignupStep3() {
-    clearErrors(['farm-name-err']);
+    clearErrors(['farm-name-err', 'farm-city-err']);
     const farmName = document.getElementById('farm-name').value.trim();
-    if (!farmName) { showErr('farm-name-err','Naziv gazdinstva je obavezan'); return; }
-    const location = document.getElementById('farm-location').value.trim();
+    const city     = document.getElementById('farm-city').value;
+    if (!farmName) { showErr('farm-name-err', 'Naziv gazdinstva je obavezan'); return; }
+    if (!city)     { showErr('farm-city-err', 'Odaberite grad'); return; }
+    const address     = document.getElementById('farm-address').value.trim();
     const description = document.getElementById('farm-description').value.trim();
 
     setLoading(true);
     try {
-        const user = await api('POST', '/api/onboarding/step/3', { farmName, location, description });
+        const user = await api('POST', '/api/onboarding/step/3', { farmName, city, address, description });
         state.auth = user;
         setSignupStep(4);
     } catch(e) {
@@ -1619,12 +1832,253 @@ async function toggleFresh(productId, value) {
 }
 
 function editFarmerProfile() {
-    showToast('Uređivanje profila — uskoro dostupno');
+    const profile = state.auth?.farmerProfile || {};
+    const user    = state.auth || {};
+
+    // Pre-fill form
+    document.getElementById('fpe-farmname').value    = profile.farmName    || user.name  || '';
+    document.getElementById('fpe-city').value        = profile.city        || '';
+    document.getElementById('fpe-address').value     = profile.address     || '';
+    document.getElementById('fpe-description').value = profile.description || '';
+
+    // Avatar preview
+    const avatarEl = document.getElementById('fpe-avatar-preview');
+    if (profile.avatarUrl) {
+        avatarEl.innerHTML = `<img src="${esc(profile.avatarUrl)}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">`;
+    } else {
+        avatarEl.textContent = '🧑‍🌾';
+    }
+
+    // Clear pending avatar
+    state._pendingAvatar = null;
+    document.getElementById('fpe-avatar-input').value = '';
+
+    clearErrors(['fpe-farmname-err', 'fpe-city-err']);
+    showScreen('screen-farmer-profile-edit');
+}
+
+function handleAvatarSelected() {
+    const file = document.getElementById('fpe-avatar-input').files[0];
+    if (!file) return;
+    state._pendingAvatar = file;
+    const url = URL.createObjectURL(file);
+    document.getElementById('fpe-avatar-preview').innerHTML =
+        `<img src="${url}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">`;
+}
+
+async function saveProfileEdit() {
+    const farmName    = document.getElementById('fpe-farmname').value.trim();
+    const city        = document.getElementById('fpe-city').value;
+    const address     = document.getElementById('fpe-address').value.trim();
+    const description = document.getElementById('fpe-description').value.trim();
+
+    clearErrors(['fpe-farmname-err', 'fpe-city-err']);
+    if (!farmName) { showErr('fpe-farmname-err', 'Naziv farme je obavezan'); return; }
+    if (!city)     { showErr('fpe-city-err', 'Odaberite grad'); return; }
+
+    const btn = document.getElementById('fpe-save-btn');
+    btn.disabled = true;
+    setLoading(true);
+
+    try {
+        const fd = new FormData();
+        fd.append('_method',     'PATCH');
+        fd.append('farmName',    farmName);
+        fd.append('city',        city);
+        fd.append('address',     address);
+        fd.append('description', description);
+        if (state._pendingAvatar) {
+            fd.append('avatar', state._pendingAvatar);
+        }
+
+        const profile = await api('POST', '/api/farmer/profile', fd);
+
+        // Update local auth state
+        if (state.auth) state.auth.farmerProfile = profile;
+        localStorage.setItem('agroapp_state', JSON.stringify({ auth: state.auth, farmers: state.farmers, categories: state.categories }));
+        state._pendingAvatar = null;
+
+        showToast('Profil uspješno sačuvan!');
+        goBack();
+        showFarmerDashboard();
+    } catch(e) {
+        showToast(e.message || 'Greška pri čuvanju', 'error');
+    } finally {
+        btn.disabled = false;
+        setLoading(false);
+    }
+}
+
+// =====================================================================
+// ADMIN
+// =====================================================================
+function showAdminScreen() {
+    showScreen('screen-admin');
+    loadAdminData();
+}
+
+async function loadAdminData() {
+    try {
+        const [farmers, products] = await Promise.all([
+            api('GET', '/api/admin/farmers'),
+            api('GET', '/api/admin/products'),
+        ]);
+        state.adminFarmers = farmers;
+        state.adminProducts = products;
+        renderAdminFarmers();
+        renderAdminProducts();
+    } catch(e) {
+        showToast('Greška pri učitavanju admin podataka', 'error');
+    }
+}
+
+function switchAdminTab(tab) {
+    state.adminTab = tab;
+    document.getElementById('admin-farmers-panel').style.display  = tab === 'farmers'  ? 'block' : 'none';
+    document.getElementById('admin-products-panel').style.display = tab === 'products' ? 'block' : 'none';
+    const fBtn = document.getElementById('admin-tab-farmers');
+    const pBtn = document.getElementById('admin-tab-products');
+    fBtn.style.borderBottomColor = tab === 'farmers'  ? 'var(--color-primary)' : 'transparent';
+    fBtn.style.color             = tab === 'farmers'  ? 'var(--color-primary)' : 'var(--color-text-muted)';
+    pBtn.style.borderBottomColor = tab === 'products' ? 'var(--color-primary)' : 'transparent';
+    pBtn.style.color             = tab === 'products' ? 'var(--color-primary)' : 'var(--color-text-muted)';
+}
+
+function renderAdminFarmers() {
+    const el = document.getElementById('admin-farmers-list');
+    if (!el) return;
+    if (!state.adminFarmers.length) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👨‍🌾</div><div class="empty-state-text">Nema farmera</div></div>';
+        return;
+    }
+    el.innerHTML = state.adminFarmers.map(f => {
+        const status = f.isActive
+            ? `<span style="font-size:11px;font-weight:600;color:#065F46;background:#D1FAE5;padding:2px 8px;border-radius:20px;">Aktivan</span>`
+            : `<span style="font-size:11px;font-weight:600;color:#92400E;background:#FEF3C7;padding:2px 8px;border-radius:20px;">Neaktivan</span>`;
+        const approveBtn = !f.isActive
+            ? `<button onclick="adminApproveFarmer(${f.id})" style="padding:6px 14px;background:var(--color-primary);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">✓ Odobri</button>`
+            : '';
+        const rejectBtn = f.isActive
+            ? `<button onclick="adminRejectFarmer(${f.id})" style="padding:6px 14px;background:#fff;color:var(--color-danger);border:1.5px solid var(--color-danger);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">✗ Deaktiviraj</button>`
+            : '';
+        return `<div style="padding:14px 16px;border-bottom:1px solid var(--color-border);background:#fff;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <div>
+                    <div style="font-size:15px;font-weight:600;">${esc(f.farmName)}</div>
+                    <div style="font-size:12px;color:var(--color-text-muted);">${esc(f.user?.email || '')}</div>
+                    <div style="font-size:12px;color:var(--color-text-secondary);">${esc(f.location || 'Bez lokacije')} · ${f.productCount} proizvoda</div>
+                </div>
+                ${status}
+            </div>
+            <div style="display:flex;gap:8px;">${approveBtn}${rejectBtn}</div>
+        </div>`;
+    }).join('');
+}
+
+function renderAdminProducts() {
+    const el = document.getElementById('admin-products-list');
+    if (!el) return;
+    if (!state.adminProducts.length) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🛒</div><div class="empty-state-text">Nema proizvoda</div></div>';
+        return;
+    }
+    el.innerHTML = state.adminProducts.map(p => {
+        const thumb = p.thumbnailUrl
+            ? `<img src="${esc(p.thumbnailUrl)}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">`
+            : `<div style="width:48px;height:48px;border-radius:8px;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${categoryEmoji(p.category)}</div>`;
+        const activeTag = p.isActive
+            ? '' : `<span style="font-size:10px;font-weight:600;color:var(--color-danger);background:#FEE2E2;padding:1px 6px;border-radius:20px;margin-left:6px;">Obrisan</span>`;
+        return `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--color-border);background:#fff;">
+            ${thumb}
+            <div style="flex:1;min-width:0;">
+                <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}${activeTag}</div>
+                <div style="font-size:12px;color:var(--color-text-secondary);">${esc(p.farmer?.farmName || '')} · ${formatPrice(p.price, p.priceUnit)}</div>
+            </div>
+            ${p.isActive ? `<button onclick="adminDeleteProduct(${p.id})" style="padding:6px 10px;background:#fff;color:var(--color-danger);border:1.5px solid var(--color-danger);border-radius:8px;font-size:12px;cursor:pointer;flex-shrink:0;">Obriši</button>` : ''}
+        </div>`;
+    }).join('');
+}
+
+async function adminApproveFarmer(id) {
+    try {
+        await api('PATCH', `/api/admin/farmers/${id}/approve`);
+        const f = state.adminFarmers.find(f => f.id === id);
+        if (f) f.isActive = true;
+        renderAdminFarmers();
+        showToast('Farmer aktiviran');
+    } catch(e) { showToast(e.message, 'error'); }
+}
+
+async function adminRejectFarmer(id) {
+    if (!confirm('Deaktivirati ovog farmera?')) return;
+    try {
+        await api('PATCH', `/api/admin/farmers/${id}/reject`);
+        const f = state.adminFarmers.find(f => f.id === id);
+        if (f) f.isActive = false;
+        renderAdminFarmers();
+        showToast('Farmer deaktiviran');
+    } catch(e) { showToast(e.message, 'error'); }
+}
+
+async function adminDeleteProduct(id) {
+    if (!confirm('Trajno obrisati ovaj proizvod?')) return;
+    try {
+        await api('DELETE', `/api/admin/products/${id}`);
+        state.adminProducts = state.adminProducts.filter(p => p.id !== id);
+        renderAdminProducts();
+        showToast('Proizvod obrisan');
+    } catch(e) { showToast(e.message, 'error'); }
+}
+
+async function adminLogout() {
+    setLoading(true);
+    try {
+        await api('POST', '/api/auth/logout');
+        state.auth = null;
+        localStorage.removeItem('agroapp_state');
+        updateAuthButton();
+        showScreen('screen-home');
+        loadHomeProducts();
+        loadFreshCount();
+    } catch(e) {
+        showToast(e.message, 'error');
+    } finally {
+        setLoading(false);
+    }
 }
 
 // =====================================================================
 // HELPERS
 // =====================================================================
+async function shareFarmerProfile(id, farmName) {
+    const url = `${window.location.origin}/farmer/${id}`;
+    if (navigator.share) {
+        try {
+            await navigator.share({ title: farmName, text: `Pogledajte ${farmName} na AgroApp-u`, url });
+        } catch(e) {}
+    } else {
+        try {
+            await navigator.clipboard.writeText(url);
+            showToast('Link kopiran u clipboard!');
+        } catch(e) {
+            showToast(url);
+        }
+    }
+}
+
+function formatLocation(f) {
+    const cityLabels = {
+        prnjavor:'Prnjavor', doboj:'Doboj', banja_luka:'Banja Luka', bijeljina:'Bijeljina',
+        trebinje:'Trebinje', prijedor:'Prijedor', zvornik:'Zvornik', srbac:'Srbac',
+        celinac:'Čelinac', laktasi:'Laktaši', derventa:'Derventa', gradiska:'Gradiška',
+        modrica:'Modriča', kotor_varos:'Kotor Varoš', foca:'Foča',
+        istocno_sarajevo:'Istočno Sarajevo', brcko:'Brčko', mrkonjic_grad:'Mrkonjić Grad',
+    };
+    const cityLabel = f.city ? (cityLabels[f.city] || f.city) : '';
+    if (f.address && cityLabel) return `${f.address}, ${cityLabel}`;
+    return f.address || cityLabel || 'Republika Srpska';
+}
+
 function formatPrice(price, unit) {
     const p = parseFloat(price).toFixed(2).replace('.', ',');
     return unit ? `${p} KM/${unit}` : `${p} KM`;
