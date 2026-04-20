@@ -5,40 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>AgroApp Prnjavor</title>
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#3d5a3a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
         <style>
             *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-            html, body { height: 100%; font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif; background: #FAFAF8; color: #1A2E1A; -webkit-tap-highlight-color: transparent; }
+            html, body { height: 100%; font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; background: #faf6ef; color: #1f1a14; -webkit-tap-highlight-color: transparent; }
             :root {
-                --color-primary: #2D6A4F;
-                --color-primary-light: #40916C;
-                --color-primary-subtle: #D8F3DC;
-                --color-accent: #E9C46A;
-                --color-accent-deep: #F4A261;
-                --color-surface: #FAFAF8;
-                --color-card: #FFFFFF;
-                --color-border: #E4E8E0;
-                --color-text-primary: #1A2E1A;
-                --color-text-secondary: #5A6B5A;
-                --color-text-muted: #9AA89A;
-                --color-danger: #C0392B;
+                --font-serif: 'Fraunces', 'DM Serif Display', Georgia, 'Times New Roman', serif;
+                --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+                --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+                --color-primary: #3d5a3a;
+                --color-primary-dark: #2a3f27;
+                --color-primary-light: #4a6a3a;
+                --color-primary-subtle: #e8efe4;
+                --color-accent: #c06643;
+                --color-accent-soft: #f3e0d4;
+                --color-accent-deep: #b8902a;
+                --color-gold: #b8902a;
+                --color-bg: #faf6ef;
+                --color-surface: #ffffff;
+                --color-surface-alt: #f2ece0;
+                --color-card: #ffffff;
+                --color-border: #e4ddd0;
+                --color-divider: #ece5d6;
+                --color-ink: #2a2218;
+                --color-text-primary: #1f1a14;
+                --color-text-secondary: #7a6f5f;
+                --color-text-muted: #a89a85;
+                --color-success: #4a7a3e;
+                --color-danger: #b83232;
                 --color-viber: #7360F2;
                 --color-whatsapp: #25D366;
             }
-            .screen { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 64px; overflow-y: auto; -webkit-overflow-scrolling: touch; background: var(--color-surface); }
+            .screen { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 64px; overflow-y: auto; -webkit-overflow-scrolling: touch; background: var(--color-bg); }
             .screen.active { display: block; }
             #app { position: relative; height: 100vh; overflow: hidden; max-width: 480px; margin: 0 auto; }
-            .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; height: 64px; background: #fff; border-top: 1px solid var(--color-border); display: flex; align-items: center; padding-bottom: env(safe-area-inset-bottom, 0); z-index: 50; }
+            .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; height: 64px; background: #fff; border-top: 1px solid #ece5d6; display: flex; align-items: center; padding-bottom: env(safe-area-inset-bottom, 0); z-index: 50; }
             .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; color: var(--color-text-muted); cursor: pointer; padding: 8px 4px; border: none; background: none; transition: color 0.15s; }
             .nav-btn.active { color: var(--color-primary); }
             .nav-btn svg { width: 22px; height: 22px; }
-            .top-bar { position: sticky; top: 0; z-index: 10; background: #fff; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; padding: 0 16px; height: 56px; gap: 12px; }
+            .top-bar { position: sticky; top: 0; z-index: 10; background: #faf6ef; border-bottom: 1px solid var(--color-divider); display: flex; align-items: center; padding: 0 16px; height: 56px; gap: 12px; }
             .top-bar-title { font-size: 17px; font-weight: 600; color: var(--color-text-primary); flex: 1; }
-            .top-bar-logo { font-size: 20px; font-weight: 700; color: var(--color-primary); flex: 1; }
+            .top-bar-logo { font-size: 20px; font-weight: 500; font-family: var(--font-serif); color: var(--color-primary); flex: 1; letter-spacing: -0.3px; }
             .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary); }
             .icon-btn:active { background: var(--color-primary-subtle); }
             .btn-primary { background: var(--color-primary); color: #fff; border: none; border-radius: 12px; padding: 14px 24px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s; }
@@ -91,7 +107,7 @@
             .gallery-dots { display: flex; justify-content: center; gap: 6px; padding: 8px; }
             .gallery-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-border); transition: background 0.2s; }
             .gallery-dot.active { background: var(--color-primary); }
-            .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1A2E1A; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; z-index: 9999; max-width: 320px; text-align: center; animation: fadeIn 0.2s; pointer-events: none; }
+            .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #2a2218; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; z-index: 9999; max-width: 320px; text-align: center; animation: fadeIn 0.2s; pointer-events: none; }
             .toast.error { background: var(--color-danger); }
             .spinner { width: 24px; height: 24px; border: 3px solid var(--color-primary-subtle); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
             .spinner-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; }
@@ -116,6 +132,11 @@
             .farmer-avatar-overlap { position: absolute; bottom: -32px; left: 16px; width: 64px; height: 64px; border: 3px solid #fff; border-radius: 50%; z-index: 2; }
         </style>
     @endif
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        }
+    </script>
 </head>
 <body>
 <div id="app">
@@ -125,7 +146,7 @@
     <!-- ============================================================ -->
     <div id="screen-home" class="screen active">
         <!-- Top bar -->
-        <div class="top-bar">
+        <div class="top-bar" style="background:#faf6ef;border-bottom:1px solid #ece5d6;">
             <div class="top-bar-logo">🌿 AgroApp</div>
             <button class="icon-btn" onclick="onLoginIconTap()" id="home-auth-btn" title="Prijava">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -134,9 +155,9 @@
 
         <!-- Search bar (tappable, navigates to search) -->
         <div style="padding:12px 16px 0;">
-            <div onclick="showScreen('screen-search')" style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--color-border);border-radius:12px;padding:10px 14px;cursor:pointer;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                <span style="color:var(--color-text-muted);font-size:15px;">Pretraži farmere i proizvode...</span>
+            <div onclick="showScreen('screen-search')" style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e4ddd0;border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 1px 4px rgba(42,34,24,0.06);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a89a85" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <span style="color:#a89a85;font-size:15px;font-family:var(--font-sans);">Pretraži farmere i proizvode...</span>
             </div>
         </div>
 
@@ -667,12 +688,16 @@
         <!-- Tabs -->
         <div style="display:flex;border-bottom:1px solid var(--color-border);background:#fff;">
             <button id="admin-tab-farmers" onclick="switchAdminTab('farmers')"
-                style="flex:1;padding:12px;font-size:14px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid var(--color-primary);color:var(--color-primary);">
+                style="flex:1;padding:12px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid var(--color-primary);color:var(--color-primary);">
                 Farmeri
             </button>
             <button id="admin-tab-products" onclick="switchAdminTab('products')"
-                style="flex:1;padding:12px;font-size:14px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-muted);">
+                style="flex:1;padding:12px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-muted);">
                 Proizvodi
+            </button>
+            <button id="admin-tab-reviews" onclick="switchAdminTab('reviews')"
+                style="flex:1;padding:12px;font-size:13px;font-weight:600;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-muted);">
+                Recenzije
             </button>
         </div>
 
@@ -686,6 +711,13 @@
         <!-- Products tab -->
         <div id="admin-products-panel" style="display:none;">
             <div id="admin-products-list" style="padding-bottom:20px;">
+                <div style="color:var(--color-text-muted);font-size:14px;padding:24px 16px;">Učitavam...</div>
+            </div>
+        </div>
+
+        <!-- Reviews tab -->
+        <div id="admin-reviews-panel" style="display:none;">
+            <div id="admin-reviews-list" style="padding-bottom:20px;">
                 <div style="color:var(--color-text-muted);font-size:14px;padding:24px 16px;">Učitavam...</div>
             </div>
         </div>
@@ -931,16 +963,18 @@ function renderHomeFarmers(farmers) {
 }
 
 function farmerCardHtml(f) {
-    const img = f.coverPhoto ? `<img src="${esc(f.coverPhoto.url)}" alt="${esc(f.farmName)}" style="width:100%;height:100px;object-fit:cover;">`
-        : `<div style="width:100%;height:100px;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:32px;">🌿</div>`;
-    const bio = f.description ? `<div style="font-size:10px;color:var(--color-text-muted);margin-top:3px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${esc(f.description)}</div>` : '';
-    return `<div class="farmer-card-h" onclick="loadFarmerProfile(${f.id})">
+    const img = f.coverPhoto
+        ? `<img src="${esc(f.coverPhoto.url)}" alt="${esc(f.farmName)}" style="width:100%;height:110px;object-fit:cover;">`
+        : `<div style="width:100%;height:110px;background:linear-gradient(145deg,#3d5a3a,#2a3f27);display:flex;align-items:center;justify-content:center;font-size:36px;">🌿</div>`;
+    return `<div onclick="loadFarmerProfile(${f.id})" style="display:flex;flex-direction:column;width:160px;flex-shrink:0;background:#fff;border-radius:16px;border:1px solid #e4ddd0;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(42,34,24,0.07);">
         ${img}
-        <div style="padding:8px;">
-            <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(f.farmName)}</div>
-            <div style="font-size:11px;color:var(--color-text-muted);">${esc(formatLocation(f))}</div>
-            <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">${f.productCount || 0} proizvoda</div>
-            ${bio}
+        <div style="padding:10px;">
+            <div style="font-family:var(--font-serif);font-size:14px;font-weight:500;color:#2a2218;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;">${esc(f.farmName)}</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#7a6f5f;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                ${esc(formatLocation(f))}
+            </div>
+            <div style="font-size:11px;color:#a89a85;margin-top:3px;">${f.productCount || 0} proizvoda</div>
         </div>
     </div>`;
 }
@@ -978,16 +1012,17 @@ function renderHomeProducts(products) {
 
 function productCardHtml(p) {
     const thumb = p.thumbnailUrl
-        ? `<img src="${esc(p.thumbnailUrl)}" class="product-card-thumb" alt="${esc(p.name)}">`
-        : `<div class="product-card-thumb">${categoryEmoji(p.category)}</div>`;
-    const fresh = p.freshToday ? `<span class="fresh-badge">🌞 Svježe</span>` : '';
-    const farmer = p.farmer ? `<div style="font-size:11px;color:var(--color-text-muted);">${esc(p.farmer.farmName)}</div>` : '';
-    return `<div class="product-card" onclick="loadProductDetail(${p.id})">
+        ? `<img src="${esc(p.thumbnailUrl)}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;flex-shrink:0;" alt="${esc(p.name)}">`
+        : `<div style="width:80px;height:80px;border-radius:12px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">${categoryEmoji(p.category)}</div>`;
+    const fresh = p.freshToday ? `<div style="display:inline-flex;align-items:center;gap:3px;background:#fef3c7;color:#92400e;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;margin-bottom:4px;">🌞 Svježe danas</div>` : '';
+    const farmer = p.farmer ? `<div style="font-size:11px;color:#a89a85;margin-top:3px;">${esc(p.farmer.farmName)}</div>` : '';
+    const price = p.price ? `<div style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:#2a2218;margin-top:2px;">${formatPrice(p.price, p.priceUnit)}</div>` : '';
+    return `<div onclick="loadProductDetail(${p.id})" style="display:flex;gap:12px;background:#fff;border-radius:16px;border:1px solid #e4ddd0;padding:12px;cursor:pointer;box-shadow:0 1px 4px rgba(42,34,24,0.06);">
         ${thumb}
         <div style="flex:1;min-width:0;">
             ${fresh}
-            <div style="font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</div>
-            <div style="font-size:16px;font-weight:700;color:var(--color-primary);">${formatPrice(p.price, p.priceUnit)}</div>
+            <div style="font-family:var(--font-serif);font-size:15px;font-weight:500;color:#2a2218;line-height:1.25;margin-bottom:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${esc(p.name)}</div>
+            ${price}
             ${farmer}
         </div>
     </div>`;
@@ -1065,6 +1100,7 @@ async function loadFarmerProfile(id) {
     try {
         const data = await api('GET', `/api/farmers/${id}`);
         state.selectedFarmer = data;
+        _fpCurrentFarmerId = data.id;
         renderFarmerProfile(data);
         showScreen('screen-farmer-profile');
     } catch(e) {
@@ -1080,87 +1116,200 @@ function renderFarmerProfile(f) {
     const photos = f.photos || [];
     const products = f.products || [];
 
-    const galleryHtml = photos.length
-        ? `<div class="gallery" id="fp-gallery">
-            <div class="gallery-track" id="fp-gallery-track">
-                ${photos.map(p => `<div class="gallery-slide"><img src="${esc(p.url)}" alt="Foto"></div>`).join('')}
-            </div>
-            ${photos.length > 1 ? `<div class="gallery-dots">${photos.map((_, i) => `<div class="gallery-dot${i===0?' active':''}" data-gallery="fp-gallery" data-idx="${i}"></div>`).join('')}</div>` : ''}
-           </div>`
-        : `<div style="width:100%;aspect-ratio:16/9;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:56px;">🌿</div>`;
+    const heroBg = photos.length
+        ? `<img src="${esc(photos[0].url)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">`
+        : `<div style="position:absolute;inset:0;background:linear-gradient(160deg,#3d5a3a 0%,#2a3f27 60%,#4a6a3a 100%);"></div>`;
 
     const avatarHtml = f.avatarUrl
-        ? `<img src="${esc(f.avatarUrl)}" class="farmer-avatar-overlap avatar-circle" style="width:64px;height:64px;">`
-        : `<div class="farmer-avatar-overlap avatar-circle" style="width:64px;height:64px;background:var(--color-primary-subtle);">🧑‍🌾</div>`;
-
-    const contactBtns = buildContactBtns(user.phone, user.viber, user.whatsapp);
+        ? `<img src="${esc(f.avatarUrl)}" style="width:86px;height:86px;border-radius:24px;object-fit:cover;border:3px solid #faf6ef;box-shadow:0 10px 24px rgba(26,20,10,0.25);flex-shrink:0;">`
+        : `<div style="width:86px;height:86px;border-radius:24px;background:#e8efe4;border:3px solid #faf6ef;box-shadow:0 10px 24px rgba(26,20,10,0.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:36px;">🧑‍🌾</div>`;
 
     const productsHtml = products.length
-        ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 16px;">
+        ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
             ${products.map(p => productGridCard(p)).join('')}
           </div>`
-        : `<div class="empty-state"><div class="empty-state-icon">🛒</div><div class="empty-state-text">Nema proizvoda</div></div>`;
+        : `<div class="empty-state"><div class="empty-state-icon">🌿</div><div class="empty-state-text">Nema proizvoda</div></div>`;
 
     el.innerHTML = `
-        <div style="position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--color-border);display:flex;align-items:center;padding:0 16px;height:56px;gap:12px;">
-            <button class="icon-btn" onclick="goBack()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="m15 18-6-6 6-6"/></svg>
-            </button>
-            <div style="font-size:17px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(f.farmName)}</div>
-            <button class="icon-btn" onclick="shareFarmerProfile(${f.id}, '${esc(f.farmName)}')" title="Podijeli">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            </button>
-        </div>
-        <div class="farmer-profile-hero">
-            ${galleryHtml}
-            ${avatarHtml}
-        </div>
-        <div style="padding:40px 16px 8px;">
-            <div style="font-size:22px;font-weight:700;">${esc(f.farmName)}</div>
-            <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span style="font-size:13px;color:var(--color-text-muted);">${esc(formatLocation(f))}</span>
-                <span style="font-size:12px;color:var(--color-text-muted);margin-left:8px;">Član od ${f.createdAt ? f.createdAt.substring(0,7) : '—'}</span>
+        <div style="position:relative;height:340px;overflow:hidden;flex-shrink:0;">
+            ${heroBg}
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,20,16,0.4) 0%,rgba(26,20,16,0) 25%,rgba(26,20,16,0) 45%,rgba(250,246,239,0.95) 95%,rgba(250,246,239,1) 100%);"></div>
+            <div style="position:absolute;top:58px;left:0;right:0;display:flex;justify-content:space-between;padding:0 16px;z-index:10;">
+                <button onclick="goBack()" style="width:40px;height:40px;border-radius:100px;border:none;background:rgba(26,20,16,0.55);backdrop-filter:blur(8px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <button onclick="shareFarmerProfile(${f.id},'${esc(f.farmName)}')" style="width:40px;height:40px;border-radius:100px;border:none;background:rgba(26,20,16,0.55);backdrop-filter:blur(8px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                </button>
+            </div>
+            <div style="position:absolute;bottom:24px;left:22px;right:22px;display:flex;align-items:flex-end;gap:14px;">
+                ${avatarHtml}
+                <div style="flex:1;padding-bottom:6px;">
+                    <div style="font-family:var(--font-sans);font-size:11.5px;font-weight:600;color:#3d5a3a;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px;">${esc(formatLocation(f))}</div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span style="font-family:var(--font-serif);font-size:24px;font-weight:500;color:#2a2218;line-height:1.05;letter-spacing:-0.5px;">${esc(f.farmName)}</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#3d5a3a"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                    </div>
+                </div>
             </div>
         </div>
-        ${f.description ? `
-        <div style="margin:0 16px 16px;background:var(--color-primary-subtle);border-radius:12px;padding:14px 16px;">
-            <div style="font-size:12px;font-weight:700;color:var(--color-primary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">O farmi</div>
-            <div style="font-size:14px;line-height:1.65;color:var(--color-text-secondary);">${esc(f.description)}</div>
-        </div>` : ''}
-        <div style="padding:0 16px 16px;display:flex;gap:10px;">
-            ${contactBtns}
+
+        <div style="padding:20px 22px 0;">
+            <div style="display:flex;align-items:center;gap:0;margin-bottom:18px;">
+                <div style="flex:1;">
+                    <div style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;line-height:1;margin-bottom:4px;">${products.length}</div>
+                    <div style="font-family:var(--font-sans);font-size:11px;color:#a89a85;letter-spacing:0.3px;">proizvoda</div>
+                </div>
+                <div style="width:1px;height:26px;background:#ece5d6;margin:0 18px;"></div>
+                <div style="flex:1;">
+                    <div style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;line-height:1;margin-bottom:4px;">—</div>
+                    <div style="font-family:var(--font-sans);font-size:11px;color:#a89a85;letter-spacing:0.3px;">pratilaca</div>
+                </div>
+                <div style="width:1px;height:26px;background:#ece5d6;margin:0 18px;"></div>
+                <div style="flex:1;">
+                    <div style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;line-height:1;margin-bottom:4px;">★ —</div>
+                    <div style="font-family:var(--font-sans);font-size:11px;color:#a89a85;letter-spacing:0.3px;">recenzija</div>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-bottom:22px;">
+                ${user.phone ? `<button onclick="window.location='tel:${esc(user.phone)}'" style="flex:1;height:46px;border:none;border-radius:100px;background:#3d5a3a;color:#fff;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6.29 6.29l1.83-1.83a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    Pozovi
+                </button>` : `<div style="flex:1;"></div>`}
+                <button onclick="typeof showChatWithFarmer==='function'&&showChatWithFarmer(${f.id})" style="flex:1;height:46px;border:1px solid #e4ddd0;border-radius:100px;background:#fff;color:#1f1a14;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Poruka
+                </button>
+            </div>
+
+            ${f.description ? `<p style="font-family:var(--font-serif);font-size:16.5px;line-height:1.5;color:#1f1a14;margin:0 0 8px;letter-spacing:-0.1px;">${esc(f.description)}</p>` : ''}
         </div>
-        <div class="section-title">Proizvodi (${products.length})</div>
-        ${productsHtml}
-        <div style="height:80px;"></div>
+
+        <div style="display:flex;gap:0;padding:22px 22px 0;border-bottom:1px solid #ece5d6;background:#faf6ef;position:sticky;top:0;z-index:5;" id="fp-tabs">
+            <button onclick="fpSwitchTab('products')" id="fp-tab-products" style="flex:1;padding:12px 0;background:none;border:none;border-bottom:2px solid #2a2218;font-family:var(--font-sans);font-size:13.5px;font-weight:600;color:#2a2218;cursor:pointer;">Proizvodi</button>
+            <button onclick="fpSwitchTab('story')" id="fp-tab-story" style="flex:1;padding:12px 0;background:none;border:none;border-bottom:2px solid transparent;font-family:var(--font-sans);font-size:13.5px;font-weight:500;color:#7a6f5f;cursor:pointer;">Priča</button>
+            <button onclick="fpSwitchTab('reviews')" id="fp-tab-reviews" style="flex:1;padding:12px 0;background:none;border:none;border-bottom:2px solid transparent;font-family:var(--font-sans);font-size:13.5px;font-weight:500;color:#7a6f5f;cursor:pointer;">Recenzije</button>
+        </div>
+        <div id="fp-tab-content-products" style="padding:18px 22px 100px;">${productsHtml}</div>
+        <div id="fp-tab-content-story" style="display:none;padding:28px 22px 100px;">
+            <div style="font-family:var(--font-sans);font-size:11.5px;font-weight:600;color:#c06643;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">Osnovano · ${f.createdAt ? f.createdAt.substring(0,4) : '—'}</div>
+            <h2 style="font-family:var(--font-serif);font-size:26px;font-weight:500;margin:0 0 16px;line-height:1.1;color:#2a2218;letter-spacing:-0.5px;">O gazdinstvu</h2>
+            <p style="font-family:var(--font-serif);font-size:16px;line-height:1.65;color:#1f1a14;margin:0 0 22px;">${f.description ? esc(f.description) : 'Priča o ovom gazdinstvu uskoro…'}</p>
+        </div>
+        <div id="fp-tab-content-reviews" style="display:none;padding:22px 22px 100px;">
+            <div id="fp-reviews-list"><div class="empty-state"><div class="empty-state-icon">⭐</div><div class="empty-state-text">Učitavanje…</div></div></div>
+            <div id="fp-review-form" style="margin-top:24px;">
+                <div style="font-family:var(--font-sans);font-size:11.5px;font-weight:700;color:#7a6f5f;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:14px;">Ostavi recenziju</div>
+                <div id="fp-star-row" style="display:flex;gap:6px;margin-bottom:14px;" data-rating="5">
+                    ${[1,2,3,4,5].map(n => `<button onclick="fpSetStar(${n})" data-star="${n}" style="font-size:26px;background:none;border:none;cursor:pointer;padding:0;color:#b8902a;">★</button>`).join('')}
+                </div>
+                <input id="fp-review-name" type="text" placeholder="Vaše ime (npr. Marko iz Banjaluke)" maxlength="60" style="width:100%;padding:12px 14px;border:1.5px solid #e4ddd0;border-radius:10px;font-size:15px;color:#1f1a14;background:#fff;outline:none;margin-bottom:10px;font-family:var(--font-sans);">
+                <textarea id="fp-review-body" placeholder="Vaše iskustvo s ovim gazdinstvom…" maxlength="500" rows="3" style="width:100%;padding:12px 14px;border:1.5px solid #e4ddd0;border-radius:10px;font-size:15px;color:#1f1a14;background:#fff;outline:none;resize:vertical;font-family:var(--font-sans);"></textarea>
+                <div style="text-align:right;font-size:11px;color:#a89a85;margin-bottom:12px;" id="fp-body-count">0 / 500</div>
+                <button onclick="fpSubmitReview()" style="width:100%;height:46px;border:none;border-radius:12px;background:#3d5a3a;color:#fff;font-family:var(--font-sans);font-size:15px;font-weight:600;cursor:pointer;">Pošalji recenziju</button>
+            </div>
+        </div>
     `;
 
-    // Sticky contact bar
-    const stickyBar = document.createElement('div');
-    stickyBar.className = 'contact-bar';
-    stickyBar.innerHTML = user.phone
-        ? `<button class="btn-call" onclick="window.location='tel:${esc(user.phone)}'">📞 Pozovi ${esc(user.phone)}</button>`
-        : `<div style="flex:1;text-align:center;color:var(--color-text-muted);font-size:14px;">Nema broja</div>`;
-    el.appendChild(stickyBar);
+    if (photos.length > 1) setupGallery('fp-gallery');
 
-    // Setup gallery swipe
-    if (photos.length > 1) {
-        setupGallery('fp-gallery');
+    // initialise star colours and wire character counter
+    fpSetStar(5);
+    const bodyEl = document.getElementById('fp-review-body');
+    if (bodyEl) bodyEl.addEventListener('input', () => {
+        const c = document.getElementById('fp-body-count');
+        if (c) c.textContent = bodyEl.value.length + ' / 500';
+    });
+}
+
+let _fpCurrentFarmerId = null;
+
+function fpSwitchTab(tab) {
+    ['products','story','reviews'].forEach(t => {
+        const btn = document.getElementById('fp-tab-' + t);
+        const content = document.getElementById('fp-tab-content-' + t);
+        const active = t === tab;
+        if (btn) {
+            btn.style.fontWeight = active ? '600' : '500';
+            btn.style.color = active ? '#2a2218' : '#7a6f5f';
+            btn.style.borderBottomColor = active ? '#2a2218' : 'transparent';
+        }
+        if (content) content.style.display = active ? '' : 'none';
+    });
+    if (tab === 'reviews' && _fpCurrentFarmerId) fpLoadReviews(_fpCurrentFarmerId);
+}
+
+async function fpLoadReviews(farmerId) {
+    const list = document.getElementById('fp-reviews-list');
+    if (!list) return;
+    try {
+        const data = await api('GET', `/api/farmers/${farmerId}/reviews`);
+        const reviews = data.reviews || [];
+        if (!reviews.length) {
+            list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⭐</div><div class="empty-state-text">Još nema recenzija</div><div class="empty-state-sub">Budite prvi koji će ostaviti utisak</div></div>`;
+            return;
+        }
+        list.innerHTML = reviews.map(r => `
+            <div style="padding:16px 0;border-bottom:1px solid #ece5d6;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                    <div style="font-family:var(--font-sans);font-size:14px;font-weight:600;color:#2a2218;">${esc(r.reviewer_name)}</div>
+                    <div style="font-size:12px;color:#a89a85;">${r.created_at ? r.created_at.substring(0,10) : ''}</div>
+                </div>
+                <div style="color:#b8902a;margin-bottom:6px;font-size:15px;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                <div style="font-family:var(--font-serif);font-size:15px;line-height:1.55;color:#1f1a14;">${esc(r.body)}</div>
+            </div>`).join('');
+    } catch(e) {
+        list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⭐</div><div class="empty-state-text">Greška pri učitavanju</div></div>`;
+    }
+}
+
+function fpSetStar(n) {
+    document.getElementById('fp-star-row').dataset.rating = n;
+    document.querySelectorAll('#fp-star-row button').forEach((btn, i) => {
+        btn.style.color = i < n ? '#b8902a' : '#e4ddd0';
+    });
+}
+
+async function fpSubmitReview() {
+    const farmerId = _fpCurrentFarmerId;
+    if (!farmerId) return;
+    const name = document.getElementById('fp-review-name')?.value.trim();
+    const body = document.getElementById('fp-review-body')?.value.trim();
+    const rating = parseInt(document.getElementById('fp-star-row')?.dataset.rating || '5');
+    if (!name || name.length < 2) { showToast('Unesite ime (min. 2 znaka)', 'error'); return; }
+    if (!body || body.length < 10) { showToast('Komentar mora imati min. 10 znakova', 'error'); return; }
+    try {
+        await api('POST', `/api/farmers/${farmerId}/reviews`, { reviewer_name: name, body, rating });
+        document.getElementById('fp-review-name').value = '';
+        document.getElementById('fp-review-body').value = '';
+        fpSetStar(5);
+        showToast('Hvala! Recenzija je objavljena.');
+        fpLoadReviews(farmerId);
+    } catch(e) {
+        if (e.status === 429) {
+            showToast('Već ste ostavili recenziju za ovo gazdinstvo danas.', 'error');
+        } else if (e.status === 422) {
+            showToast(e.message || 'Provjerite unesene podatke.', 'error');
+        } else {
+            showToast('Greška pri slanju recenzije.', 'error');
+        }
     }
 }
 
 function productGridCard(p) {
     const thumb = p.thumbnailUrl
-        ? `<img src="${esc(p.thumbnailUrl)}" style="width:100%;height:100px;object-fit:cover;border-radius:10px;">`
-        : `<div style="width:100%;height:100px;border-radius:10px;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:32px;">${categoryEmoji(p.category)}</div>`;
-    const fresh = p.freshToday ? `<span class="fresh-badge" style="font-size:10px;">🌞 Svježe</span>` : '';
-    return `<div onclick="loadProductDetail(${p.id})" style="background:#fff;border:1px solid var(--color-border);border-radius:12px;overflow:hidden;cursor:pointer;">
-        ${thumb}
-        <div style="padding:8px;">
-            ${fresh}
-            <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</div>
-            <div style="font-size:14px;font-weight:700;color:var(--color-primary);">${formatPrice(p.price, p.priceUnit)}</div>
+        ? `<img src="${esc(p.thumbnailUrl)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">`
+        : `<div style="position:absolute;inset:0;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:40px;">${categoryEmoji(p.category)}</div>`;
+    const tag = p.freshToday ? 'Svježe' : (p.category || '');
+    return `<div onclick="loadProductDetail(${p.id})" style="cursor:pointer;">
+        <div style="position:relative;border-radius:14px;overflow:hidden;margin-bottom:10px;aspect-ratio:1/1.1;">
+            ${thumb}
+            ${tag ? `<div style="position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:100px;background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);font-family:var(--font-sans);font-size:10px;font-weight:600;color:#2a2218;letter-spacing:0.3px;text-transform:uppercase;">${esc(tag)}</div>` : ''}
+        </div>
+        <div style="font-family:var(--font-serif);font-size:15.5px;font-weight:500;color:#2a2218;line-height:1.2;margin-bottom:4px;">${esc(p.name)}</div>
+        <div style="display:flex;align-items:baseline;gap:4px;">
+            <span style="font-family:var(--font-sans);font-size:13.5px;font-weight:700;color:#2a2218;">${formatPrice(p.price, p.priceUnit)}</span>
         </div>
     </div>`;
 }
@@ -1188,60 +1337,87 @@ function renderProductDetail(p) {
     const farmer = p.farmer || {};
     const user = farmer.user || {};
 
-    const galleryHtml = photos.length
-        ? `<div class="gallery" id="pd-gallery">
-            <div class="gallery-track" id="pd-gallery-track" style="aspect-ratio:1;">
-                ${photos.map(ph => `<div class="gallery-slide" style="aspect-ratio:1;"><img src="${esc(ph.url)}" alt="${esc(p.name)}"></div>`).join('')}
+    const heroContent = photos.length
+        ? `<div class="gallery" id="pd-gallery" style="position:relative;">
+            <div class="gallery-track" id="pd-gallery-track" style="height:420px;overflow-x:auto;scroll-snap-type:x mandatory;display:flex;">
+                ${photos.map(ph => `<div style="min-width:100%;height:420px;scroll-snap-align:start;flex-shrink:0;overflow:hidden;"><img src="${esc(ph.url)}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover;"></div>`).join('')}
             </div>
-            ${photos.length > 1 ? `<div style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.5);color:#fff;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;" id="pd-photo-counter">1/${photos.length}</div>
-            <div class="gallery-dots">${photos.map((_, i) => `<div class="gallery-dot${i===0?' active':''}" data-gallery="pd-gallery" data-idx="${i}"></div>`).join('')}</div>` : ''}
+            ${photos.length > 1 ? `<div style="position:absolute;bottom:18px;left:0;right:0;display:flex;justify-content:center;gap:6px;">${photos.map((_, i) => `<div class="gallery-dot${i===0?' active':''}" data-gallery="pd-gallery" data-idx="${i}" style="width:${i===0?18:6}px;height:6px;border-radius:100px;background:${i===0?'#fff':'rgba(255,255,255,0.5)'};transition:width .2s;"></div>`).join('')}</div>` : ''}
            </div>`
-        : `<div style="width:100%;aspect-ratio:1;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:64px;">${categoryEmoji(p.category)}</div>`;
+        : `<div style="height:420px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:80px;">${categoryEmoji(p.category)}</div>`;
 
-    const freshBadge = p.freshToday ? `<span class="fresh-badge" style="margin-bottom:8px;">🌞 Svježe danas</span>` : '';
+    const freshBadge = p.freshToday
+        ? `<div style="position:absolute;top:120px;left:22px;padding:6px 12px;border-radius:100px;background:#2a2218;color:#fff;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:6px;"><span style="width:6px;height:6px;border-radius:100px;background:#8ac878;display:inline-block;"></span>Svježe danas</div>`
+        : '';
+
+    const categoryLabel = p.category
+        ? `<div style="font-family:var(--font-sans);font-size:11.5px;font-weight:600;color:#c06643;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">${esc(p.category)}</div>`
+        : '';
 
     const farmerCard = farmer.id ? `
-        <div onclick="loadFarmerProfile(${farmer.id})" style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--color-border);border-radius:12px;padding:12px;cursor:pointer;">
-            ${farmer.avatarUrl ? `<img src="${esc(farmer.avatarUrl)}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">` : `<div class="avatar-circle" style="width:48px;height:48px;background:var(--color-primary-subtle);">🧑‍🌾</div>`}
-            <div>
-                <div style="font-size:14px;font-weight:600;">${esc(farmer.farmName || '')}</div>
-                <div style="font-size:12px;color:var(--color-text-muted);">${esc(farmer.location || 'Prnjavor')}</div>
+        <div style="display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;background:#fff;border:1px solid #e4ddd0;cursor:pointer;margin-bottom:24px;">
+            <div onclick="loadFarmerProfile(${farmer.id})" style="display:flex;align-items:center;gap:14px;flex:1;min-width:0;">
+                ${farmer.avatarUrl
+                    ? `<img src="${esc(farmer.avatarUrl)}" style="width:52px;height:52px;border-radius:16px;object-fit:cover;flex-shrink:0;">`
+                    : `<div style="width:52px;height:52px;border-radius:16px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🧑‍🌾</div>`}
+                <div style="flex:1;min-width:0;">
+                    <div style="font-family:var(--font-sans);font-size:10.5px;color:#7a6f5f;letter-spacing:0.8px;text-transform:uppercase;font-weight:600;margin-bottom:2px;">Sa gazdinstva</div>
+                    <div style="font-family:var(--font-serif);font-size:17px;font-weight:500;color:#2a2218;letter-spacing:-0.2px;">${esc(farmer.farmName || '')}</div>
+                    <div style="font-size:11.5px;color:#7a6f5f;margin-top:2px;">${esc(farmer.location || 'Prnjavor, BiH')}</div>
+                </div>
             </div>
-            <svg style="margin-left:auto;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            <button onclick="typeof showChatWithFarmer==='function'&&showChatWithFarmer(${farmer.id})" style="width:40px;height:40px;border-radius:100px;border:1px solid #e4ddd0;background:#faf6ef;color:#1f1a14;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </button>
         </div>` : '';
 
     el.innerHTML = `
-        <div style="position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--color-border);display:flex;align-items:center;padding:0 16px;height:56px;gap:12px;">
-            <button class="icon-btn" onclick="goBack()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="m15 18-6-6 6-6"/></svg>
-            </button>
-            <div style="font-size:17px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</div>
-        </div>
-        <div style="position:relative;">${galleryHtml}</div>
-        <div style="padding:16px;">
+        <div style="position:relative;flex-shrink:0;">
+            ${heroContent}
             ${freshBadge}
-            <div style="font-size:22px;font-weight:700;">${esc(p.name)}</div>
-            <div style="font-size:24px;font-weight:800;color:var(--color-primary);margin:4px 0 8px;">${formatPrice(p.price, p.priceUnit)}</div>
-            ${p.description ? `<div style="font-size:14px;line-height:1.6;color:var(--color-text-secondary);margin-bottom:16px;">${esc(p.description)}</div>` : ''}
-            <div style="font-size:13px;font-weight:600;color:var(--color-text-muted);margin-bottom:8px;">Farmer</div>
-            ${farmerCard}
+            <div style="position:absolute;top:58px;left:0;right:0;display:flex;justify-content:space-between;padding:0 16px;z-index:10;">
+                <button onclick="goBack()" style="width:40px;height:40px;border-radius:100px;border:none;background:rgba(26,20,16,0.55);backdrop-filter:blur(8px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+            </div>
         </div>
-        <div style="height:80px;"></div>
-        <div class="contact-bar">
+
+        <div style="margin-top:-22px;background:#faf6ef;border-radius:24px 24px 0 0;padding:24px 22px 120px;position:relative;">
+            ${categoryLabel}
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px;">
+                <h1 style="font-family:var(--font-serif);font-size:28px;font-weight:500;line-height:1.1;margin:0;color:#2a2218;letter-spacing:-0.6px;flex:1;">${esc(p.name)}</h1>
+                <div style="text-align:right;flex-shrink:0;">
+                    <div style="font-family:var(--font-serif);font-size:26px;font-weight:500;color:#2a2218;line-height:1;">${formatPrice(p.price, p.priceUnit)}</div>
+                    <div style="font-size:11px;color:#7a6f5f;margin-top:4px;">/ ${esc(p.priceUnit || 'kg')}</div>
+                </div>
+            </div>
+
+            ${p.freshToday ? `<div style="display:inline-flex;align-items:center;gap:4px;background:#fef3c7;color:#92400e;font-family:var(--font-sans);font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px;margin-bottom:18px;">🌞 Svježe danas</div>` : ''}
+
+            ${farmerCard}
+
+            ${p.description ? `
+            <div style="font-family:var(--font-sans);font-size:11.5px;font-weight:700;color:#7a6f5f;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:12px;">Opis</div>
+            <p style="font-family:var(--font-serif);font-size:15.5px;line-height:1.6;color:#1f1a14;margin:0 0 22px;">${esc(p.description)}</p>` : ''}
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#ece5d6;border-radius:12px;overflow:hidden;border:1px solid #ece5d6;margin-bottom:24px;">
+                <div style="padding:14px;background:#fff;">
+                    <div style="font-size:10.5px;font-weight:600;color:#7a6f5f;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;">Dostava</div>
+                    <div style="font-family:var(--font-serif);font-size:15px;font-weight:500;color:#2a2218;">2–3 dana</div>
+                </div>
+                <div style="padding:14px;background:#fff;">
+                    <div style="font-size:10.5px;font-weight:600;color:#7a6f5f;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;">Preuzimanje</div>
+                    <div style="font-family:var(--font-serif);font-size:15px;font-weight:500;color:#2a2218;">Moguće</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="position:sticky;bottom:0;left:0;right:0;padding:14px 18px 18px;background:#faf6ef;border-top:1px solid #ece5d6;display:flex;gap:10px;">
             ${buildContactBtns(user.phone, user.viber, user.whatsapp)}
         </div>
     `;
 
-    if (photos.length > 1) {
-        setupGallery('pd-gallery', () => {
-            const counter = document.getElementById('pd-photo-counter');
-            if (counter) {
-                const track = document.getElementById('pd-gallery-track');
-                const idx = Math.round(track.scrollLeft / track.offsetWidth);
-                counter.textContent = `${idx+1}/${photos.length}`;
-            }
-        });
-    }
+    if (photos.length > 1) setupGallery('pd-gallery');
 }
 
 // =====================================================================
@@ -1287,6 +1463,60 @@ function buildContactBtns(phone, viber, whatsapp) {
     if (whatsapp) html += `<button class="btn-whatsapp" onclick="window.open('https://wa.me/${esc(whatsapp.replace(/\D/g,''))}','_blank')">💚 WhatsApp</button>`;
     if (!phone && !viber && !whatsapp) html = `<div style="flex:1;text-align:center;color:var(--color-text-muted);font-size:14px;">Nema kontakt podataka</div>`;
     return html;
+}
+
+// =====================================================================
+// CHAT / CONTACT SHEET
+// =====================================================================
+function showChatWithFarmer(farmerId) {
+    // Find farmer data from state or current farmer
+    const farmer = state.selectedFarmer?.id === farmerId
+        ? state.selectedFarmer
+        : state.farmers.find(f => f.id === farmerId);
+    const user = farmer?.user || {};
+
+    const existing = document.getElementById('contact-sheet-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'contact-sheet-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(42,34,24,0.5);z-index:500;display:flex;align-items:flex-end;';
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    const farmName = esc(farmer?.farmName || 'farmera');
+    const phoneBtn = user.phone
+        ? `<a href="tel:${esc(user.phone)}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;text-decoration:none;color:#1f1a14;border-bottom:1px solid #ece5d6;">
+            <span style="width:42px;height:42px;border-radius:12px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">📞</span>
+            <div><div style="font-family:var(--font-sans);font-size:15px;font-weight:600;">Pozovi</div><div style="font-size:12px;color:#7a6f5f;">${esc(user.phone)}</div></div>
+          </a>` : '';
+    const viberBtn = user.viber
+        ? `<a href="viber://chat?number=${esc(user.viber.replace(/\D/g,''))}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;text-decoration:none;color:#1f1a14;border-bottom:1px solid #ece5d6;">
+            <span style="width:42px;height:42px;border-radius:12px;background:#ede9fc;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">💜</span>
+            <div><div style="font-family:var(--font-sans);font-size:15px;font-weight:600;">Viber</div><div style="font-size:12px;color:#7a6f5f;">${esc(user.viber)}</div></div>
+          </a>` : '';
+    const waBtn = user.whatsapp
+        ? `<a href="https://wa.me/${esc(user.whatsapp.replace(/\D/g,''))}" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px 20px;text-decoration:none;color:#1f1a14;border-bottom:1px solid #ece5d6;">
+            <span style="width:42px;height:42px;border-radius:12px;background:#dcf5e7;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">💚</span>
+            <div><div style="font-family:var(--font-sans);font-size:15px;font-weight:600;">WhatsApp</div><div style="font-size:12px;color:#7a6f5f;">${esc(user.whatsapp)}</div></div>
+          </a>` : '';
+
+    if (!phoneBtn && !viberBtn && !waBtn) {
+        showToast('Farmer nema kontakt podataka');
+        return;
+    }
+
+    overlay.innerHTML = `
+        <div style="width:100%;max-width:480px;margin:0 auto;background:#faf6ef;border-radius:24px 24px 0 0;overflow:hidden;padding-bottom:env(safe-area-inset-bottom,0);">
+            <div style="padding:20px 20px 4px;border-bottom:1px solid #ece5d6;">
+                <div style="width:36px;height:4px;border-radius:2px;background:#e4ddd0;margin:0 auto 16px;"></div>
+                <div style="font-family:var(--font-sans);font-size:11.5px;font-weight:600;color:#a89a85;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px;">Kontaktiraj</div>
+                <div style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;">${farmName}</div>
+            </div>
+            ${phoneBtn}${viberBtn}${waBtn}
+            <button onclick="document.getElementById('contact-sheet-overlay').remove()" style="width:100%;padding:16px;background:none;border:none;font-family:var(--font-sans);font-size:15px;font-weight:600;color:#7a6f5f;cursor:pointer;">Zatvori</button>
+        </div>`;
+
+    document.body.appendChild(overlay);
 }
 
 // =====================================================================
@@ -1936,12 +2166,56 @@ function switchAdminTab(tab) {
     state.adminTab = tab;
     document.getElementById('admin-farmers-panel').style.display  = tab === 'farmers'  ? 'block' : 'none';
     document.getElementById('admin-products-panel').style.display = tab === 'products' ? 'block' : 'none';
-    const fBtn = document.getElementById('admin-tab-farmers');
-    const pBtn = document.getElementById('admin-tab-products');
-    fBtn.style.borderBottomColor = tab === 'farmers'  ? 'var(--color-primary)' : 'transparent';
-    fBtn.style.color             = tab === 'farmers'  ? 'var(--color-primary)' : 'var(--color-text-muted)';
-    pBtn.style.borderBottomColor = tab === 'products' ? 'var(--color-primary)' : 'transparent';
-    pBtn.style.color             = tab === 'products' ? 'var(--color-primary)' : 'var(--color-text-muted)';
+    document.getElementById('admin-reviews-panel').style.display  = tab === 'reviews'  ? 'block' : 'none';
+    ['farmers','products','reviews'].forEach(t => {
+        const btn = document.getElementById('admin-tab-' + t);
+        if (!btn) return;
+        btn.style.borderBottomColor = t === tab ? 'var(--color-primary)' : 'transparent';
+        btn.style.color             = t === tab ? 'var(--color-primary)' : 'var(--color-text-muted)';
+    });
+    if (tab === 'reviews') loadAdminReviews();
+}
+
+async function loadAdminReviews() {
+    const el = document.getElementById('admin-reviews-list');
+    if (!el) return;
+    try {
+        const data = await api('GET', '/api/admin/reviews');
+        const reviews = data.reviews || [];
+        if (!reviews.length) {
+            el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⭐</div><div class="empty-state-text">Nema recenzija</div></div>';
+            return;
+        }
+        el.innerHTML = reviews.map(r => `
+            <div id="admin-review-${r.id}" style="padding:14px 16px;border-bottom:1px solid var(--color-border);background:#fff;">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+                    <div style="flex:1;min-width:0;">
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                            <span style="font-size:14px;font-weight:600;color:#2a2218;">${esc(r.reviewerName)}</span>
+                            <span style="font-size:11px;color:#a89a85;">${r.createdAt}</span>
+                        </div>
+                        <div style="font-size:12px;color:#7a6f5f;margin-bottom:6px;">Gazdinstvo: ${esc(r.farmName || '—')}</div>
+                        <div style="color:#b8902a;font-size:13px;margin-bottom:4px;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                        <div style="font-size:14px;line-height:1.5;color:#1f1a14;">${esc(r.body)}</div>
+                    </div>
+                    <button onclick="adminDeleteReview(${r.id})" style="padding:6px 10px;background:#fff;color:var(--color-danger);border:1.5px solid var(--color-danger);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;">Obriši</button>
+                </div>
+            </div>`).join('');
+    } catch(e) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⭐</div><div class="empty-state-text">Greška pri učitavanju</div></div>';
+    }
+}
+
+async function adminDeleteReview(id) {
+    if (!confirm('Obrisati ovu recenziju?')) return;
+    try {
+        await api('DELETE', `/api/admin/reviews/${id}`);
+        const row = document.getElementById('admin-review-' + id);
+        if (row) row.remove();
+        showToast('Recenzija obrisana');
+    } catch(e) {
+        showToast('Greška pri brisanju', 'error');
+    }
 }
 
 function renderAdminFarmers() {

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FarmerController;
 use App\Http\Controllers\Api\OnboardingController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\StateController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,8 @@ Route::prefix('api')->group(function () {
     Route::post('auth/login', [AuthController::class, 'login']);
     Route::get('farmers', [FarmerController::class, 'index']);
     Route::get('farmers/{id}', [FarmerController::class, 'show']);
+    Route::get('farmers/{id}/reviews', [ReviewController::class, 'index']);
+    Route::post('farmers/{id}/reviews', [ReviewController::class, 'store']);
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/{id}', [ProductController::class, 'show']);
     Route::get('search', [SearchController::class, 'search']);
@@ -42,6 +45,8 @@ Route::prefix('api')->group(function () {
             Route::patch('farmers/{id}/reject', [AdminController::class, 'rejectFarmer']);
             Route::get('products', [AdminController::class, 'products']);
             Route::delete('products/{id}', [AdminController::class, 'deleteProduct']);
+            Route::get('reviews', [ReviewController::class, 'adminIndex']);
+            Route::delete('reviews/{id}', [ReviewController::class, 'destroy']);
         });
 
         // Farmer only

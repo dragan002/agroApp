@@ -40,6 +40,11 @@ class FarmerProfile extends Model
         return $this->morphMany(Photo::class, 'photoable')->orderBy('position');
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'farmer_id')->latest();
+    }
+
     // Scopes
 
     public function scopeActive($query)
@@ -64,7 +69,7 @@ class FarmerProfile extends Model
         if (!$this->avatar_path) {
             return null;
         }
-        return Storage::disk('public')->url($this->avatar_path);
+        return Storage::disk()->url($this->avatar_path);
     }
 
     // API representations

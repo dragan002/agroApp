@@ -99,7 +99,7 @@ class ProductController extends Controller
         if ($request->hasFile('photos')) {
             $position = 0;
             foreach ($request->file('photos') as $file) {
-                $path = $file->store("products/{$user->id}", 'public');
+                $path = $file->store("products/{$user->id}");
                 $product->photos()->create([
                     'path'     => $path,
                     'position' => $position++,
@@ -184,7 +184,7 @@ class ProductController extends Controller
             ->where('photoable_id', $product->id)
             ->firstOrFail();
 
-        Storage::disk('public')->delete($photo->path);
+        Storage::disk()->delete($photo->path);
         $photo->delete();
 
         return response()->json(['message' => 'Fotografija je obrisana.']);

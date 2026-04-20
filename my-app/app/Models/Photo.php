@@ -35,7 +35,7 @@ class Photo extends Model
 
     public function getUrlAttribute(): string
     {
-        return Storage::disk('public')->url($this->path);
+        return Storage::disk()->url($this->path);
     }
 
     // API representation

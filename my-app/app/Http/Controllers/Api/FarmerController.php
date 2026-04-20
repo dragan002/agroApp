@@ -77,9 +77,9 @@ class FarmerController extends Controller
 
         if ($request->hasFile('avatar')) {
             if ($profile->avatar_path) {
-                Storage::disk('public')->delete($profile->avatar_path);
+                Storage::disk()->delete($profile->avatar_path);
             }
-            $updateData['avatar_path'] = $request->file('avatar')->store("farmers/{$user->id}", 'public');
+            $updateData['avatar_path'] = $request->file('avatar')->store("farmers/{$user->id}");
         }
 
         $profile->update($updateData);
@@ -110,7 +110,7 @@ class FarmerController extends Controller
         $newPhotos = [];
         foreach ($request->file('photos') as $file) {
             if ($currentCount >= 30) break;
-            $path = $file->store("farmers/{$user->id}", 'public');
+            $path = $file->store("farmers/{$user->id}");
             $photo = $profile->photos()->create([
                 'path'     => $path,
                 'position' => $currentCount,
@@ -136,7 +136,7 @@ class FarmerController extends Controller
             ->where('photoable_id', $profile->id)
             ->firstOrFail();
 
-        Storage::disk('public')->delete($photo->path);
+        Storage::disk()->delete($photo->path);
         $photo->delete();
 
         return response()->json(['message' => 'Fotografija je obrisana.']);
