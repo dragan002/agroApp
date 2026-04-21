@@ -24,7 +24,7 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 COPY package.json package-lock.json ./
-RUN npm install --omit=optional
+RUN npm install
 
 COPY . .
 RUN npm run build
