@@ -21,7 +21,7 @@ function farmerTestMakeActiveFarmer(array $userAttrs = [], array $profileAttrs =
     $profile = FarmerProfile::create(array_merge([
         'user_id'   => $user->id,
         'farm_name' => 'Test Farm',
-        'location'  => 'Prnjavor',
+        'city'      => 'prnjavor',
         'is_active' => true,
     ], $profileAttrs));
 
@@ -74,11 +74,11 @@ describe('FarmerController index', function () {
         expect($response->json('data.0.farmName'))->toBe('Imanje Petrović');
     });
 
-    it('filters farmers by location', function () {
-        farmerTestMakeActiveFarmer(['email' => 'loc1@test.com'], ['farm_name' => 'City Farm', 'location' => 'Prnjavor']);
-        farmerTestMakeActiveFarmer(['email' => 'loc2@test.com'], ['farm_name' => 'Remote Farm', 'location' => 'Banja Luka']);
+    it('filters farmers by city', function () {
+        farmerTestMakeActiveFarmer(['email' => 'loc1@test.com'], ['farm_name' => 'City Farm', 'city' => 'prnjavor']);
+        farmerTestMakeActiveFarmer(['email' => 'loc2@test.com'], ['farm_name' => 'Remote Farm', 'city' => 'banja_luka']);
 
-        $response = $this->getJson('/api/farmers?location=Prnjavor');
+        $response = $this->getJson('/api/farmers?city=prnjavor');
 
         $response->assertStatus(200);
         expect($response->json('meta.total'))->toBe(1);

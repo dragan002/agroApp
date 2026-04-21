@@ -12,7 +12,7 @@ class ReviewController extends Controller
 {
     public function index(int $id)
     {
-        $farmer = FarmerProfile::findOrFail($id);
+        $farmer = FarmerProfile::active()->findOrFail($id);
         $reviews = $farmer->reviews()->select(['id', 'reviewer_name', 'body', 'rating', 'created_at'])->get();
 
         return response()->json([
@@ -24,7 +24,7 @@ class ReviewController extends Controller
 
     public function store(Request $request, int $id)
     {
-        $farmer = FarmerProfile::findOrFail($id);
+        $farmer = FarmerProfile::active()->findOrFail($id);
 
         $ip = $request->ip();
         $key = 'review:' . $id . ':' . md5($ip);

@@ -78,7 +78,7 @@ class OnboardingController extends Controller
                 if ($currentCount >= 30) {
                     break;
                 }
-                $path = $file->store("farmers/{$user->id}", 'public');
+                $path = $file->store("farmers/{$user->id}");
                 $photo = $profile->photos()->create([
                     'path'     => $path,
                     'position' => $currentCount,

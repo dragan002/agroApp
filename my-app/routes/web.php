@@ -60,8 +60,8 @@ Route::prefix('api')->group(function () {
             Route::delete('farmer/photos/{photoId}', [FarmerController::class, 'deletePhoto']);
             Route::get('farmer/products', [ProductController::class, 'myProducts']);
             Route::post('farmer/products', [ProductController::class, 'store']);
-            Route::patch('farmer/products/{id}', [ProductController::class, 'update']);
-            Route::patch('farmer/products/{id}/fresh', [ProductController::class, 'toggleFresh']);
+            Route::match(['POST', 'PATCH'], 'farmer/products/{id}', [ProductController::class, 'update']);
+            Route::patch('farmer/products/{id}/fresh', [ProductController::class, 'setFreshUntil']);
             Route::delete('farmer/products/{id}', [ProductController::class, 'destroy']);
             Route::delete('farmer/products/{id}/photos/{photoId}', [ProductController::class, 'deletePhoto']);
         });

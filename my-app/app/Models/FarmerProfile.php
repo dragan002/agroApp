@@ -72,6 +72,12 @@ class FarmerProfile extends Model
         return Storage::disk()->url($this->avatar_path);
     }
 
+    public function getLocationAttribute(): string
+    {
+        $parts = array_filter([$this->address, $this->city]);
+        return implode(', ', $parts);
+    }
+
     // API representations
 
     public function toApiArray(): array
@@ -85,6 +91,7 @@ class FarmerProfile extends Model
             'description' => $this->description,
             'city'        => $this->city,
             'address'     => $this->address,
+            'location'    => $this->location,
             'avatarUrl'   => $this->avatar_url,
             'isActive'    => $this->is_active,
             'createdAt'   => $this->created_at?->toDateString(),
@@ -113,6 +120,7 @@ class FarmerProfile extends Model
             'description'  => $this->description,
             'city'         => $this->city,
             'address'      => $this->address,
+            'location'     => $this->location,
             'avatarUrl'    => $this->avatar_url,
             'isActive'     => $this->is_active,
             'createdAt'    => $this->created_at?->toDateString(),

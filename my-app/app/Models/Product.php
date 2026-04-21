@@ -19,7 +19,7 @@ class Product extends Model
         'description',
         'price',
         'price_unit',
-        'fresh_today',
+        'fresh_until',
         'is_active',
     ];
 
@@ -27,7 +27,7 @@ class Product extends Model
     {
         return [
             'price'       => 'decimal:2',
-            'fresh_today' => 'boolean',
+            'fresh_until' => 'datetime',
             'is_active'   => 'boolean',
         ];
     }
@@ -58,7 +58,7 @@ class Product extends Model
 
     public function scopeFreshToday($query)
     {
-        return $query->where('fresh_today', true);
+        return $query->where('fresh_until', '>', now());
     }
 
     public function scopeSearch($query, string $term)
@@ -72,6 +72,18 @@ class Product extends Model
     }
 
     // Accessors
+
+    public function getIsFreshAttribute(): bool
+    {
+        return $this->fresh_until !== null && $this->fresh_until->isFuture();
+    }
+
+    public function getFreshExpiredRecentlyAttribute(): bool
+    {
+        return $this->fresh_until !== null
+            && $this->fresh_until->isPast()
+            && $this->fresh_until->diffInHours(now()) <= 48;
+    }
 
     public function getThumbnailUrlAttribute(): ?string
     {
@@ -102,9 +114,11 @@ class Product extends Model
             'description'   => $this->description,
             'price'         => (float) $this->price,
             'priceUnit'     => $this->price_unit,
-            'freshToday'    => $this->fresh_today,
-            'isActive'      => $this->is_active,
-            'createdAt'     => $this->created_at?->toDateString(),
+            'freshToday'           => $this->is_fresh,
+            'freshUntil'           => $this->fresh_until?->toISOString(),
+            'freshExpiredRecently' => $this->fresh_expired_recently,
+            'isActive'             => $this->is_active,
+            'createdAt'            => $this->created_at?->toDateString(),
             'photos'        => $this->relationLoaded('photos')
                 ? $this->photos->map(fn($p) => $p->toApiArray())->values()->all()
                 : [],
@@ -113,6 +127,7 @@ class Product extends Model
                 'farmName'  => $farmerProfile->farm_name,
                 'city'      => $farmerProfile->city,
                 'address'   => $farmerProfile->address,
+                'location'  => $farmerProfile->location,
                 'avatarUrl' => $farmerProfile->avatar_url,
                 'user'      => $user ? [
                     'id'       => $user->id,
@@ -138,7 +153,8 @@ class Product extends Model
             'name'          => $this->name,
             'price'         => (float) $this->price,
             'priceUnit'     => $this->price_unit,
-            'freshToday'    => $this->fresh_today,
+            'freshToday'    => $this->is_fresh,
+            'freshUntil'    => $this->fresh_until?->toISOString(),
             'thumbnailUrl'  => $this->thumbnail_url,
             'farmer'        => $farmerProfile ? [
                 'id'       => $farmerProfile->id,

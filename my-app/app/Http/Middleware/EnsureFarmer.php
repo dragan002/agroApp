@@ -11,8 +11,14 @@ class EnsureFarmer
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check() || !auth()->user()->isFarmer()) {
+        $user = Auth::user();
+
+        if (!$user || !$user->isFarmer()) {
             return response()->json(['message' => 'Forbidden. Farmer access required.'], 403);
+        }
+
+        if ($user->onboarding_step !== null) {
+            return response()->json(['message' => 'Onboarding nije završen.'], 403);
         }
 
         return $next($request);

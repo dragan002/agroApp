@@ -10,7 +10,7 @@ uses(RefreshDatabase::class);
 function searchTestSeedFarmerWithProduct(
     string $farmerEmail,
     string $farmName,
-    string $location,
+    string $city,
     string $productName,
     string $category = 'povrce',
     bool $freshToday = false
@@ -25,7 +25,7 @@ function searchTestSeedFarmerWithProduct(
     $profile = FarmerProfile::create([
         'user_id'   => $user->id,
         'farm_name' => $farmName,
-        'location'  => $location,
+        'city'      => $city,
         'is_active' => true,
     ]);
 
@@ -35,7 +35,7 @@ function searchTestSeedFarmerWithProduct(
         'name'       => $productName,
         'price'      => 2.00,
         'is_active'  => true,
-        'fresh_today' => $freshToday,
+        'fresh_until' => $freshToday ? now()->addHours(24) : null,
     ]);
 
     return [$user, $profile, $product];
@@ -59,8 +59,8 @@ describe('SearchController search', function () {
     });
 
     it('finds farmer by farm name query', function () {
-        searchTestSeedFarmerWithProduct('f1@test.com', 'Imanje Petrović', 'Prnjavor', 'Paradajz');
-        searchTestSeedFarmerWithProduct('f2@test.com', 'Mljekara Kovač', 'Prnjavor', 'Mlijeko', 'mlijeko');
+        searchTestSeedFarmerWithProduct('f1@test.com', 'Imanje Petrović', 'prnjavor', 'Paradajz');
+        searchTestSeedFarmerWithProduct('f2@test.com', 'Mljekara Kovač', 'prnjavor', 'Mlijeko', 'mlijeko');
 
         $response = $this->getJson('/api/search?q=Petrović');
 
@@ -70,8 +70,8 @@ describe('SearchController search', function () {
     });
 
     it('finds product by name query', function () {
-        searchTestSeedFarmerWithProduct('s1@test.com', 'Farm A', 'Prnjavor', 'Organski paradajz');
-        searchTestSeedFarmerWithProduct('s2@test.com', 'Farm B', 'Prnjavor', 'Bijeli luk');
+        searchTestSeedFarmerWithProduct('s1@test.com', 'Farm A', 'prnjavor', 'Organski paradajz');
+        searchTestSeedFarmerWithProduct('s2@test.com', 'Farm B', 'prnjavor', 'Bijeli luk');
 
         $response = $this->getJson('/api/search?q=paradajz');
 
@@ -81,7 +81,7 @@ describe('SearchController search', function () {
     });
 
     it('returns both farmers and products matching the query', function () {
-        searchTestSeedFarmerWithProduct('multi@test.com', 'Paradajz Farm', 'Prnjavor', 'Crveni paradajz');
+        searchTestSeedFarmerWithProduct('multi@test.com', 'Paradajz Farm', 'prnjavor', 'Crveni paradajz');
 
         $response = $this->getJson('/api/search?q=paradajz');
 
@@ -91,8 +91,8 @@ describe('SearchController search', function () {
     });
 
     it('filters products by category in search', function () {
-        searchTestSeedFarmerWithProduct('cat1@test.com', 'Farm A', 'Prnjavor', 'Paradajz', 'povrce');
-        searchTestSeedFarmerWithProduct('cat2@test.com', 'Farm B', 'Prnjavor', 'Jabuka', 'voce');
+        searchTestSeedFarmerWithProduct('cat1@test.com', 'Farm A', 'prnjavor', 'Paradajz', 'povrce');
+        searchTestSeedFarmerWithProduct('cat2@test.com', 'Farm B', 'prnjavor', 'Jabuka', 'voce');
 
         $response = $this->getJson('/api/search?category=povrce');
 
@@ -102,8 +102,8 @@ describe('SearchController search', function () {
     });
 
     it('returns all active products when no filters given', function () {
-        searchTestSeedFarmerWithProduct('all1@test.com', 'Farm A', 'Prnjavor', 'Paradajz', 'povrce');
-        searchTestSeedFarmerWithProduct('all2@test.com', 'Farm B', 'Prnjavor', 'Jabuka', 'voce');
+        searchTestSeedFarmerWithProduct('all1@test.com', 'Farm A', 'prnjavor', 'Paradajz', 'povrce');
+        searchTestSeedFarmerWithProduct('all2@test.com', 'Farm B', 'prnjavor', 'Jabuka', 'voce');
 
         $response = $this->getJson('/api/search');
 
@@ -112,8 +112,8 @@ describe('SearchController search', function () {
     });
 
     it('filters products by freshOnly', function () {
-        searchTestSeedFarmerWithProduct('fr1@test.com', 'Farm A', 'Prnjavor', 'Svjezi Paradajz', 'povrce', true);
-        searchTestSeedFarmerWithProduct('fr2@test.com', 'Farm B', 'Prnjavor', 'Stari Krompir', 'povrce', false);
+        searchTestSeedFarmerWithProduct('fr1@test.com', 'Farm A', 'prnjavor', 'Svjezi Paradajz', 'povrce', true);
+        searchTestSeedFarmerWithProduct('fr2@test.com', 'Farm B', 'prnjavor', 'Stari Krompir', 'povrce', false);
 
         $response = $this->getJson('/api/search?freshOnly=true');
 
@@ -122,11 +122,11 @@ describe('SearchController search', function () {
         expect($response->json('products.0.name'))->toBe('Svjezi Paradajz');
     });
 
-    it('filters farmers by location', function () {
-        searchTestSeedFarmerWithProduct('loc1@test.com', 'City Farm', 'Prnjavor', 'Paradajz');
-        searchTestSeedFarmerWithProduct('loc2@test.com', 'Rural Farm', 'Banja Luka', 'Jabuka', 'voce');
+    it('filters farmers by city', function () {
+        searchTestSeedFarmerWithProduct('loc1@test.com', 'City Farm', 'prnjavor', 'Paradajz');
+        searchTestSeedFarmerWithProduct('loc2@test.com', 'Rural Farm', 'banja_luka', 'Jabuka', 'voce');
 
-        $response = $this->getJson('/api/search?location=Prnjavor');
+        $response = $this->getJson('/api/search?city=prnjavor');
 
         $response->assertStatus(200);
         expect($response->json('farmers'))->toHaveCount(1);
@@ -140,7 +140,7 @@ describe('SearchController search', function () {
         ]);
         FarmerProfile::create([
             'user_id' => $user->id, 'farm_name' => 'Inactive Farm',
-            'location' => 'Prnjavor', 'is_active' => false,
+            'city' => 'prnjavor', 'is_active' => false,
         ]);
 
         $response = $this->getJson('/api/search?q=Inactive');
@@ -156,7 +156,7 @@ describe('SearchController search', function () {
         ]);
         FarmerProfile::create([
             'user_id' => $user->id, 'farm_name' => 'Test Farm',
-            'location' => 'Prnjavor', 'is_active' => true,
+            'city' => 'prnjavor', 'is_active' => true,
         ]);
         Product::create([
             'user_id'   => $user->id, 'category' => 'povrce',
@@ -177,9 +177,9 @@ describe('SearchController search', function () {
     });
 
     it('combines q and category filters', function () {
-        searchTestSeedFarmerWithProduct('comb1@test.com', 'Farm A', 'Prnjavor', 'Organski paradajz', 'povrce');
-        searchTestSeedFarmerWithProduct('comb2@test.com', 'Farm B', 'Prnjavor', 'Organska jabuka', 'voce');
-        searchTestSeedFarmerWithProduct('comb3@test.com', 'Farm C', 'Prnjavor', 'Obicna paprika', 'povrce');
+        searchTestSeedFarmerWithProduct('comb1@test.com', 'Farm A', 'prnjavor', 'Organski paradajz', 'povrce');
+        searchTestSeedFarmerWithProduct('comb2@test.com', 'Farm B', 'prnjavor', 'Organska jabuka', 'voce');
+        searchTestSeedFarmerWithProduct('comb3@test.com', 'Farm C', 'prnjavor', 'Obicna paprika', 'povrce');
 
         $response = $this->getJson('/api/search?q=Organski&category=povrce');
 

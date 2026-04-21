@@ -3,6 +3,7 @@
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 
 uses(RefreshDatabase::class);
 
@@ -20,12 +21,11 @@ function productTestMakeFarmer(?string $email = null): User
 function productTestMakeActiveProduct(User $farmer, array $attrs = []): Product
 {
     return Product::create(array_merge([
-        'user_id'    => $farmer->id,
-        'category'   => 'povrce',
-        'name'       => 'Test Product',
-        'price'      => 2.00,
-        'is_active'  => true,
-        'fresh_today' => false,
+        'user_id'   => $farmer->id,
+        'category'  => 'povrce',
+        'name'      => 'Test Product',
+        'price'     => 2.00,
+        'is_active' => true,
     ], $attrs));
 }
 
@@ -79,8 +79,8 @@ describe('ProductController index', function () {
 
     it('filters products by freshOnly flag', function () {
         $farmer = productTestMakeFarmer();
-        productTestMakeActiveProduct($farmer, ['name' => 'Fresh Paradajz', 'fresh_today' => true]);
-        productTestMakeActiveProduct($farmer, ['name' => 'Not Fresh Krompir', 'fresh_today' => false]);
+        productTestMakeActiveProduct($farmer, ['name' => 'Fresh Paradajz', 'fresh_until' => now()->addHours(24)]);
+        productTestMakeActiveProduct($farmer, ['name' => 'Not Fresh Krompir']);
 
         $response = $this->getJson('/api/products?freshOnly=true');
 
@@ -142,7 +142,7 @@ describe('ProductController show', function () {
 
 describe('ProductController myProducts', function () {
 
-    it('returns only the authenticated farmers own products', function () {
+    it('returns only the authenticated farmers own active products', function () {
         $farmer1 = productTestMakeFarmer('f1@test.com');
         $farmer2 = productTestMakeFarmer('f2@test.com');
         productTestMakeActiveProduct($farmer1, ['name' => 'Farmer1 Product']);
@@ -155,7 +155,7 @@ describe('ProductController myProducts', function () {
         expect($response->json('0.name'))->toBe('Farmer1 Product');
     });
 
-    it('includes inactive products in own list', function () {
+    it('excludes inactive products from own list', function () {
         $farmer = productTestMakeFarmer();
         productTestMakeActiveProduct($farmer, ['name' => 'Active', 'is_active' => true]);
         productTestMakeActiveProduct($farmer, ['name' => 'Inactive', 'is_active' => false]);
@@ -163,7 +163,8 @@ describe('ProductController myProducts', function () {
         $response = $this->actingAs($farmer)->getJson('/api/farmer/products');
 
         $response->assertStatus(200);
-        expect($response->json())->toHaveCount(2);
+        expect($response->json())->toHaveCount(1);
+        expect($response->json('0.name'))->toBe('Active');
     });
 
     it('returns empty array when farmer has no products', function () {
@@ -214,12 +215,11 @@ describe('ProductController store', function () {
             'price'       => 1.80,
             'description' => 'Crvena babura',
             'priceUnit'   => 'kg',
-            'freshToday'  => true,
         ]);
 
         $response->assertStatus(201)
             ->assertJsonStructure(['id', 'name', 'category', 'price', 'priceUnit', 'freshToday', 'photos']);
-        expect($response->json('freshToday'))->toBeTrue();
+        expect($response->json('freshToday'))->toBeFalse();
         expect($response->json('priceUnit'))->toBe('kg');
     });
 
@@ -345,49 +345,66 @@ describe('ProductController update', function () {
 
 });
 
-describe('ProductController toggleFresh', function () {
+describe('ProductController setFreshUntil', function () {
 
-    it('toggles fresh_today from false to true', function () {
+    it('sets fresh_until to today at 20:00', function () {
         $farmer = productTestMakeFarmer();
-        $product = productTestMakeActiveProduct($farmer, ['fresh_today' => false]);
+        $product = productTestMakeActiveProduct($farmer);
 
-        $response = $this->actingAs($farmer)->patchJson("/api/farmer/products/{$product->id}/fresh");
+        $response = $this->actingAs($farmer)->patchJson("/api/farmer/products/{$product->id}/fresh", [
+            'hours' => 'today',
+        ]);
 
-        $response->assertStatus(200);
-        expect($product->fresh()->fresh_today)->toBeTrue();
-    });
-
-    it('toggles fresh_today from true to false', function () {
-        $farmer = productTestMakeFarmer();
-        $product = productTestMakeActiveProduct($farmer, ['fresh_today' => true]);
-
-        $response = $this->actingAs($farmer)->patchJson("/api/farmer/products/{$product->id}/fresh");
-
-        $response->assertStatus(200);
-        expect($product->fresh()->fresh_today)->toBeFalse();
-    });
-
-    it('returns id and freshToday in response', function () {
-        $farmer = productTestMakeFarmer();
-        $product = productTestMakeActiveProduct($farmer, ['fresh_today' => false]);
-
-        $response = $this->actingAs($farmer)->patchJson("/api/farmer/products/{$product->id}/fresh");
-
-        $response->assertStatus(200)
-            ->assertJsonStructure(['id', 'freshToday']);
-        expect($response->json('id'))->toBe($product->id);
+        $response->assertStatus(200)->assertJsonStructure(['id', 'freshToday', 'freshUntil']);
         expect($response->json('freshToday'))->toBeTrue();
     });
 
-    it('returns 403 when toggling another farmers product', function () {
-        $farmer1 = productTestMakeFarmer('tog1@test.com');
-        $farmer2 = productTestMakeFarmer('tog2@test.com');
-        $product = productTestMakeActiveProduct($farmer1, ['fresh_today' => false]);
+    it('sets fresh_until to 24 hours from now', function () {
+        $farmer = productTestMakeFarmer();
+        $product = productTestMakeActiveProduct($farmer);
 
-        $response = $this->actingAs($farmer2)->patchJson("/api/farmer/products/{$product->id}/fresh");
+        $response = $this->actingAs($farmer)->patchJson("/api/farmer/products/{$product->id}/fresh", [
+            'hours' => '24',
+        ]);
+
+        $response->assertStatus(200);
+        expect($response->json('freshToday'))->toBeTrue();
+    });
+
+    it('clears fresh_until when hours is clear', function () {
+        $farmer = productTestMakeFarmer();
+        $product = productTestMakeActiveProduct($farmer, ['fresh_until' => now()->addHours(24)]);
+
+        $response = $this->actingAs($farmer)->patchJson("/api/farmer/products/{$product->id}/fresh", [
+            'hours' => 'clear',
+        ]);
+
+        $response->assertStatus(200);
+        expect($response->json('freshToday'))->toBeFalse();
+        expect($response->json('freshUntil'))->toBeNull();
+    });
+
+    it('returns 403 when setting fresh on another farmers product', function () {
+        $farmer1 = productTestMakeFarmer('fr1@test.com');
+        $farmer2 = productTestMakeFarmer('fr2@test.com');
+        $product = productTestMakeActiveProduct($farmer1);
+
+        $response = $this->actingAs($farmer2)->patchJson("/api/farmer/products/{$product->id}/fresh", [
+            'hours' => '24',
+        ]);
 
         $response->assertStatus(403);
-        expect($product->fresh()->fresh_today)->toBeFalse();
+    });
+
+    it('rejects invalid hours value', function () {
+        $farmer = productTestMakeFarmer();
+        $product = productTestMakeActiveProduct($farmer);
+
+        $response = $this->actingAs($farmer)->patchJson("/api/farmer/products/{$product->id}/fresh", [
+            'hours' => 'invalid',
+        ]);
+
+        $response->assertStatus(422);
     });
 
 });
@@ -411,6 +428,16 @@ describe('ProductController destroy', function () {
         $this->actingAs($farmer)->deleteJson("/api/farmer/products/{$product->id}");
 
         expect(Product::find($product->id))->not->toBeNull();
+    });
+
+    it('deleted product does not appear in farmers own product list', function () {
+        $farmer = productTestMakeFarmer();
+        $product = productTestMakeActiveProduct($farmer, ['name' => 'To Delete']);
+
+        $this->actingAs($farmer)->deleteJson("/api/farmer/products/{$product->id}");
+
+        $response = $this->actingAs($farmer)->getJson('/api/farmer/products');
+        expect($response->json())->toHaveCount(0);
     });
 
     it('returns 403 when deleting another farmers product', function () {

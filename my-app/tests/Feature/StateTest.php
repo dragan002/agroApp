@@ -42,7 +42,7 @@ describe('StateController', function () {
         ]);
         FarmerProfile::create([
             'user_id' => $activeFarmer->id, 'farm_name' => 'Active Farm',
-            'location' => 'Prnjavor', 'is_active' => true,
+            'city' => 'prnjavor', 'is_active' => true,
         ]);
 
         $inactiveFarmer = User::create([
@@ -51,7 +51,7 @@ describe('StateController', function () {
         ]);
         FarmerProfile::create([
             'user_id' => $inactiveFarmer->id, 'farm_name' => 'Inactive Farm',
-            'location' => 'Prnjavor', 'is_active' => false,
+            'city' => 'prnjavor', 'is_active' => false,
         ]);
 
         $response = $this->getJson('/api/state');
@@ -68,7 +68,7 @@ describe('StateController', function () {
         ]);
         FarmerProfile::create([
             'user_id' => $farmer->id, 'farm_name' => 'Test Farm',
-            'location' => 'Prnjavor', 'is_active' => true,
+            'city' => 'prnjavor', 'is_active' => true,
         ]);
 
         $response = $this->getJson('/api/state');

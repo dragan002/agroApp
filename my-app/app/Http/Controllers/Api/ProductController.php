@@ -9,6 +9,7 @@ use App\Enums\City;
 use App\Enums\ProductCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -37,7 +38,7 @@ class ProductController extends Controller
             $query->inCity($city);
         }
 
-        $paginated = $query->paginate(20);
+        $paginated = $query->paginate($request->integer('per_page', 20));
 
         return response()->json([
             'data' => $paginated->map(fn($p) => $p->toCardArray())->values()->all(),
@@ -63,6 +64,7 @@ class ProductController extends Controller
     {
         $products = $request->user()
             ->products()
+            ->where('is_active', true)
             ->with(['photos'])
             ->get()
             ->map(fn($p) => $p->toApiArray())
@@ -80,7 +82,6 @@ class ProductController extends Controller
             'price'       => 'required|numeric|min:0',
             'description' => 'nullable|string|max:2000',
             'priceUnit'   => 'nullable|string|max:20',
-            'freshToday'  => 'nullable|boolean',
             'photos'      => 'nullable|array|max:5',
             'photos.*'    => 'mimes:jpg,jpeg,png,webp|max:10240',
         ]);
@@ -92,7 +93,6 @@ class ProductController extends Controller
             'price'       => $data['price'],
             'description' => $data['description'] ?? null,
             'price_unit'  => $data['priceUnit'] ?? null,
-            'fresh_today' => $data['freshToday'] ?? false,
             'is_active'   => true,
         ]);
 
@@ -124,7 +124,6 @@ class ProductController extends Controller
             'price'       => 'nullable|numeric|min:0',
             'description' => 'nullable|string|max:2000',
             'priceUnit'   => 'nullable|string|max:20',
-            'freshToday'  => 'nullable|boolean',
         ]);
 
         $updateData = array_filter([
@@ -133,7 +132,6 @@ class ProductController extends Controller
             'price'       => $data['price'] ?? null,
             'description' => $data['description'] ?? null,
             'price_unit'  => $data['priceUnit'] ?? null,
-            'fresh_today' => isset($data['freshToday']) ? $data['freshToday'] : null,
         ], fn($v) => $v !== null);
 
         $product->update($updateData);
@@ -141,20 +139,33 @@ class ProductController extends Controller
         return response()->json($product->fresh()->load('photos')->toApiArray());
     }
 
-    public function toggleFresh(Request $request, int $id): JsonResponse
+    public function setFreshUntil(Request $request, int $id): JsonResponse
     {
+        $data = $request->validate(['hours' => 'required|in:today,24,48,72,96,120,clear']);
+
         $product = Product::findOrFail($id);
 
         if ($product->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Nemate dozvolu za ovu akciju.'], 403);
         }
 
-        $product->update(['fresh_today' => !$product->fresh_today]);
+        $freshUntil = match($data['hours']) {
+            'today' => Carbon::today()->setTime(20, 0),
+            '24'    => now()->addHours(24),
+            '48'    => now()->addHours(48),
+            '72'    => now()->addHours(72),
+            '96'    => now()->addHours(96),
+            '120'   => now()->addHours(120),
+            'clear' => null,
+        };
+
+        $product->update(['fresh_until' => $freshUntil]);
         $product->refresh();
 
         return response()->json([
             'id'         => $product->id,
-            'freshToday' => $product->fresh_today,
+            'freshToday' => $product->is_fresh,
+            'freshUntil' => $product->fresh_until?->toISOString(),
         ]);
     }
 

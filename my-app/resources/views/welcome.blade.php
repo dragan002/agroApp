@@ -155,7 +155,7 @@
 
         <!-- Search bar (tappable, navigates to search) -->
         <div style="padding:12px 16px 0;">
-            <div onclick="showScreen('screen-search')" style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e4ddd0;border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 1px 4px rgba(42,34,24,0.06);">
+            <div onclick="showSearchScreen()" style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e4ddd0;border-radius:14px;padding:12px 16px;cursor:pointer;box-shadow:0 1px 4px rgba(42,34,24,0.06);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a89a85" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                 <span style="color:#a89a85;font-size:15px;font-family:var(--font-sans);">Pretraži farmere i proizvode...</span>
             </div>
@@ -171,6 +171,7 @@
             <button class="chip" data-cat="jaja" onclick="selectHomeCategory(this,'jaja')">Jaja</button>
             <button class="chip" data-cat="med" onclick="selectHomeCategory(this,'med')">Med</button>
             <button class="chip" data-cat="zitarice" onclick="selectHomeCategory(this,'zitarice')">Žitarice</button>
+            <button class="chip" data-cat="rakija" onclick="selectHomeCategory(this,'rakija')">Rakija</button>
             <button class="chip" data-cat="zimnica" onclick="selectHomeCategory(this,'zimnica')">Zimnica</button>
             <button class="chip" data-cat="ostalo" onclick="selectHomeCategory(this,'ostalo')">Ostalo</button>
             <button id="home-fresh-chip" class="chip" style="background:#FEF3C7;border-color:#F59E0B;color:#92400E;flex-shrink:0;" onclick="toggleHomeFresh(this)">🌞 Svježe danas</button>
@@ -200,9 +201,15 @@
         </div>
 
         <!-- Products section -->
-        <div class="section-title">Proizvodi</div>
-        <div id="home-products-list" style="padding:0 16px 80px;display:flex;flex-direction:column;gap:10px;">
+        <div class="section-title" style="display:flex;align-items:baseline;gap:6px;">Proizvodi <span id="home-products-total" style="font-size:12px;font-weight:400;color:var(--color-text-muted);"></span></div>
+        <div id="home-products-list" style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px;">
             <div style="color:var(--color-text-muted);font-size:14px;padding:8px 0;">Učitavam...</div>
+        </div>
+        <div style="padding:0 16px 80px;">
+            <button onclick="showAllProducts()" style="width:100%;padding:13px;background:#fff;border:1.5px solid #e4ddd0;border-radius:14px;font-family:var(--font-sans);font-size:14px;font-weight:600;color:#3d5a3a;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 1px 4px rgba(42,34,24,0.06);">
+                Prikaži sve proizvode
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3d5a3a" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
         </div>
     </div>
     <!-- Bottom nav: customer -->
@@ -211,7 +218,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             Farmeri
         </button>
-        <button class="nav-btn" onclick="showScreen('screen-search');setNavActive('nav-customer',1)">
+        <button class="nav-btn" onclick="showSearchScreen();setNavActive('nav-customer',1)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             Pretraga
         </button>
@@ -247,6 +254,7 @@
             <button class="chip" data-cat="jaja" onclick="selectSearchCategory(this,'jaja')">Jaja</button>
             <button class="chip" data-cat="med" onclick="selectSearchCategory(this,'med')">Med</button>
             <button class="chip" data-cat="zitarice" onclick="selectSearchCategory(this,'zitarice')">Žitarice</button>
+            <button class="chip" data-cat="rakija" onclick="selectSearchCategory(this,'rakija')">Rakija</button>
             <button class="chip" data-cat="zimnica" onclick="selectSearchCategory(this,'zimnica')">Zimnica</button>
             <button class="chip" data-cat="ostalo" onclick="selectSearchCategory(this,'ostalo')">Ostalo</button>
         </div>
@@ -478,10 +486,7 @@
     <!-- ============================================================ -->
     <div id="screen-farmer-dashboard" class="screen">
         <div class="top-bar">
-            <div class="top-bar-title">Moj profil</div>
-            <button class="icon-btn" onclick="showScreen('screen-farmer-settings')" title="Postavke">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            </button>
+            <div class="top-bar-title">Moj nalog</div>
         </div>
 
         <div style="padding-bottom:80px;" id="dashboard-content">
@@ -490,19 +495,19 @@
     </div>
     <!-- Bottom nav: farmer -->
     <div id="nav-farmer" class="bottom-nav hidden">
-        <button class="nav-btn active" onclick="showFarmerDashboard();setNavActive('nav-farmer',0)">
+        <button class="nav-btn active" onclick="showDashboardTab('profil');setNavActive('nav-farmer',0)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
             Profil
         </button>
-        <button class="nav-btn" onclick="showMyProducts();setNavActive('nav-farmer',1)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <button class="nav-btn" onclick="showDashboardTab('proizvodi');setNavActive('nav-farmer',1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
             Proizvodi
         </button>
         <button class="nav-btn" style="font-size:26px;margin-top:-8px;" onclick="openProductEditor(null);setNavActive('nav-farmer',2)">
             <div style="width:48px;height:48px;background:var(--color-primary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;box-shadow:0 2px 8px rgba(45,106,79,0.4);">+</div>
         </button>
-        <button class="nav-btn" onclick="">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <button class="nav-btn" onclick="showDashboardTab('podrska');setNavActive('nav-farmer',3)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             Podrška
         </button>
         <button class="nav-btn" onclick="doLogout()">
@@ -541,6 +546,11 @@
                         </div>
                     </div>
                 </div>
+                <!-- Preset images -->
+                <div id="pe-presets-section" style="margin-top:12px;display:none;">
+                    <div style="font-size:12px;color:var(--color-text-muted);margin-bottom:6px;">Ili odaberite preset sliku:</div>
+                    <div id="pe-presets-grid" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -551,7 +561,7 @@
 
             <div class="form-group">
                 <label class="form-label">Kategorija *</label>
-                <select id="pe-category" class="select-input">
+                <select id="pe-category" class="select-input" onchange="onPeCategoryChange(this.value)">
                     <option value="">-- Odaberite kategoriju --</option>
                     <option value="povrce">Povrće</option>
                     <option value="voce">Voće</option>
@@ -587,17 +597,8 @@
                 <textarea id="pe-description" class="form-input form-textarea" placeholder="Kratki opis proizvoda..."></textarea>
             </div>
 
-            <!-- Fresh today toggle -->
-            <div class="fresh-toggle-card">
-                <div>
-                    <div style="font-size:14px;font-weight:600;color:#92400E;">🌞 Svježe danas</div>
-                    <div style="font-size:12px;color:#B45309;">Označite ako je proizvod ubran/spreman danas</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="pe-fresh">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
+            <!-- Fresh until picker -->
+            <div id="pe-fresh-section" style="margin-bottom:16px;"></div>
 
             <button class="btn-primary" onclick="saveProduct()" id="save-product-btn">Sačuvaj proizvod</button>
             <button class="btn-danger" id="delete-product-btn" style="display:none;width:100%;margin-top:12px;text-align:center;" onclick="confirmDeleteProduct()">Obriši proizvod</button>
@@ -748,10 +749,12 @@ const state = {
     searchQuery: '',
     selectedCategory: '',
     freshOnly: false,
+    browseAll: false,
     isLoading: false,
     currentScreen: 'screen-home',
     screenHistory: [],
     editingProduct: null,
+    pendingFreshHours: null,
     homeProducts: [],
     homeCategory: '',
     homeCity: '',
@@ -829,7 +832,7 @@ function showScreen(name, pushHistory = true) {
     // Show correct nav
     const isAdmin  = state.auth && state.auth.role === 'admin';
     const isFarmer = state.auth && state.auth.role === 'farmer' && !state.auth.onboardingStep;
-    const farmerScreens = ['screen-farmer-dashboard', 'screen-product-edit', 'screen-farmer-settings', 'screen-farmer-profile-edit'];
+    const farmerScreens = ['screen-farmer-dashboard', 'screen-product-edit', 'screen-farmer-profile-edit'];
     const noNav = ['screen-farmer-signup', 'screen-login', 'screen-admin'];
 
     document.getElementById('nav-customer').classList.add('hidden');
@@ -931,7 +934,7 @@ function onLoginIconTap() {
         } else if (state.auth.onboardingStep) {
             resumeOnboarding();
         } else {
-            showScreen('screen-farmer-dashboard');
+            showScreen('screen-login');
         }
     } else {
         showScreen('screen-login');
@@ -991,13 +994,39 @@ async function loadHomeProducts(category = '', city = '', freshOnly = false) {
         if (category)  params.set('category', category);
         if (city)      params.set('city', city);
         if (freshOnly) params.set('freshOnly', '1');
+        params.set('per_page', '8');
         const url = '/api/products?' + params.toString();
         const data = await api('GET', url);
         state.homeProducts = data.data || [];
+        const total = data.meta ? data.meta.total : null;
+        const totalEl = document.getElementById('home-products-total');
+        if (totalEl && total !== null) totalEl.textContent = `(${total} ukupno)`;
         renderHomeProducts(state.homeProducts);
     } catch(e) {
         el.innerHTML = '<div style="color:var(--color-danger);font-size:14px;">Greška pri učitavanju</div>';
     }
+}
+
+function showSearchScreen() {
+    state.browseAll = false;
+    showScreen('screen-search');
+}
+
+function showAllProducts() {
+    showScreen('screen-search');
+    setNavActive('nav-customer', 1);
+    state.searchQuery = '';
+    state.selectedCategory = '';
+    state.freshOnly = false;
+    state.browseAll = true;
+    const input = document.getElementById('search-input');
+    if (input) input.value = '';
+    const freshToggle = document.getElementById('search-fresh-toggle');
+    if (freshToggle) freshToggle.checked = false;
+    document.querySelectorAll('#search-chips .chip').forEach((c, i) => {
+        i === 0 ? c.classList.add('active') : c.classList.remove('active');
+    });
+    doSearch();
 }
 
 function renderHomeProducts(products) {
@@ -1013,9 +1042,9 @@ function renderHomeProducts(products) {
 function productCardHtml(p) {
     const thumb = p.thumbnailUrl
         ? `<img src="${esc(p.thumbnailUrl)}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;flex-shrink:0;" alt="${esc(p.name)}">`
-        : `<div style="width:80px;height:80px;border-radius:12px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">${categoryEmoji(p.category)}</div>`;
+        : `<div style="width:80px;height:80px;border-radius:12px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">${productEmoji(p.name, p.category)}</div>`;
     const fresh = p.freshToday ? `<div style="display:inline-flex;align-items:center;gap:3px;background:#fef3c7;color:#92400e;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;margin-bottom:4px;">🌞 Svježe danas</div>` : '';
-    const farmer = p.farmer ? `<div style="font-size:11px;color:#a89a85;margin-top:3px;">${esc(p.farmer.farmName)}</div>` : '';
+    const farmer = p.farmer ? `<div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3d5a3a" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span style="font-size:12px;font-weight:600;color:#3d5a3a;">${esc(p.farmer.farmName)}</span></div>` : '';
     const price = p.price ? `<div style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:#2a2218;margin-top:2px;">${formatPrice(p.price, p.priceUnit)}</div>` : '';
     return `<div onclick="loadProductDetail(${p.id})" style="display:flex;gap:12px;background:#fff;border-radius:16px;border:1px solid #e4ddd0;padding:12px;cursor:pointer;box-shadow:0 1px 4px rgba(42,34,24,0.06);">
         ${thumb}
@@ -1116,7 +1145,14 @@ function renderFarmerProfile(f) {
     const photos = f.photos || [];
     const products = f.products || [];
 
-    const heroBg = photos.length
+    const heroBg = photos.length > 1
+        ? `<div class="gallery" id="fp-gallery" style="position:absolute;inset:0;">
+            <div class="gallery-track" id="fp-gallery-track" style="height:340px;overflow-x:auto;scroll-snap-type:x mandatory;display:flex;">
+                ${photos.map(ph => `<div style="min-width:100%;height:340px;scroll-snap-align:start;flex-shrink:0;overflow:hidden;"><img src="${esc(ph.url)}" style="width:100%;height:100%;object-fit:cover;"></div>`).join('')}
+            </div>
+            <div style="position:absolute;bottom:80px;left:0;right:0;display:flex;justify-content:center;gap:6px;">${photos.map((_, i) => `<div class="gallery-dot${i===0?' active':''}" data-gallery="fp-gallery" data-idx="${i}" style="width:${i===0?18:6}px;height:6px;border-radius:100px;background:${i===0?'#fff':'rgba(255,255,255,0.5)'};transition:width .2s;"></div>`).join('')}</div>
+           </div>`
+        : photos.length === 1
         ? `<img src="${esc(photos[0].url)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">`
         : `<div style="position:absolute;inset:0;background:linear-gradient(160deg,#3d5a3a 0%,#2a3f27 60%,#4a6a3a 100%);"></div>`;
 
@@ -1167,7 +1203,7 @@ function renderFarmerProfile(f) {
                 </div>
                 <div style="width:1px;height:26px;background:#ece5d6;margin:0 18px;"></div>
                 <div style="flex:1;">
-                    <div style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;line-height:1;margin-bottom:4px;">★ —</div>
+                    <div id="fp-rating-stat" style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;line-height:1;margin-bottom:4px;">★ —</div>
                     <div style="font-family:var(--font-sans);font-size:11px;color:#a89a85;letter-spacing:0.3px;">recenzija</div>
                 </div>
             </div>
@@ -1246,6 +1282,14 @@ async function fpLoadReviews(farmerId) {
     try {
         const data = await api('GET', `/api/farmers/${farmerId}/reviews`);
         const reviews = data.reviews || [];
+        const ratingStat = document.getElementById('fp-rating-stat');
+        if (ratingStat) {
+            if (data.avg && data.count) {
+                ratingStat.textContent = `★ ${parseFloat(data.avg).toFixed(1)} (${data.count})`;
+            } else {
+                ratingStat.textContent = '★ —';
+            }
+        }
         if (!reviews.length) {
             list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⭐</div><div class="empty-state-text">Još nema recenzija</div><div class="empty-state-sub">Budite prvi koji će ostaviti utisak</div></div>`;
             return;
@@ -1300,7 +1344,7 @@ async function fpSubmitReview() {
 function productGridCard(p) {
     const thumb = p.thumbnailUrl
         ? `<img src="${esc(p.thumbnailUrl)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">`
-        : `<div style="position:absolute;inset:0;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:40px;">${categoryEmoji(p.category)}</div>`;
+        : `<div style="position:absolute;inset:0;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:40px;">${productEmoji(p.name, p.category)}</div>`;
     const tag = p.freshToday ? 'Svježe' : (p.category || '');
     return `<div onclick="loadProductDetail(${p.id})" style="cursor:pointer;">
         <div style="position:relative;border-radius:14px;overflow:hidden;margin-bottom:10px;aspect-ratio:1/1.1;">
@@ -1344,7 +1388,7 @@ function renderProductDetail(p) {
             </div>
             ${photos.length > 1 ? `<div style="position:absolute;bottom:18px;left:0;right:0;display:flex;justify-content:center;gap:6px;">${photos.map((_, i) => `<div class="gallery-dot${i===0?' active':''}" data-gallery="pd-gallery" data-idx="${i}" style="width:${i===0?18:6}px;height:6px;border-radius:100px;background:${i===0?'#fff':'rgba(255,255,255,0.5)'};transition:width .2s;"></div>`).join('')}</div>` : ''}
            </div>`
-        : `<div style="height:420px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:80px;">${categoryEmoji(p.category)}</div>`;
+        : `<div style="height:420px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:80px;">${productEmoji(p.name, p.category)}</div>`;
 
     const freshBadge = p.freshToday
         ? `<div style="position:absolute;top:120px;left:22px;padding:6px 12px;border-radius:100px;background:#2a2218;color:#fff;font-family:var(--font-sans);font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:6px;"><span style="width:6px;height:6px;border-radius:100px;background:#8ac878;display:inline-block;"></span>Svježe danas</div>`
@@ -1469,9 +1513,10 @@ function buildContactBtns(phone, viber, whatsapp) {
 // CHAT / CONTACT SHEET
 // =====================================================================
 function showChatWithFarmer(farmerId) {
-    // Find farmer data from state or current farmer
     const farmer = state.selectedFarmer?.id === farmerId
         ? state.selectedFarmer
+        : state.selectedProduct?.farmer?.id === farmerId
+        ? state.selectedProduct.farmer
         : state.farmers.find(f => f.id === farmerId);
     const user = farmer?.user || {};
 
@@ -1527,6 +1572,7 @@ let searchDebounce = null;
 function onSearchInput() {
     const q = document.getElementById('search-input').value;
     state.searchQuery = q;
+    state.browseAll = false;
     clearTimeout(searchDebounce);
     searchDebounce = setTimeout(doSearch, 300);
 }
@@ -1548,7 +1594,7 @@ async function doSearch() {
     const category = state.selectedCategory;
     const freshOnly = state.freshOnly;
 
-    if (!q && !category && !freshOnly) {
+    if (!state.browseAll && !q && !category && !freshOnly) {
         document.getElementById('search-results').innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon">🔍</div>
@@ -1590,7 +1636,8 @@ function renderSearchResults(data) {
         html += '</div>';
     }
     if (products.length) {
-        html += `<div style="font-size:14px;font-weight:700;color:var(--color-text-muted);margin-bottom:8px;">PROIZVODI (${products.length})</div>`;
+        const productTotal = data.productTotal ?? products.length;
+        html += `<div style="font-size:14px;font-weight:700;color:var(--color-text-muted);margin-bottom:8px;">PROIZVODI (${productTotal})</div>`;
         html += `<div style="display:flex;flex-direction:column;gap:10px;">`;
         html += products.map(p => productCardHtml(p)).join('');
         html += '</div>';
@@ -1799,11 +1846,10 @@ function resumeOnboarding() {
 // =====================================================================
 // FARMER DASHBOARD
 // =====================================================================
-async function showFarmerDashboard() {
+async function showFarmerDashboard(tab) {
     showScreen('screen-farmer-dashboard');
     document.getElementById('nav-farmer').classList.remove('hidden');
     document.getElementById('nav-customer').classList.add('hidden');
-    setNavActive('nav-farmer', 0);
 
     const user = state.auth;
     if (!user) return;
@@ -1814,35 +1860,43 @@ async function showFarmerDashboard() {
         : `<div class="avatar-circle" style="width:72px;height:72px;background:var(--color-primary-subtle);font-size:28px;">🧑‍🌾</div>`;
 
     document.getElementById('dashboard-content').innerHTML = `
-        <div style="padding:16px;">
-            <div class="card" style="padding:16px;display:flex;gap:14px;align-items:center;margin-bottom:16px;">
-                ${avatarHtml}
-                <div style="flex:1;min-width:0;">
-                    <div style="font-size:17px;font-weight:700;">${esc(profile.farmName || user.name)}</div>
-                    <div style="font-size:13px;color:var(--color-text-muted);">${esc(profile.location || 'Prnjavor')}</div>
-                    <div style="font-size:12px;color:var(--color-text-muted);">Član od ${profile.createdAt ? profile.createdAt.substring(0,7) : '—'}</div>
+        <div id="dash-tab-profil" class="dash-tab-panel">
+            <div style="padding:16px;">
+                <div class="card" style="padding:16px;display:flex;gap:14px;align-items:center;margin-bottom:16px;">
+                    ${avatarHtml}
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:17px;font-weight:700;">${esc(profile.farmName || user.name)}</div>
+                        <div style="font-size:13px;color:var(--color-text-muted);">${esc(profile.location || '')}</div>
+                        <div style="font-size:12px;color:var(--color-text-muted);">Član od ${profile.createdAt ? profile.createdAt.substring(0,7) : '—'}</div>
+                    </div>
+                    <button class="btn-ghost" style="width:auto;padding:8px 14px;font-size:13px;" onclick="editFarmerProfile()">Uredi</button>
                 </div>
-                <button class="btn-ghost" style="width:auto;padding:8px 14px;font-size:13px;" onclick="editFarmerProfile()">Uredi</button>
-            </div>
 
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
-                <div class="card" style="padding:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:700;color:var(--color-primary);">0</div>
-                    <div style="font-size:11px;color:var(--color-text-muted);">Pregledi</div>
+                ${profile.description ? `<div class="card" style="padding:14px;margin-bottom:16px;">
+                    <div style="font-size:12px;font-weight:600;color:var(--color-text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">O farmi</div>
+                    <div style="font-size:14px;color:var(--color-text-primary);line-height:1.6;">${esc(profile.description)}</div>
+                </div>` : ''}
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+                    <div class="card" style="padding:14px;">
+                        <div style="font-size:12px;color:var(--color-text-muted);margin-bottom:4px;">Telefon</div>
+                        <div style="font-size:14px;font-weight:600;">${user.phone ? esc(user.phone) : '—'}</div>
+                    </div>
+                    <div class="card" style="padding:14px;">
+                        <div style="font-size:12px;color:var(--color-text-muted);margin-bottom:4px;">Viber / WhatsApp</div>
+                        <div style="font-size:13px;font-weight:600;">${(user.viber || user.whatsapp) ? 'Aktivno' : '—'}</div>
+                    </div>
                 </div>
-                <div class="card" style="padding:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:700;color:var(--color-primary);">0</div>
-                    <div style="font-size:11px;color:var(--color-text-muted);">Kontakti</div>
-                </div>
-                <div class="card" id="dash-product-count" style="padding:12px;text-align:center;">
-                    <div style="font-size:24px;font-weight:700;color:var(--color-primary);">—</div>
-                    <div style="font-size:11px;color:var(--color-text-muted);">Proizvodi</div>
-                </div>
+
+                <button class="btn-ghost" style="width:100%;margin-top:4px;" onclick="editFarmerProfile()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="vertical-align:middle;margin-right:6px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Uredi profil farme
+                </button>
             </div>
         </div>
 
-        <div id="my-products-section">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px;">
+        <div id="dash-tab-proizvodi" class="dash-tab-panel" style="display:none;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px;">
                 <div class="section-title" style="padding:0;">Moji proizvodi</div>
                 <button class="btn-primary" style="width:auto;padding:8px 16px;font-size:13px;" onclick="openProductEditor(null)">+ Novi</button>
             </div>
@@ -1850,9 +1904,64 @@ async function showFarmerDashboard() {
                 <div style="padding:16px;color:var(--color-text-muted);font-size:14px;">Učitavam...</div>
             </div>
         </div>
+
+        <div id="dash-tab-podrska" class="dash-tab-panel" style="display:none;">
+            <div style="padding:16px;">
+                <div class="card" style="padding:20px;margin-bottom:16px;">
+                    <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Podrška i kontakt</div>
+                    <div style="font-size:14px;color:var(--color-text-muted);line-height:1.6;">Imate pitanje ili problem? Kontaktirajte nas putem jednog od navedenih kanala — odgovaramo radnim danima.</div>
+                </div>
+                <div class="card" style="padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;" onclick="window.location='tel:+38765000001'">
+                    <div style="width:42px;height:42px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">📞</div>
+                    <div>
+                        <div style="font-size:14px;font-weight:600;">Telefon</div>
+                        <div style="font-size:13px;color:var(--color-text-muted);">+387 65 000 001</div>
+                        <div style="font-size:12px;color:var(--color-text-muted);">Pon–Pet, 8:00–16:00</div>
+                    </div>
+                </div>
+                <div class="card" style="padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;" onclick="window.location='mailto:podrska@agroapp.ba'">
+                    <div style="width:42px;height:42px;background:#dbeafe;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">✉️</div>
+                    <div>
+                        <div style="font-size:14px;font-weight:600;">E-mail</div>
+                        <div style="font-size:13px;color:var(--color-text-muted);">podrska@agroapp.ba</div>
+                        <div style="font-size:12px;color:var(--color-text-muted);">Odgovaramo u roku od 24h</div>
+                    </div>
+                </div>
+                <div class="card" style="padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;" onclick="window.open('https://viber.com/agroapp')">
+                    <div style="width:42px;height:42px;background:#f3e8ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">💬</div>
+                    <div>
+                        <div style="font-size:14px;font-weight:600;">Viber poruka</div>
+                        <div style="font-size:13px;color:var(--color-text-muted);">+387 65 000 001</div>
+                        <div style="font-size:12px;color:var(--color-text-muted);">Najbrži odgovor</div>
+                    </div>
+                </div>
+                <div style="margin-top:20px;padding:14px;background:var(--color-surface-alt);border-radius:10px;font-size:13px;color:var(--color-text-muted);text-align:center;line-height:1.5;">
+                    Verzija aplikacije: 1.0<br>AgroApp © 2025 — Tržnica domaćih proizvoda RS
+                </div>
+            </div>
+        </div>
     `;
 
+    showDashboardTab(tab || 'profil', false);
     loadMyProducts();
+}
+
+function showDashboardTab(tab, navigate) {
+    if (navigate !== false) {
+        showScreen('screen-farmer-dashboard');
+        document.getElementById('nav-farmer').classList.remove('hidden');
+        document.getElementById('nav-customer').classList.add('hidden');
+        if (!document.getElementById('dash-tab-profil')) {
+            showFarmerDashboard(tab);
+            return;
+        }
+    }
+    ['profil','proizvodi','podrska'].forEach(t => {
+        const el = document.getElementById(`dash-tab-${t}`);
+        if (el) el.style.display = t === tab ? '' : 'none';
+    });
+    const navIdx = { profil: 0, proizvodi: 1, podrska: 3 };
+    if (navIdx[tab] !== undefined) setNavActive('nav-farmer', navIdx[tab]);
 }
 
 async function loadMyProducts() {
@@ -1860,8 +1969,6 @@ async function loadMyProducts() {
         const data = await api('GET', '/api/farmer/products');
         state.myProducts = data;
         renderMyProducts(data);
-        const countEl = document.querySelector('#dash-product-count div:first-child');
-        if (countEl) countEl.textContent = data.filter(p => p.isActive !== false).length;
     } catch(e) {
         console.warn(e);
     }
@@ -1880,28 +1987,27 @@ function renderMyProducts(products) {
 function myProductRowHtml(p) {
     const thumb = p.photos && p.photos.length
         ? `<img src="${esc(p.photos[0].url)}" class="my-product-thumb">`
-        : `<div class="my-product-thumb">${categoryEmoji(p.category)}</div>`;
+        : `<div class="my-product-thumb">${productEmoji(p.name, p.category)}</div>`;
     return `<div class="my-product-row">
         ${thumb}
         <div style="flex:1;min-width:0;">
             <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.name)}</div>
             <div style="font-size:13px;color:var(--color-primary);font-weight:600;">${formatPrice(p.price, p.priceUnit)}</div>
         </div>
-        <label class="toggle-switch" style="margin-right:12px;" title="Svježe danas">
-            <input type="checkbox" ${p.freshToday ? 'checked' : ''} onchange="toggleFresh(${p.id}, this.checked)">
-            <span class="toggle-slider"></span>
-        </label>
-        <button class="icon-btn" onclick="openProductEditor(${p.id})">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <button onclick="showFreshSheet(${p.id})" style="margin-right:6px;flex-shrink:0;border:none;background:none;padding:0;cursor:pointer;" title="Postavi svježinu">
+            ${freshStatusBadge(p)}
+        </button>
+        <button class="icon-btn" onclick="openProductEditor(${p.id})" title="Uredi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="icon-btn" data-pid="${p.id}" onclick="quickDeleteProduct(+this.dataset.pid)" title="Obriši" style="color:#dc2626;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         </button>
     </div>`;
 }
 
 async function showMyProducts() {
-    showScreen('screen-farmer-dashboard');
-    await showFarmerDashboard();
-    const el = document.getElementById('my-products-section');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    showDashboardTab('proizvodi');
 }
 
 // =====================================================================
@@ -1909,7 +2015,11 @@ async function showMyProducts() {
 // =====================================================================
 function openProductEditor(productId) {
     state.editingProduct = productId ? state.myProducts.find(p => p.id === productId) || null : null;
+    state.editingProductId = productId || null;
     state.pendingProductPhotos = [];
+    state.pendingFreshHours = null;
+    state.selectedPresetEmoji = null;
+    state.selectedPresetBg = null;
 
     document.getElementById('product-edit-title').textContent = productId ? 'Uredi proizvod' : 'Novi proizvod';
     document.getElementById('delete-product-btn').style.display = productId ? '' : 'none';
@@ -1920,7 +2030,7 @@ function openProductEditor(productId) {
     document.getElementById('pe-price').value = state.editingProduct?.price || '';
     document.getElementById('pe-unit').value = state.editingProduct?.priceUnit || 'kg';
     document.getElementById('pe-description').value = state.editingProduct?.description || '';
-    document.getElementById('pe-fresh').checked = state.editingProduct?.freshToday || false;
+    renderFreshSection(state.editingProduct);
 
     // Reset photo slots
     for (let i = 0; i < 5; i++) {
@@ -1940,7 +2050,58 @@ function openProductEditor(productId) {
     document.getElementById('product-edit-photo-count').textContent = `${state.editingProduct?.photos?.length || 0}/5`;
     clearErrors(['pe-name-err','pe-category-err','pe-price-err']);
 
+    // Show presets for new products without photos
+    const hasPhotos = (state.editingProduct?.photos?.length || 0) > 0;
+    renderProductPresets(hasPhotos ? null : (state.editingProduct?.category || ''));
+
     showScreen('screen-product-edit');
+}
+
+const PRODUCT_PRESETS = {
+    povrce:    ['🥕','🥦','🌽','🍅','🥒','🧅','🥬','🌶️'],
+    voce:      ['🍎','🍓','🍇','🍑','🍒','🍋','🍊','🍈'],
+    mlijeko:   ['🥛','🧀','🫙','🍶'],
+    meso:      ['🥩','🍗','🥚','🌭'],
+    jaja:      ['🥚','🍳'],
+    med:       ['🍯','🐝'],
+    zitarice:  ['🌾','🍞','🥖','🫓'],
+    rakija:    ['🫙','🍶','🥃'],
+    zimnica:   ['🫙','🥫','🫑','🧄'],
+    ostalo:    ['🌿','🫚','🛒','🌱'],
+};
+
+function onPeCategoryChange(cat) {
+    const hasPhotos = (state.editingProduct?.photos?.length || 0) > 0 || state.pendingProductPhotos?.length > 0;
+    if (!hasPhotos && !state.selectedPresetEmoji) renderProductPresets(cat);
+}
+
+function renderProductPresets(category) {
+    const section = document.getElementById('pe-presets-section');
+    const grid = document.getElementById('pe-presets-grid');
+    if (!section || !grid) return;
+
+    if (!category) { section.style.display = 'none'; return; }
+
+    const emojis = PRODUCT_PRESETS[category] || PRODUCT_PRESETS.ostalo;
+    const bgColors = ['#fef9c3','#dcfce7','#dbeafe','#fce7f3','#ede9fe','#ffedd5','#d1fae5','#fef3c7'];
+    grid.innerHTML = emojis.map((em, i) => `
+        <div onclick="selectProductPreset('${em}','${bgColors[i % bgColors.length]}')"
+             style="width:52px;height:52px;border-radius:10px;background:${bgColors[i % bgColors.length]};display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;"
+             id="preset-btn-${i}" title="Odaberi preset">
+            ${em}
+        </div>
+    `).join('');
+    section.style.display = '';
+}
+
+function selectProductPreset(emoji, bg) {
+    state.selectedPresetEmoji = emoji;
+    state.selectedPresetBg = bg;
+    const slot0 = document.getElementById('product-edit-photo-0');
+    if (slot0) {
+        slot0.innerHTML = `<div style="width:100%;height:100%;background:${bg};display:flex;align-items:center;justify-content:center;font-size:52px;border-radius:8px;">${emoji}</div>`;
+    }
+    document.getElementById('pe-presets-section').style.display = 'none';
 }
 
 function triggerProductPhotoInput() {
@@ -1966,6 +2127,10 @@ function handleProductPhotosSelected() {
     });
     const total = existingCount + state.pendingProductPhotos.length;
     document.getElementById('product-edit-photo-count').textContent = `${total}/5`;
+    // Hide presets once a real photo is selected
+    const ps = document.getElementById('pe-presets-section');
+    if (ps) ps.style.display = 'none';
+    state.selectedPresetEmoji = null;
 }
 
 async function saveProduct() {
@@ -1981,10 +2146,10 @@ async function saveProduct() {
 
     const description = document.getElementById('pe-description').value.trim();
     const priceUnit = document.getElementById('pe-unit').value;
-    const freshToday = document.getElementById('pe-fresh').checked;
 
     setLoading(true);
     try {
+        let savedProduct = null;
         if (state.pendingProductPhotos.length > 0) {
             const fd = new FormData();
             fd.append('name', name);
@@ -1992,26 +2157,33 @@ async function saveProduct() {
             fd.append('price', price);
             fd.append('priceUnit', priceUnit);
             fd.append('description', description);
-            fd.append('freshToday', freshToday ? '1' : '0');
             state.pendingProductPhotos.forEach(f => fd.append('photos[]', f));
 
             if (state.editingProduct) {
                 fd.append('_method', 'PATCH');
-                await api('POST', `/api/farmer/products/${state.editingProduct.id}`, fd);
+                savedProduct = await api('POST', `/api/farmer/products/${state.editingProduct.id}`, fd);
             } else {
-                await api('POST', '/api/farmer/products', fd);
+                savedProduct = await api('POST', '/api/farmer/products', fd);
             }
         } else {
-            const payload = { name, category, price: parseFloat(price), priceUnit, description, freshToday };
+            const payload = { name, category, price: parseFloat(price), priceUnit, description };
             if (state.editingProduct) {
-                await api('PATCH', `/api/farmer/products/${state.editingProduct.id}`, payload);
+                savedProduct = await api('PATCH', `/api/farmer/products/${state.editingProduct.id}`, payload);
             } else {
-                await api('POST', '/api/farmer/products', payload);
+                savedProduct = await api('POST', '/api/farmer/products', payload);
             }
         }
 
-        showToast(state.editingProduct ? 'Proizvod ažuriran' : 'Proizvod dodan');
+        const wasNew = !state.editingProduct;
+        showToast(wasNew ? 'Proizvod dodan' : 'Proizvod ažuriran');
+        if (wasNew && state.pendingFreshHours && savedProduct?.id) {
+            const fresh = state.pendingFreshHours;
+            await api('PATCH', `/api/farmer/products/${savedProduct.id}/fresh`, { hours: fresh });
+        }
+        state.pendingFreshHours = null;
         state.editingProduct = null;
+        state.editingProductId = null;
+        state.selectedPresetEmoji = null;
         state.pendingProductPhotos = [];
         goBack();
         setTimeout(loadMyProducts, 300);
@@ -2029,15 +2201,18 @@ async function saveProduct() {
 }
 
 async function confirmDeleteProduct() {
-    if (!state.editingProduct) return;
-    if (!confirm(`Obrisati "${state.editingProduct.name}"?`)) return;
+    const product = state.editingProduct;
+    const productId = product?.id || state.editingProductId;
+    if (!productId) return;
+    const name = product?.name || 'ovaj proizvod';
+    if (!confirm(`Obrisati "${name}"?`)) return;
     setLoading(true);
     try {
-        await api('DELETE', `/api/farmer/products/${state.editingProduct.id}`);
-        // Optimistic remove
-        state.myProducts = state.myProducts.filter(p => p.id !== state.editingProduct.id);
-        showToast('Proizvod obrisan');
+        await api('DELETE', `/api/farmer/products/${productId}`);
+        state.myProducts = state.myProducts.filter(p => p.id !== productId);
         state.editingProduct = null;
+        state.editingProductId = null;
+        showToast('Proizvod obrisan');
         goBack();
         setTimeout(loadMyProducts, 300);
     } catch(e) {
@@ -2047,16 +2222,153 @@ async function confirmDeleteProduct() {
     }
 }
 
-async function toggleFresh(productId, value) {
-    // Optimistic update
-    const p = state.myProducts.find(p => p.id === productId);
-    if (p) p.freshToday = value;
+async function quickDeleteProduct(productId) {
+    const product = state.myProducts.find(p => p.id === productId);
+    const name = product?.name || 'ovaj proizvod';
+    if (!confirm(`Obrisati "${name}"?`)) return;
+    setLoading(true);
     try {
-        await api('PATCH', `/api/farmer/products/${productId}/fresh`);
-    } catch(e) {
-        // Revert on failure
-        if (p) p.freshToday = !value;
+        await api('DELETE', `/api/farmer/products/${productId}`);
+        state.myProducts = state.myProducts.filter(p => p.id !== productId);
+        showToast('Proizvod obrisan');
         renderMyProducts(state.myProducts);
+    } catch(e) {
+        showToast(e.message, 'error');
+    } finally {
+        setLoading(false);
+    }
+}
+
+function freshStatusBadge(p) {
+    if (p.freshToday && p.freshUntil) {
+        const until = new Date(p.freshUntil);
+        const now = new Date();
+        const diffHours = (until - now) / 36e5;
+        let label;
+        if (diffHours <= 24) {
+            const hh = until.getHours().toString().padStart(2,'0');
+            const mm = until.getMinutes().toString().padStart(2,'0');
+            label = `Do ${hh}:${mm}`;
+        } else {
+            const days = Math.ceil(diffHours / 24);
+            label = `Još ${days} dana`;
+        }
+        return `<div style="display:inline-flex;align-items:center;gap:4px;background:#fef3c7;color:#92400e;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;white-space:nowrap;">🌞 ${label}</div>`;
+    }
+    if (p.freshExpiredRecently) {
+        return `<div style="display:inline-flex;align-items:center;gap:4px;background:#FEF2F2;color:#B91C1C;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;white-space:nowrap;">⚠️ Isteklo</div>`;
+    }
+    return `<div style="display:inline-flex;align-items:center;gap:3px;background:#f2ece0;color:#7a6f5f;font-size:11px;font-weight:600;padding:4px 8px;border-radius:20px;white-space:nowrap;">+ Svježe</div>`;
+}
+
+function renderFreshSection(product) {
+    const el = document.getElementById('pe-fresh-section');
+    if (!el) return;
+    const productId = product?.id ?? null;
+    const isFresh = product?.freshToday || false;
+    const freshUntil = product?.freshUntil || null;
+    const pending = state.pendingFreshHours;
+
+    let statusLine = '';
+    if (pending) {
+        const labels = { today:'Danas do 20:00', '24':'Naredna 24 sata', '48':'Naredna 2 dana', '72':'Naredna 3 dana', '96':'Naredna 4 dana', '120':'Naredna 5 dana' };
+        statusLine = `<div style="font-size:12px;color:#92400e;margin-top:4px;">✓ Postaviti: ${labels[pending] || pending}</div>`;
+    } else if (isFresh && freshUntil) {
+        const until = new Date(freshUntil);
+        const diffH = (until - new Date()) / 36e5;
+        const timeStr = diffH <= 24
+            ? `do ${until.getHours().toString().padStart(2,'0')}:${until.getMinutes().toString().padStart(2,'0')}`
+            : `još ${Math.ceil(diffH/24)} dana`;
+        statusLine = `<div style="font-size:12px;color:#92400e;margin-top:4px;">Aktivno ${timeStr}</div>`;
+    } else if (product?.freshExpiredRecently) {
+        statusLine = `<div style="font-size:12px;color:#B91C1C;margin-top:4px;">⚠️ Svježina istekla — obnovite ako je još dostupno</div>`;
+    }
+
+    const btnLabel = (isFresh || pending) ? 'Promijeni' : 'Označi';
+
+    el.innerHTML = `
+        <div style="background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:12px;padding:14px 16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                    <div style="font-size:14px;font-weight:600;color:#92400E;">🌞 Svježe danas</div>
+                    <div style="font-size:12px;color:#B45309;">Označite koliko dugo je proizvod svjež</div>
+                    ${statusLine}
+                </div>
+                <button onclick="showFreshSheet(${productId ?? 'null'}, true)" style="background:#F59E0B;color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+                    ${btnLabel}
+                </button>
+            </div>
+        </div>`;
+}
+
+function showFreshSheet(productId, fromEditor = false) {
+    const overlay = document.createElement('div');
+    overlay.id = 'fresh-sheet-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(42,34,24,0.55);z-index:1000;display:flex;align-items:flex-end;justify-content:center;';
+    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+
+    const p = fromEditor ? state.editingProduct : state.myProducts.find(p => p.id === productId);
+
+    overlay.innerHTML = `
+        <div style="width:100%;max-width:480px;background:#faf6ef;border-radius:24px 24px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0));">
+            <div style="width:36px;height:4px;background:#e4ddd0;border-radius:2px;margin:0 auto 20px;"></div>
+            <div style="font-family:var(--font-serif);font-size:18px;font-weight:500;color:#2a2218;margin-bottom:4px;">Označi kao svježe</div>
+            <div style="font-size:13px;color:#7a6f5f;margin-bottom:20px;">Odaberite koliko dugo je ovaj proizvod dostupan kao svjež</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <button onclick="setFreshUntil(${productId},'today',${fromEditor})" style="padding:14px 16px;background:#fff;border:1.5px solid #e4ddd0;border-radius:12px;font-size:14px;font-weight:600;color:#2a2218;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+                    🌅 <span>Danas do 20:00</span>
+                </button>
+                <button onclick="setFreshUntil(${productId},'24',${fromEditor})" style="padding:14px 16px;background:#fff;border:1.5px solid #e4ddd0;border-radius:12px;font-size:14px;font-weight:600;color:#2a2218;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+                    🕐 <span>Naredna 24 sata</span>
+                </button>
+                <button onclick="setFreshUntil(${productId},'48',${fromEditor})" style="padding:14px 16px;background:#fff;border:1.5px solid #e4ddd0;border-radius:12px;font-size:14px;font-weight:600;color:#2a2218;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+                    🕑 <span>Naredna 2 dana</span>
+                </button>
+                <button onclick="setFreshUntil(${productId},'72',${fromEditor})" style="padding:14px 16px;background:#fff;border:1.5px solid #e4ddd0;border-radius:12px;font-size:14px;font-weight:600;color:#2a2218;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+                    📅 <span>Naredna 3 dana</span>
+                </button>
+                <button onclick="setFreshUntil(${productId},'96',${fromEditor})" style="padding:14px 16px;background:#fff;border:1.5px solid #e4ddd0;border-radius:12px;font-size:14px;font-weight:600;color:#2a2218;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+                    📅 <span>Naredna 4 dana</span>
+                </button>
+                <button onclick="setFreshUntil(${productId},'120',${fromEditor})" style="padding:14px 16px;background:#fff;border:1.5px solid #e4ddd0;border-radius:12px;font-size:14px;font-weight:600;color:#2a2218;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+                    📅 <span>Naredna 5 dana</span>
+                </button>
+                ${p?.freshToday ? `<button onclick="setFreshUntil(${productId},'clear',${fromEditor})" style="padding:14px 16px;background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;font-size:14px;font-weight:600;color:#B91C1C;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;">
+                    ✕ <span>Ukloni oznaku svježine</span>
+                </button>` : ''}
+            </div>
+            <button onclick="document.getElementById('fresh-sheet-overlay').remove()" style="width:100%;padding:14px;background:none;border:none;font-size:15px;font-weight:600;color:#7a6f5f;cursor:pointer;margin-top:12px;">Zatvori</button>
+        </div>`;
+
+    document.body.appendChild(overlay);
+}
+
+async function setFreshUntil(productId, hours, fromEditor = false) {
+    document.getElementById('fresh-sheet-overlay')?.remove();
+    if (!productId) {
+        // New product — store selection, apply after save
+        state.pendingFreshHours = hours === 'clear' ? null : hours;
+        if (fromEditor) renderFreshSection(state.editingProduct);
+        return;
+    }
+    try {
+        const data = await api('PATCH', `/api/farmer/products/${productId}/fresh`, { hours });
+        // Update local state
+        const p = state.myProducts.find(p => p.id === productId);
+        if (p) {
+            p.freshToday = data.freshToday;
+            p.freshUntil = data.freshUntil;
+            p.freshExpiredRecently = false;
+            renderMyProducts(state.myProducts);
+        }
+        if (fromEditor && state.editingProduct) {
+            state.editingProduct.freshToday = data.freshToday;
+            state.editingProduct.freshUntil = data.freshUntil;
+            state.editingProduct.freshExpiredRecently = false;
+            renderFreshSection(state.editingProduct);
+        }
+        showToast(hours === 'clear' ? 'Svježina uklonjena' : 'Svježina postavljena');
+    } catch(e) {
         showToast('Greška', 'error');
     }
 }
@@ -2130,7 +2442,6 @@ async function saveProfileEdit() {
 
         showToast('Profil uspješno sačuvan!');
         goBack();
-        showFarmerDashboard();
     } catch(e) {
         showToast(e.message || 'Greška pri čuvanju', 'error');
     } finally {
@@ -2259,7 +2570,7 @@ function renderAdminProducts() {
     el.innerHTML = state.adminProducts.map(p => {
         const thumb = p.thumbnailUrl
             ? `<img src="${esc(p.thumbnailUrl)}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">`
-            : `<div style="width:48px;height:48px;border-radius:8px;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${categoryEmoji(p.category)}</div>`;
+            : `<div style="width:48px;height:48px;border-radius:8px;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${productEmoji(p.name, p.category)}</div>`;
         const activeTag = p.isActive
             ? '' : `<span style="font-size:10px;font-weight:600;color:var(--color-danger);background:#FEE2E2;padding:1px 6px;border-radius:20px;margin-left:6px;">Obrisan</span>`;
         return `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--color-border);background:#fff;">
@@ -2361,6 +2672,38 @@ function formatPrice(price, unit) {
 function categoryEmoji(cat) {
     const map = { povrce:'🥦', voce:'🍎', mlijeko:'🥛', meso:'🥩', jaja:'🥚', med:'🍯', zitarice:'🌾', rakija:'🥃', zimnica:'🫙', ostalo:'📦' };
     return map[cat] || '🌿';
+}
+
+function productEmoji(name, cat) {
+    const n = (name || '').toLowerCase();
+    if (n.includes('paradajz'))                         return '🍅';
+    if (n.includes('paprika') && !n.includes('ajvar'))  return '🫑';
+    if (n.includes('crni luk') || (n.includes('luk') && !n.includes('bijeli'))) return '🧅';
+    if (n.includes('krompir'))                          return '🥔';
+    if (n.includes('kupus'))                            return '🥬';
+    if (n.includes('mrkva') || n.includes('šargarepa')) return '🥕';
+    if (n.includes('jabuk'))                            return '🍎';
+    if (n.includes('šljiv') || n.includes('sljiv'))    return '🫐';
+    if (n.includes('kruš') || n.includes('krus'))      return '🍐';
+    if (n.includes('trešnj') || n.includes('višnj'))   return '🍒';
+    if (n.includes('grož') || n.includes('groz'))      return '🍇';
+    if (n.includes('lubenič') || n.includes('dinja'))  return '🍉';
+    if (n.includes('sir'))                              return '🧀';
+    if (n.includes('jogurt'))                           return '🥛';
+    if (n.includes('mlijeko') || n.includes('milk'))   return '🥛';
+    if (n.includes('jaja') || n.includes('jaje'))      return '🥚';
+    if (n.includes('med'))                              return '🍯';
+    if (n.includes('kobasic'))                          return '🌭';
+    if (n.includes('slanin'))                           return '🥓';
+    if (n.includes('jagnj'))                            return '🐑';
+    if (n.includes('piletina') || n.includes('pileć'))  return '🍗';
+    if (n.includes('kukuruz') && n.includes('brašno')) return '🌽';
+    if (n.includes('brašno') || n.includes('brasno'))  return '🌾';
+    if (n.includes('rakij') || n.includes('šljivovic')) return '🥃';
+    if (n.includes('ajvar'))                            return '🫙';
+    if (n.includes('džem') || n.includes('dzem'))      return '🍓';
+    if (n.includes('med') && n.includes('bagrem'))      return '🍯';
+    return categoryEmoji(cat);
 }
 
 function esc(str) {

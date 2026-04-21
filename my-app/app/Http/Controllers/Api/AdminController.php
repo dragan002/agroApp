@@ -27,10 +27,10 @@ class AdminController extends Controller
             'id'           => $fp->id,
             'userId'       => $fp->user_id,
             'farmName'     => $fp->farm_name,
-            'location'     => $fp->location,
+            'location'     => $fp->address ? "{$fp->address}, {$fp->city}" : $fp->city,
             'isActive'     => $fp->is_active,
             'createdAt'    => $fp->created_at?->toDateString(),
-            'productCount' => $fp->user?->products()->where('is_active', true)->count() ?? 0,
+            'productCount' => $fp->products_count ?? 0,
             'coverPhoto'   => $fp->photos->isNotEmpty() ? $fp->photos->first()->toApiArray() : null,
             'user'         => $fp->user ? [
                 'id'    => $fp->user->id,
@@ -83,7 +83,7 @@ class AdminController extends Controller
         $product = Product::findOrFail($id);
 
         foreach ($product->photos as $photo) {
-            Storage::disk('public')->delete($photo->path);
+            Storage::disk()->delete($photo->path);
             $photo->delete();
         }
 

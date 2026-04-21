@@ -26,7 +26,7 @@ class SearchController extends Controller
 
         // Search farmers
         $farmerQuery = FarmerProfile::active()->with([
-            'user',
+            'user'   => fn($uq) => $uq->withCount('products'),
             'photos' => fn($pq) => $pq->orderBy('position')->limit(1),
         ]);
 
@@ -65,14 +65,13 @@ class SearchController extends Controller
             $productQuery->inCity($city);
         }
 
-        $products = $productQuery->limit(20)->get()
-            ->map(fn($p) => $p->toCardArray())
-            ->values()
-            ->all();
+        $productsPaginated = $productQuery->paginate(100);
+        $products = $productsPaginated->map(fn($p) => $p->toCardArray())->values()->all();
 
         return response()->json([
-            'farmers'  => $farmers,
-            'products' => $products,
+            'farmers'      => $farmers,
+            'products'     => $products,
+            'productTotal' => $productsPaginated->total(),
         ]);
     }
 }
