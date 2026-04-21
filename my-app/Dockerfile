@@ -30,13 +30,10 @@ COPY . .
 RUN npm run build
 
 RUN mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+    && chmod -R 775 storage bootstrap/cache
 
 COPY Caddyfile /Caddyfile
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan storage:link --force && frankenphp run --config /Caddyfile"]
+CMD ["sh", "-c", "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php artisan storage:link --force && frankenphp run --config /Caddyfile"]
