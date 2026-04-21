@@ -1,10 +1,9 @@
 FROM dunglas/frankenphp:php8.4-bookworm
 
-# Install system dependencies + PHP extensions
-RUN apt-get update && apt-get install -y \
-    git unzip zip curl libpng-dev libpq-dev libzip-dev \
-    && docker-php-ext-install pdo pdo_pgsql pdo_mysql mbstring gd zip fileinfo \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Use the official PHP extension installer (handles all deps automatically)
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+RUN install-php-extensions pdo pdo_pgsql mbstring gd zip fileinfo
 
 # Install Node.js 22
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
