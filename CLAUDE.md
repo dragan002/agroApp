@@ -24,12 +24,12 @@ Digital marketplace connecting farmers with customers across Republic of Srpska.
 ## Stack
 
 ```
-Laravel 13 / PHP 8.4  (NativePHP Mobile binaries only support 8.4 — don't upgrade PHP)
-NativePHP Mobile v3.2.3
+Laravel 13 / PHP 8.4  (don't upgrade PHP)
 SQLite (local dev) / PostgreSQL (Railway production)
 Tailwind CSS v4 with @theme tokens in resources/css/app.css
 Vite 8
 Pest v4.6
+FrankenPHP (dunglas/frankenphp) as production server via Caddy
 ```
 
 ---
@@ -57,9 +57,55 @@ php artisan test tests/Feature/ReviewTest.php
 # Fresh DB with seed data
 php artisan migrate:fresh --seed
 
+# Seed demo farmers only (production-realistic data)
+php artisan db:seed --class=DemoSeeder
+
+# Seed admin account only
+php artisan db:seed --class=AdminSeeder
+
 # Build frontend assets
 npm run build
 ```
+
+---
+
+## Production Deployment (Railway)
+
+Deployed via **Dockerfile** builder (not Railpack/Nixpacks). The `Dockerfile` and `Caddyfile` are in `my-app/`.
+
+**Required Railway env vars:**
+```
+APP_KEY=base64:...
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://<your-railway-domain>
+SESSION_DRIVER=database
+DB_CONNECTION=pgsql
+DB_URL=postgresql://...         # use DATABASE_PUBLIC_URL from Railway Postgres plugin (not internal URL)
+FILESYSTEM_DISK=s3              # for Cloudflare R2 photo storage
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_DEFAULT_REGION=auto
+AWS_BUCKET=...
+AWS_ENDPOINT=https://<accountid>.r2.cloudflarestorage.com
+AWS_USE_PATH_STYLE_ENDPOINT=true
+AWS_URL=https://pub-<hash>.r2.dev  # R2 public bucket URL — used by Storage::url() to generate public photo URLs
+```
+
+**Important:** Laravel reads `DB_URL`, not `DATABASE_URL`. Railway's internal hostname (`postgres.railway.internal`) can fail DNS resolution — use the public proxy URL instead.
+
+**Railway target port:** Set to `8080` in Railway Networking settings. Caddyfile listens on `$PORT` which Railway sets to match.
+
+**Start command** (set as Custom Start Command in Railway Settings):
+```
+sh -c "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force && php artisan storage:link --force && frankenphp run --config /Caddyfile"
+```
+
+**Build-time vs runtime:** Artisan cache commands (`config:cache`, `route:cache`, `view:cache`) run at **container startup** (in `CMD`), not during Docker build — so they pick up real env vars. Only `mkdir`/`chmod` for storage dirs happen at build time.
+
+**HTTPS proxy:** `AppServiceProvider::boot()` calls `URL::forceScheme('https')` in production because Railway terminates SSL at its load balancer (app sees HTTP internally without this).
+
+**Seeding on Railway:** Railway Shell is not reliably accessible via UI. Best approach: temporarily add `; php artisan db:seed --class=DemoSeeder --force;` to the start command (using semicolons not `&&` so failure doesn't block startup), redeploy, then remove it. Run `AdminSeeder` the same way for the admin account.
 
 ---
 
@@ -82,7 +128,7 @@ CSRF: read-only API routes are exempt (list in `bootstrap/app.php`). All mutatin
 **Models and relationships:**
 - `User` → `hasOne FarmerProfile`, `hasMany Product`. Role: `farmer` or `customer`.
 - `FarmerProfile` → `morphMany Photo`, `hasMany Review`, `hasMany Product` (via User).
-- `Product` → `morphMany Photo`, `belongsTo User` (farmer).
+- `Product` → `morphMany Photo`, `belongsTo User` (farmer). Has `fresh_until` (nullable datetime) — products with `fresh_until > now()` are "fresh today".
 - `Review` → `belongsTo FarmerProfile`. Guest-submitted (no user_id). Rate-limited 1 per farmer per IP per 24h.
 - `Photo` — polymorphic: owned by FarmerProfile or Product.
 
@@ -94,7 +140,10 @@ CSRF: read-only API routes are exempt (list in `bootstrap/app.php`). All mutatin
 
 **Enums:** `App\Enums\ProductCategory` and `App\Enums\City` — both have a static `all()` returning `[key => label]`. Add new categories/cities here, not in the frontend JS.
 
-**Seeding:** `FarmerSeeder` creates test farmers with products; `AdminSeeder` creates the admin account.
+**Seeders:**
+- `DemoSeeder` — 8 realistic RS farmers with products; use for production or demo.
+- `FarmerSeeder` — simpler test farmers for local dev.
+- `AdminSeeder` — creates the admin account.
 
 ### Design System
 
@@ -132,9 +181,35 @@ Text muted:        #a89a85
 | Farmer Profile Edit | `screen-farmer-profile-edit` | Edit farm info + photos |
 | Admin | `screen-admin` | Farmers / Products / Recenzije tabs |
 
+### Onboarding State Machine
+
+`User.onboarding_step` drives the 4-step signup flow:
+
+| Value | Meaning | What was saved |
+|---|---|---|
+| `1` | Just registered | name, email only |
+| `2` | Contacts saved | phone, viber, whatsapp |
+| `3` | Farm info saved | FarmerProfile created (is_active=false) |
+| `4` | Photos uploaded | farm photos attached |
+| `null` | Complete | `is_active=true`, farmer is live |
+
+`EnsureFarmer` middleware blocks requests when `onboarding_step !== null`. The SPA checks `state.auth.onboardingStep` on every login to resume at the correct step.
+
+### SPA Bootstrap
+
+`GET /api/state` is the first call the SPA makes on load. Returns `{ auth, farmers (limit 20), categories, cities }` in one round-trip. All category and city labels in the UI come from this response — never hardcoded in JS.
+
+### Deep Links
+
+`GET /farmer/{id}` renders `welcome.blade.php` with `$openFarmerId` injected. The JS reads `window.openFarmerId` (set in a Blade `<script>` block) and immediately opens that farmer's profile. Used for sharing links.
+
+### Photo Storage
+
+Photos stored via `Storage::disk()` (no argument — disk is driven by `FILESYSTEM_DISK` env var) at path `farmers/{userId}/{filename}`. `Photo::toApiArray()` returns a full URL via `Storage::url()`. Production uses Cloudflare R2 — `league/flysystem-aws-s3-v3` is installed. `AWS_URL` must be set to the R2 public bucket URL (`pub-xxx.r2.dev`) so `Storage::url()` generates correct public URLs rather than the S3 API endpoint.
+
 ### Reviews
 
-Guest reviews: `POST /api/farmers/{id}/reviews` (no auth, rate-limited). Admin delete: `DELETE /api/admin/reviews/{id}` (admin middleware). The reviews tab in FarmerProfile lazy-loads on tab switch via `fpLoadReviews(farmerId)`.
+Guest reviews: `POST /api/farmers/{id}/reviews` (no auth, rate-limited 1/IP/farmer/24h via `RateLimiter`). IP is stored as `sha256` hash, never raw. Admin delete: `DELETE /api/admin/reviews/{id}` (admin middleware). The reviews tab in FarmerProfile lazy-loads on tab switch via `fpLoadReviews(farmerId)`.
 
 ---
 
@@ -149,8 +224,37 @@ Guest reviews: `POST /api/farmers/{id}/reviews` (no auth, rate-limited). Admin d
 | `app/Enums/` | ProductCategory, City — canonical label maps |
 | `app/Http/Controllers/Api/` | One controller per domain area |
 | `app/Http/Middleware/` | EnsureFarmer, EnsureAdmin |
-| `database/seeders/` | FarmerSeeder (test data), AdminSeeder |
-| `tests/Feature/` | Pest tests: Auth, Farmer, Product, Search, State, Review |
+| `app/Providers/AppServiceProvider.php` | Forces HTTPS scheme in production |
+| `database/seeders/` | DemoSeeder (production), FarmerSeeder (dev), AdminSeeder |
+| `tests/Feature/` | Pest tests: Auth, Farmer, Product, Search, State |
+| `Dockerfile` | Production build — FrankenPHP on PHP 8.4 bookworm |
+| `Caddyfile` | FrankenPHP server config — listens on `$PORT` (Railway sets this to target port, configured as 8080) |
+| `public/.well-known/assetlinks.json` | Play Store TWA domain verification |
+| `resources/views/privacy.blade.php` | Privacy policy at `/privacy` (required by Play Store) |
+| `resources/views/delete-account.blade.php` | Account deletion instructions at `/delete-account` (required by Play Store) |
+
+---
+
+## Test Conventions
+
+Tests use `RefreshDatabase` — no persistent state between tests. **No factories** — create models directly with `User::create([...])`. Test structure uses Pest `describe()` blocks with `beforeEach()` for shared setup.
+
+```php
+uses(RefreshDatabase::class);
+
+describe('feature name', function () {
+    beforeEach(function () {
+        $this->user = User::create([...]);
+    });
+
+    it('does the thing', function () {
+        $this->actingAs($this->user)->postJson('/api/...', [...])
+            ->assertStatus(200);
+    });
+});
+```
+
+Mutating API routes require `X-CSRF-TOKEN` in real browser calls, but test HTTP client bypasses CSRF automatically.
 
 ---
 
