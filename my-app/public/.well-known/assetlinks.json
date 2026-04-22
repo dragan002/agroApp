@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.railway.up.agroapp_production_54a0.twa",
+        "sha256_cert_fingerprints": ["CE:43:95:13:78:AE:76:F1:81:15:F4:FF:57:4E:2C:D0:E8:9B:4A:D0:48:41:DE:3F:E5:B8:ED:57:09:4E:DA:A3"]
+      }
+    }]
