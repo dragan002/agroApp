@@ -22,6 +22,10 @@ Route::get('/privacy', function () {
     return response()->view('privacy');
 });
 
+Route::get('/delete-account', function () {
+    return response()->view('delete-account');
+});
+
 // API routes (CSRF excluded via bootstrap/app.php validateCsrfTokens except)
 Route::prefix('api')->group(function () {
 
