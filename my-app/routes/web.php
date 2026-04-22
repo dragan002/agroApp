@@ -18,6 +18,10 @@ Route::get('/farmer/{id}', function (int $id) {
     return view('welcome', ['openFarmerId' => $id]);
 });
 
+Route::get('/privacy', function () {
+    return response()->view('privacy');
+});
+
 // API routes (CSRF excluded via bootstrap/app.php validateCsrfTokens except)
 Route::prefix('api')->group(function () {
 
