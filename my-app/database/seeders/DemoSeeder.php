@@ -37,8 +37,8 @@ class DemoSeeder extends Seeder
             'is_active'   => true,
         ]);
 
-        $this->savePhoto($milica->id, $milicaProfil->id, 'orchard,woman,apple,farmer,smile', 1004, 0);
-        $this->savePhoto($milica->id, $milicaProfil->id, 'apple,orchard,trees,fruit,autumn', 2004, 1, 800, 600);
+        $this->savePhoto($milica->id, $milicaProfil->id, 'orchard,apple,woman', 107, 0);
+        $this->savePhoto($milica->id, $milicaProfil->id, 'apple,orchard,trees', 108, 1, 800, 600);
 
         $p = Product::create([
             'user_id'     => $milica->id,
@@ -50,7 +50,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => now()->addHours(24),
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($milica->id, $p->id, 'apple,red,fresh,orchard,harvest', 3014);
+        $this->saveProductPhoto($milica->id, $p->id, 'apple,red', 214);
 
         $p = Product::create([
             'user_id'     => $milica->id,
@@ -62,7 +62,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($milica->id, $p->id, 'golden,apple,yellow,fruit,harvest', 3015);
+        $this->saveProductPhoto($milica->id, $p->id, 'apple,yellow', 215);
 
         $p = Product::create([
             'user_id'     => $milica->id,
@@ -74,7 +74,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($milica->id, $p->id, 'pear,williams,fresh,fruit,ripe', 3016);
+        $this->saveProductPhoto($milica->id, $p->id, 'pear,fruit', 216);
 
         $p = Product::create([
             'user_id'     => $milica->id,
@@ -86,7 +86,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($milica->id, $p->id, 'dried,plum,prune,natural,bag', 3017);
+        $this->saveProductPhoto($milica->id, $p->id, 'dried,plum', 217);
 
         $p = Product::create([
             'user_id'     => $milica->id,
@@ -98,7 +98,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($milica->id, $p->id, 'plum,jam,jar,homemade,dark', 3018);
+        $this->saveProductPhoto($milica->id, $p->id, 'jam,jar', 218);
 
         Review::create(['farmer_id' => $milicaProfil->id, 'reviewer_name' => 'Anđela M.',   'body' => 'Jabuke "Ajdared" su prekrasne — krupne, hrskave i slatke. Kutija od 10 kg nestane za sedmicu. Već drugu sezonu naručujem isključivo kod Milice.',              'rating' => 5, 'ip_hash' => hash('sha256', '4.1.1.1')]);
         Review::create(['farmer_id' => $milicaProfil->id, 'reviewer_name' => 'Predrag S.',  'body' => 'Džem od šljive je savršen za palačinke — gust i intenzivan. Kupio sam 6 tegli i polovina je već otišla za sedam dana. Preporučujem svima.',                    'rating' => 5, 'ip_hash' => hash('sha256', '4.1.1.2')]);
@@ -126,8 +126,8 @@ class DemoSeeder extends Seeder
             'is_active'   => true,
         ]);
 
-        $this->savePhoto($nikola->id, $nikolaProfil->id, 'sheep,livestock,farmer,man,field', 1005, 0);
-        $this->savePhoto($nikola->id, $nikolaProfil->id, 'sheep,pasture,barn,green,farm', 2005, 1, 800, 600);
+        $this->savePhoto($nikola->id, $nikolaProfil->id, 'sheep,farmer', 109, 0);
+        $this->savePhoto($nikola->id, $nikolaProfil->id, 'sheep,pasture', 110, 1, 800, 600);
 
         $p = Product::create([
             'user_id'     => $nikola->id,
@@ -139,7 +139,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($nikola->id, $p->id, 'lamb,meat,fresh,farm,natural', 3019);
+        $this->saveProductPhoto($nikola->id, $p->id, 'lamb,meat', 219);
 
         $p = Product::create([
             'user_id'     => $nikola->id,
@@ -151,7 +151,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($nikola->id, $p->id, 'bacon,smoked,homemade,cured,meat', 3020);
+        $this->saveProductPhoto($nikola->id, $p->id, 'bacon,smoked', 220);
 
         $p = Product::create([
             'user_id'     => $nikola->id,
@@ -163,7 +163,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($nikola->id, $p->id, 'sausage,smoked,homemade,pork,grilled', 3021);
+        $this->saveProductPhoto($nikola->id, $p->id, 'sausage,smoked', 221);
 
         $p = Product::create([
             'user_id'     => $nikola->id,
@@ -175,7 +175,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($nikola->id, $p->id, 'ribs,smoked,pork,meat,homemade', 3022);
+        $this->saveProductPhoto($nikola->id, $p->id, 'ribs,pork', 222);
 
         $p = Product::create([
             'user_id'     => $nikola->id,
@@ -187,7 +187,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($nikola->id, $p->id, 'lard,rendered,pork,fat,jar', 3023);
+        $this->saveProductPhoto($nikola->id, $p->id, 'pork,fat', 223);
 
         Review::create(['farmer_id' => $nikolaProfil->id, 'reviewer_name' => 'Petar J.',    'body' => 'Jagnjetina za Đurđevdan je bila savršena — mekano meso, prirodan miris, bez ničega vještačkog. Nikola je pravi majstor za ovčarstvo.',                           'rating' => 5, 'ip_hash' => hash('sha256', '5.1.1.1')]);
         Review::create(['farmer_id' => $nikolaProfil->id, 'reviewer_name' => 'Slavica M.',  'body' => 'Kobasice su fenomenalne! Dim i začini su savršeno odmjereni, nije preslano. Pravim sarmu od kobasice i niko ne može vjerovati da nije iz mesare.',               'rating' => 5, 'ip_hash' => hash('sha256', '5.1.1.2')]);
@@ -215,8 +215,8 @@ class DemoSeeder extends Seeder
             'is_active'   => true,
         ]);
 
-        $this->savePhoto($zdravko->id, $zdravkoProfil->id, 'winery,barrel,man,rural,farmhouse', 1006, 0);
-        $this->savePhoto($zdravko->id, $zdravkoProfil->id, 'plum,orchard,trees,rural,countryside', 2006, 1, 800, 600);
+        $this->savePhoto($zdravko->id, $zdravkoProfil->id, 'winery,barrel,man', 111, 0);
+        $this->savePhoto($zdravko->id, $zdravkoProfil->id, 'plum,orchard,rural', 112, 1, 800, 600);
 
         $p = Product::create([
             'user_id'     => $zdravko->id,
@@ -228,7 +228,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zdravko->id, $p->id, 'brandy,plum,bottle,spirit,amber', 3024);
+        $this->saveProductPhoto($zdravko->id, $p->id, 'brandy,bottle', 224);
 
         $p = Product::create([
             'user_id'     => $zdravko->id,
@@ -240,7 +240,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zdravko->id, $p->id, 'plum,spirit,clear,bottle,homemade', 3025);
+        $this->saveProductPhoto($zdravko->id, $p->id, 'plum,spirit', 225);
 
         $p = Product::create([
             'user_id'     => $zdravko->id,
@@ -252,7 +252,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zdravko->id, $p->id, 'ajvar,roasted,pepper,jar,red', 3026);
+        $this->saveProductPhoto($zdravko->id, $p->id, 'pepper,roasted,jar', 226);
 
         $p = Product::create([
             'user_id'     => $zdravko->id,
@@ -264,7 +264,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zdravko->id, $p->id, 'roasted,pepper,eggplant,spread,jar', 3027);
+        $this->saveProductPhoto($zdravko->id, $p->id, 'eggplant,spread', 227);
 
         $p = Product::create([
             'user_id'     => $zdravko->id,
@@ -276,7 +276,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zdravko->id, $p->id, 'cabbage,fermented,sauerkraut,jar,natural', 3028);
+        $this->saveProductPhoto($zdravko->id, $p->id, 'cabbage,fermented', 228);
 
         Review::create(['farmer_id' => $zdravkoProfil->id, 'reviewer_name' => 'Mirko S.',    'body' => 'Šljivovica iz bakra — pravi stari recept. Tri godine odležavanja u bačvi to se osjeti na svakom gutljaju. Pravo blago za ponijeti u posjetu.',                 'rating' => 5, 'ip_hash' => hash('sha256', '6.1.1.1')]);
         Review::create(['farmer_id' => $zdravkoProfil->id, 'reviewer_name' => 'Dijana B.',   'body' => 'Ajvar je ukusan, gust, pun okusa dimljene paprike. Kupila sam 6 tegli za zimu i nisam jednu otvorila do novembra jer ih ne mogu prestati.',                    'rating' => 5, 'ip_hash' => hash('sha256', '6.1.1.2')]);
@@ -304,8 +304,8 @@ class DemoSeeder extends Seeder
             'is_active'   => true,
         ]);
 
-        $this->savePhoto($vesna->id, $vesnaProfil->id, 'wheat,field,woman,farmer,grain', 1007, 0);
-        $this->savePhoto($vesna->id, $vesnaProfil->id, 'wheat,harvest,combine,field,golden', 2007, 1, 800, 600);
+        $this->savePhoto($vesna->id, $vesnaProfil->id, 'wheat,woman,grain', 113, 0);
+        $this->savePhoto($vesna->id, $vesnaProfil->id, 'wheat,harvest,field', 114, 1, 800, 600);
 
         $p = Product::create([
             'user_id'     => $vesna->id,
@@ -317,7 +317,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($vesna->id, $p->id, 'cornmeal,flour,yellow,grain,bag', 3029);
+        $this->saveProductPhoto($vesna->id, $p->id, 'cornmeal,flour', 229);
 
         $p = Product::create([
             'user_id'     => $vesna->id,
@@ -329,7 +329,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($vesna->id, $p->id, 'flour,white,wheat,bag,baking', 3030);
+        $this->saveProductPhoto($vesna->id, $p->id, 'flour,wheat', 230);
 
         $p = Product::create([
             'user_id'     => $vesna->id,
@@ -341,7 +341,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($vesna->id, $p->id, 'whole,wheat,flour,brown,grain', 3031);
+        $this->saveProductPhoto($vesna->id, $p->id, 'wholegrain,flour', 231);
 
         $p = Product::create([
             'user_id'     => $vesna->id,
@@ -353,7 +353,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($vesna->id, $p->id, 'sunflower,oil,bottle,natural,golden', 3032);
+        $this->saveProductPhoto($vesna->id, $p->id, 'sunflower,oil', 232);
 
         $p = Product::create([
             'user_id'     => $vesna->id,
@@ -365,7 +365,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($vesna->id, $p->id, 'barley,grain,natural,harvest,field', 3033);
+        $this->saveProductPhoto($vesna->id, $p->id, 'barley,grain', 233);
 
         Review::create(['farmer_id' => $vesnaProfil->id, 'reviewer_name' => 'Mira J.',    'body' => 'Kukuruzno brašno iz Vesninog mlina je pravo — proja ispade nevjerovatna, rahla i zlatna. Nikad se neću vratiti na ono iz prodavnice.',                           'rating' => 5, 'ip_hash' => hash('sha256', '7.1.1.1')]);
         Review::create(['farmer_id' => $vesnaProfil->id, 'reviewer_name' => 'Đorđe N.',   'body' => 'Pšenično brašno bez aditiva — hljeb lijepo naraste i mekano je. Integralno brašno sam probao za kekse, odlično. Svaka preporuka Vesni.',                        'rating' => 5, 'ip_hash' => hash('sha256', '7.1.1.2')]);
@@ -393,8 +393,8 @@ class DemoSeeder extends Seeder
             'is_active'   => true,
         ]);
 
-        $this->savePhoto($slobodan->id, $slobodanProfil->id, 'apiary,beekeeper,mountain,man,honey', 1008, 0);
-        $this->savePhoto($slobodan->id, $slobodanProfil->id, 'beehive,meadow,mountain,summer,flowers', 2008, 1, 800, 600);
+        $this->savePhoto($slobodan->id, $slobodanProfil->id, 'beekeeper,mountain', 115, 0);
+        $this->savePhoto($slobodan->id, $slobodanProfil->id, 'beehive,meadow,mountain', 116, 1, 800, 600);
 
         $p = Product::create([
             'user_id'     => $slobodan->id,
@@ -406,7 +406,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($slobodan->id, $p->id, 'acacia,honey,light,golden,jar', 3034);
+        $this->saveProductPhoto($slobodan->id, $p->id, 'honey,jar', 234);
 
         $p = Product::create([
             'user_id'     => $slobodan->id,
@@ -418,7 +418,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($slobodan->id, $p->id, 'meadow,honey,dark,mountain,natural', 3035);
+        $this->saveProductPhoto($slobodan->id, $p->id, 'honey,dark', 235);
 
         $p = Product::create([
             'user_id'     => $slobodan->id,
@@ -430,7 +430,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($slobodan->id, $p->id, 'honeycomb,comb,beeswax,natural,raw', 3036);
+        $this->saveProductPhoto($slobodan->id, $p->id, 'honeycomb', 236);
 
         $p = Product::create([
             'user_id'     => $slobodan->id,
@@ -442,7 +442,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($slobodan->id, $p->id, 'pollen,bee,natural,health,granules', 3037);
+        $this->saveProductPhoto($slobodan->id, $p->id, 'pollen,bee', 237);
 
         $p = Product::create([
             'user_id'     => $slobodan->id,
@@ -454,7 +454,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($slobodan->id, $p->id, 'pear,williams,fresh,ripe,yellow', 3038);
+        $this->saveProductPhoto($slobodan->id, $p->id, 'pear,fresh', 238);
 
         Review::create(['farmer_id' => $slobodanProfil->id, 'reviewer_name' => 'Renata P.',  'body' => 'Bagremov med sa Vlašića je poseban — blag, mirisav, djeca ga obožavaju umjesto šećera. Svaka preporuka Slobodanu i njegovom pčelinjaku.',                     'rating' => 5, 'ip_hash' => hash('sha256', '8.1.1.1')]);
         Review::create(['farmer_id' => $slobodanProfil->id, 'reviewer_name' => 'Saša V.',    'body' => 'Livadski med kristalizira brzo — to je jedini pravi dokaz da nije prerađivan. Kupio sam 2 kg i poklonio komšijama koji su odmah naručili sami.',               'rating' => 5, 'ip_hash' => hash('sha256', '8.1.1.2')]);
@@ -482,8 +482,8 @@ class DemoSeeder extends Seeder
             'is_active'   => true,
         ]);
 
-        $this->savePhoto($jasminka->id, $jasminkaProfile->id, 'woman,vegetable,garden,farm,harvest', 1009, 0);
-        $this->savePhoto($jasminka->id, $jasminkaProfile->id, 'vegetable,field,farm,rows,harvest', 2009, 1, 800, 600);
+        $this->savePhoto($jasminka->id, $jasminkaProfile->id, 'woman,garden,vegetables', 117, 0);
+        $this->savePhoto($jasminka->id, $jasminkaProfile->id, 'vegetable,field,rows', 118, 1, 800, 600);
 
         $p = Product::create([
             'user_id'     => $jasminka->id,
@@ -495,7 +495,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => now()->addHours(24),
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($jasminka->id, $p->id, 'tomato,ripe,harvest,canning,red', 3039);
+        $this->saveProductPhoto($jasminka->id, $p->id, 'tomato,harvest', 239);
 
         $p = Product::create([
             'user_id'     => $jasminka->id,
@@ -507,7 +507,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => now()->addHours(24),
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($jasminka->id, $p->id, 'hot,pepper,colorful,spicy,red', 3040);
+        $this->saveProductPhoto($jasminka->id, $p->id, 'pepper,hot', 240);
 
         $p = Product::create([
             'user_id'     => $jasminka->id,
@@ -519,7 +519,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($jasminka->id, $p->id, 'pumpkin,squash,orange,harvest,autumn', 3041);
+        $this->saveProductPhoto($jasminka->id, $p->id, 'pumpkin,harvest', 241);
 
         $p = Product::create([
             'user_id'     => $jasminka->id,
@@ -531,7 +531,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => now()->addHours(48),
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($jasminka->id, $p->id, 'carrot,fresh,orange,vegetable,farm', 3042);
+        $this->saveProductPhoto($jasminka->id, $p->id, 'carrot,fresh', 242);
 
         $p = Product::create([
             'user_id'     => $jasminka->id,
@@ -543,7 +543,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($jasminka->id, $p->id, 'ketchup,tomato,sauce,jar,homemade', 3043);
+        $this->saveProductPhoto($jasminka->id, $p->id, 'ketchup,tomato', 243);
 
         Review::create(['farmer_id' => $jasminkaProfile->id, 'reviewer_name' => 'Milorad T.', 'body' => 'Bijeljinska crnica daje poseban ukus povrću — paradajz je sladak i mesnast kao nigde drugde. Naručujem cijelo ljeto za zimnicu.',                              'rating' => 5, 'ip_hash' => hash('sha256', '9.1.1.1')]);
         Review::create(['farmer_id' => $jasminkaProfile->id, 'reviewer_name' => 'Sanja B.',   'body' => 'Paprika je odlična za ajvar — mesnata, sočna, bez voštanog premaza. Uz Jasminkin paradajz napravila sam najbolji ajvar u životu.',                            'rating' => 5, 'ip_hash' => hash('sha256', '9.1.1.2')]);
@@ -571,8 +571,8 @@ class DemoSeeder extends Seeder
             'is_active'   => true,
         ]);
 
-        $this->savePhoto($mitar->id, $mitarProfile->id, 'cattle,farm,man,field,simmental', 1010, 0);
-        $this->savePhoto($mitar->id, $mitarProfile->id, 'cattle,pasture,river,meadow,green', 2010, 1, 800, 600);
+        $this->savePhoto($mitar->id, $mitarProfile->id, 'cattle,farmer,man', 119, 0);
+        $this->savePhoto($mitar->id, $mitarProfile->id, 'cattle,pasture,river', 120, 1, 800, 600);
 
         $p = Product::create([
             'user_id'     => $mitar->id,
@@ -584,7 +584,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => now()->addHours(24),
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($mitar->id, $p->id, 'milk,fresh,cow,dairy,bottle', 3044);
+        $this->saveProductPhoto($mitar->id, $p->id, 'milk,cow', 244);
 
         $p = Product::create([
             'user_id'     => $mitar->id,
@@ -596,7 +596,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($mitar->id, $p->id, 'butter,homemade,dairy,yellow,fresh', 3045);
+        $this->saveProductPhoto($mitar->id, $p->id, 'butter,dairy', 245);
 
         $p = Product::create([
             'user_id'     => $mitar->id,
@@ -608,7 +608,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($mitar->id, $p->id, 'beef,meat,fresh,farm,simmental', 3046);
+        $this->saveProductPhoto($mitar->id, $p->id, 'beef,meat', 246);
 
         $p = Product::create([
             'user_id'     => $mitar->id,
@@ -620,7 +620,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($mitar->id, $p->id, 'veal,meat,fresh,pale,natural', 3047);
+        $this->saveProductPhoto($mitar->id, $p->id, 'veal,meat', 247);
 
         Review::create(['farmer_id' => $mitarProfile->id, 'reviewer_name' => 'Dragana P.',  'body' => 'Mlijeko od Simentalki je kremasto i bogato — odmah se osjeća da krave pasu na livadi. Djeca su prestala tražiti kupovno mlijeko.',                              'rating' => 5, 'ip_hash' => hash('sha256', '10.1.1.1')]);
         Review::create(['farmer_id' => $mitarProfile->id, 'reviewer_name' => 'Stjepan V.',  'body' => 'Goveđa govedina je mekana i ukusna — kuhao sam čorbu i meso se samo raspalo. Vakuumsko pakovanje je odlično za transport.',                                    'rating' => 5, 'ip_hash' => hash('sha256', '10.1.1.2')]);
@@ -648,8 +648,8 @@ class DemoSeeder extends Seeder
             'is_active'   => true,
         ]);
 
-        $this->savePhoto($zana->id, $zanaProfile->id, 'lavender,herbs,woman,garden,sun', 1011, 0);
-        $this->savePhoto($zana->id, $zanaProfile->id, 'lavender,field,purple,herbs,countryside', 2011, 1, 800, 600);
+        $this->savePhoto($zana->id, $zanaProfile->id, 'lavender,woman,garden', 121, 0);
+        $this->savePhoto($zana->id, $zanaProfile->id, 'lavender,field,purple', 122, 1, 800, 600);
 
         $p = Product::create([
             'user_id'     => $zana->id,
@@ -661,7 +661,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zana->id, $p->id, 'thyme,herb,dried,natural,aromatic', 3048);
+        $this->saveProductPhoto($zana->id, $p->id, 'thyme,herb', 248);
 
         $p = Product::create([
             'user_id'     => $zana->id,
@@ -673,7 +673,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zana->id, $p->id, 'sage,herb,dried,leaves,natural', 3049);
+        $this->saveProductPhoto($zana->id, $p->id, 'sage,herb', 249);
 
         $p = Product::create([
             'user_id'     => $zana->id,
@@ -685,7 +685,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zana->id, $p->id, 'lavender,dried,bundle,purple,natural', 3050);
+        $this->saveProductPhoto($zana->id, $p->id, 'lavender,dried', 250);
 
         $p = Product::create([
             'user_id'     => $zana->id,
@@ -697,7 +697,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zana->id, $p->id, 'lavender,honey,jar,light,natural', 3051);
+        $this->saveProductPhoto($zana->id, $p->id, 'lavender,honey', 251);
 
         $p = Product::create([
             'user_id'     => $zana->id,
@@ -709,7 +709,7 @@ class DemoSeeder extends Seeder
             'fresh_until' => null,
             'is_active'   => true,
         ]);
-        $this->saveProductPhoto($zana->id, $p->id, 'oregano,herb,dried,mediterranean,natural', 3052);
+        $this->saveProductPhoto($zana->id, $p->id, 'oregano,herb', 252);
 
         Review::create(['farmer_id' => $zanaProfile->id, 'reviewer_name' => 'Jelena S.',   'body' => 'Majčina dušica od Žane je prava — gusto pakovanje, snažan miris. Brat ima hroničan kašalj i ovo mu jedino pomaže osim lijekova. Naručujem redovno.',          'rating' => 5, 'ip_hash' => hash('sha256', '11.1.1.1')]);
         Review::create(['farmer_id' => $zanaProfile->id, 'reviewer_name' => 'Aleksandar M.','body' => 'Med od lavande je jedinstven — blag i aromatičan. Dao sam poklon baki za Novu godinu i bila je oduševljena. Odlično pakovanje.',                               'rating' => 5, 'ip_hash' => hash('sha256', '11.1.1.2')]);
@@ -718,10 +718,10 @@ class DemoSeeder extends Seeder
         Review::create(['farmer_id' => $zanaProfile->id, 'reviewer_name' => 'Zorica K.',   'body' => 'Čaj od žalfije pomaže mi za grlo bolji od apotečkih kapsula. Narudžba dolazi uredna i mirisna poštom. Jedini prigovor — ponekad nema zaliha u proljeće.',      'rating' => 4, 'ip_hash' => hash('sha256', '11.1.1.5')]);
     }
 
-    private function savePhoto(int $userId, int $profileId, string $keywords, int $sig, int $position = 0, int $width = 400, int $height = 400): void
+    private function savePhoto(int $userId, int $profileId, string $keyword, int $lock, int $position = 0, int $width = 400, int $height = 400): void
     {
         try {
-            $url = "https://source.unsplash.com/{$width}x{$height}/?{$keywords}&sig={$sig}";
+            $url = "https://loremflickr.com/{$width}/{$height}/{$keyword}?lock={$lock}";
             $response = Http::withoutVerifying()->timeout(15)->get($url);
             if ($response->successful()) {
                 $filename = "photo_{$position}.jpg";
@@ -739,10 +739,10 @@ class DemoSeeder extends Seeder
         }
     }
 
-    private function saveProductPhoto(int $userId, int $productId, string $keywords, int $sig): void
+    private function saveProductPhoto(int $userId, int $productId, string $keyword, int $lock): void
     {
         try {
-            $url = "https://source.unsplash.com/400x400/?{$keywords}&sig={$sig}";
+            $url = "https://loremflickr.com/400/400/{$keyword}?lock={$lock}";
             $response = Http::withoutVerifying()->timeout(15)->get($url);
             if ($response->successful()) {
                 $path = "farmers/{$userId}/product_{$productId}.jpg";
