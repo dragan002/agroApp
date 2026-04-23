@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
-# AgroApp — Farmer Marketplace
+# SeljakRS — Farmer Marketplace
 
-Digital marketplace connecting farmers with customers across Republic of Srpska. Farmers list fresh products; customers browse and contact farmers directly via phone/WhatsApp/Viber. No in-app checkout — contact only.
+Digital marketplace connecting farmers with customers across Republic of Srpska. Brand name in the UI is **SeljakRS** (top-bar logo); the repo folder is `agroApp`. Farmers list fresh products; customers browse and contact farmers directly via phone/WhatsApp/Viber. No in-app checkout — contact only.
 
 **Distribution:** Web + Android TWA (Railway → PWABuilder → Play Store)  
 **App root:** `my-app/` (all Laravel commands run from there)
@@ -105,7 +105,13 @@ sh -c "php artisan config:cache && php artisan route:cache && php artisan view:c
 
 **HTTPS proxy:** `AppServiceProvider::boot()` calls `URL::forceScheme('https')` in production because Railway terminates SSL at its load balancer (app sees HTTP internally without this).
 
-**Seeding on Railway:** Railway Shell is not reliably accessible via UI. Best approach: temporarily add `; php artisan db:seed --class=DemoSeeder --force;` to the start command (using semicolons not `&&` so failure doesn't block startup), redeploy, then remove it. Run `AdminSeeder` the same way for the admin account.
+**Seeding on Railway:** The seeders download images from `loremflickr.com` — this takes 5–8 minutes for a full seed. Running `migrate:fresh --seed` synchronously blocks FrankenPHP from starting and causes Railway's health check to fail. The correct approach is to run the seeder **in the background** so FrankenPHP starts immediately:
+
+```
+sh -c "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate:fresh --force && php artisan storage:link --force && (php artisan db:seed --force > /tmp/seed.log 2>&1 &) && frankenphp run --config /Caddyfile"
+```
+
+App is live in ~5 seconds; demo data populates over the next 5–8 minutes. **After confirming data is present, immediately revert to the normal start command** (with `migrate --force`, not `migrate:fresh`) to prevent the database being wiped on the next deploy.
 
 ---
 
@@ -141,9 +147,11 @@ CSRF: read-only API routes are exempt (list in `bootstrap/app.php`). All mutatin
 **Enums:** `App\Enums\ProductCategory` and `App\Enums\City` — both have a static `all()` returning `[key => label]`. Add new categories/cities here, not in the frontend JS.
 
 **Seeders:**
-- `DemoSeeder` — 8 realistic RS farmers with products; use for production or demo.
-- `FarmerSeeder` — simpler test farmers for local dev.
+- `DemoSeeder` — 14 farmers across 9 cities (Banja Luka, Bijeljina, Brčko, Derventa, Doboj, Gradiška, Kotor Varoš, Prijedor, Trebinje); use for production/demo.
+- `FarmerSeeder` — 3 Prnjavor farmers; runs before DemoSeeder (both called from `DatabaseSeeder`). Together: **17 farmers, 10 cities, ~80 products**.
 - `AdminSeeder` — creates the admin account.
+
+Both seeders download profile photos and product photos from `loremflickr.com` at seed time using `Http::get()`. Photos are stored in `Storage::disk()` (`FILESYSTEM_DISK` drives local vs R2). If the network is unavailable, photos are silently skipped and the emoji fallback is shown in the UI.
 
 ### Design System
 
@@ -206,6 +214,8 @@ Text muted:        #a89a85
 ### Photo Storage
 
 Photos stored via `Storage::disk()` (no argument — disk is driven by `FILESYSTEM_DISK` env var) at path `farmers/{userId}/{filename}`. `Photo::toApiArray()` returns a full URL via `Storage::url()`. Production uses Cloudflare R2 — `league/flysystem-aws-s3-v3` is installed. `AWS_URL` must be set to the R2 public bucket URL (`pub-xxx.r2.dev`) so `Storage::url()` generates correct public URLs rather than the S3 API endpoint.
+
+**Product image fallback:** All product image tags use a "layered" pattern — the category emoji sits in the background div and the `<img>` overlays it absolutely. `onerror="this.style.display='none'"` reveals the emoji when the image fails to load. This is implemented in `productCardHtml()`, `productGridCard()`, `renderProductDetail()`, `myProductRowHtml()`, and the admin panel product list. Apply the same pattern for any new product image context.
 
 ### Reviews
 
