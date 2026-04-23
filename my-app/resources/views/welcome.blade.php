@@ -1040,9 +1040,10 @@ function renderHomeProducts(products) {
 }
 
 function productCardHtml(p) {
+    const _pe = productEmoji(p.name, p.category);
     const thumb = p.thumbnailUrl
-        ? `<img src="${esc(p.thumbnailUrl)}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;flex-shrink:0;" alt="${esc(p.name)}">`
-        : `<div style="width:80px;height:80px;border-radius:12px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">${productEmoji(p.name, p.category)}</div>`;
+        ? `<div style="width:80px;height:80px;border-radius:12px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;overflow:hidden;position:relative;"><span>${_pe}</span><img src="${esc(p.thumbnailUrl)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" alt=""></div>`
+        : `<div style="width:80px;height:80px;border-radius:12px;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">${_pe}</div>`;
     const fresh = p.freshToday ? `<div style="display:inline-flex;align-items:center;gap:3px;background:#fef3c7;color:#92400e;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;margin-bottom:4px;">🌞 Svježe danas</div>` : '';
     const farmer = p.farmer ? `<div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3d5a3a" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span style="font-size:12px;font-weight:600;color:#3d5a3a;">${esc(p.farmer.farmName)}</span></div>` : '';
     const price = p.price ? `<div style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:#2a2218;margin-top:2px;">${formatPrice(p.price, p.priceUnit)}</div>` : '';
@@ -1342,9 +1343,10 @@ async function fpSubmitReview() {
 }
 
 function productGridCard(p) {
+    const _pe2 = productEmoji(p.name, p.category);
     const thumb = p.thumbnailUrl
-        ? `<img src="${esc(p.thumbnailUrl)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">`
-        : `<div style="position:absolute;inset:0;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:40px;">${productEmoji(p.name, p.category)}</div>`;
+        ? `<div style="position:absolute;inset:0;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:40px;">${_pe2}</div><img src="${esc(p.thumbnailUrl)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" alt="">`
+        : `<div style="position:absolute;inset:0;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:40px;">${_pe2}</div>`;
     const tag = p.freshToday ? 'Svježe' : (p.category || '');
     return `<div onclick="loadProductDetail(${p.id})" style="cursor:pointer;">
         <div style="position:relative;border-radius:14px;overflow:hidden;margin-bottom:10px;aspect-ratio:1/1.1;">
@@ -1384,7 +1386,7 @@ function renderProductDetail(p) {
     const heroContent = photos.length
         ? `<div class="gallery" id="pd-gallery" style="position:relative;">
             <div class="gallery-track" id="pd-gallery-track" style="height:420px;overflow-x:auto;scroll-snap-type:x mandatory;display:flex;">
-                ${photos.map(ph => `<div style="min-width:100%;height:420px;scroll-snap-align:start;flex-shrink:0;overflow:hidden;"><img src="${esc(ph.url)}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover;"></div>`).join('')}
+                ${photos.map(ph => `<div style="min-width:100%;height:420px;scroll-snap-align:start;flex-shrink:0;overflow:hidden;position:relative;"><div style="position:absolute;inset:0;background:#e8efe4;display:flex;align-items:center;justify-content:center;font-size:80px;">${productEmoji(p.name, p.category)}</div><img src="${esc(ph.url)}" alt="${esc(p.name)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'"></div>`).join('')}
             </div>
             ${photos.length > 1 ? `<div style="position:absolute;bottom:18px;left:0;right:0;display:flex;justify-content:center;gap:6px;">${photos.map((_, i) => `<div class="gallery-dot${i===0?' active':''}" data-gallery="pd-gallery" data-idx="${i}" style="width:${i===0?18:6}px;height:6px;border-radius:100px;background:${i===0?'#fff':'rgba(255,255,255,0.5)'};transition:width .2s;"></div>`).join('')}</div>` : ''}
            </div>`
@@ -1986,7 +1988,7 @@ function renderMyProducts(products) {
 
 function myProductRowHtml(p) {
     const thumb = p.photos && p.photos.length
-        ? `<img src="${esc(p.photos[0].url)}" class="my-product-thumb">`
+        ? `<div class="my-product-thumb" style="position:relative;overflow:hidden;"><span style="font-size:20px;">${productEmoji(p.name, p.category)}</span><img src="${esc(p.photos[0].url)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" alt=""></div>`
         : `<div class="my-product-thumb">${productEmoji(p.name, p.category)}</div>`;
     return `<div class="my-product-row">
         ${thumb}
@@ -2568,9 +2570,10 @@ function renderAdminProducts() {
         return;
     }
     el.innerHTML = state.adminProducts.map(p => {
+        const _pea = productEmoji(p.name, p.category);
         const thumb = p.thumbnailUrl
-            ? `<img src="${esc(p.thumbnailUrl)}" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">`
-            : `<div style="width:48px;height:48px;border-radius:8px;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${productEmoji(p.name, p.category)}</div>`;
+            ? `<div style="width:48px;height:48px;border-radius:8px;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;position:relative;"><span>${_pea}</span><img src="${esc(p.thumbnailUrl)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" alt=""></div>`
+            : `<div style="width:48px;height:48px;border-radius:8px;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${_pea}</div>`;
         const activeTag = p.isActive
             ? '' : `<span style="font-size:10px;font-weight:600;color:var(--color-danger);background:#FEE2E2;padding:1px 6px;border-radius:20px;margin-left:6px;">Obrisan</span>`;
         return `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--color-border);background:#fff;">
