@@ -716,6 +716,270 @@ class DemoSeeder extends Seeder
         Review::create(['farmer_id' => $zanaProfile->id, 'reviewer_name' => 'Ivana T.',    'body' => 'Sušena lavanda iz Trebinja miriše na ljeto i sunce. Stavila sam vrećice po ormarima i soba je mirisala sedmicama. Dostava poštom bila brza.',                   'rating' => 5, 'ip_hash' => hash('sha256', '11.1.1.3')]);
         Review::create(['farmer_id' => $zanaProfile->id, 'reviewer_name' => 'Miroslav R.', 'body' => 'Origano je dvostruko jači od kupovnog — malo treba za puno mirisa. Žana je stručna i objasni sve o biljkama. Svaka preporuka.',                                  'rating' => 5, 'ip_hash' => hash('sha256', '11.1.1.4')]);
         Review::create(['farmer_id' => $zanaProfile->id, 'reviewer_name' => 'Zorica K.',   'body' => 'Čaj od žalfije pomaže mi za grlo bolji od apotečkih kapsula. Narudžba dolazi uredna i mirisna poštom. Jedini prigovor — ponekad nema zaliha u proljeće.',      'rating' => 4, 'ip_hash' => hash('sha256', '11.1.1.5')]);
+
+        // Farmer 12 — Mirsada Filipović, voće i džemovi, Banja Luka
+        $mirsada = User::create([
+            'name'            => 'Mirsada Filipović',
+            'email'           => 'mirsada.filipovic@example.com',
+            'password'        => Hash::make('password'),
+            'role'            => 'farmer',
+            'phone'           => '+38766560900',
+            'viber'           => '+38766560900',
+            'whatsapp'        => '+38766560900',
+            'onboarding_step' => null,
+        ]);
+
+        $mirsadaProfile = FarmerProfile::create([
+            'user_id'     => $mirsada->id,
+            'farm_name'   => 'Voćnjak i bašta Filipović',
+            'description' => 'Porodično imanje na rubu Banja Luke — mala bašta, ali bogata i pažljivo obrađena. Uzgajamo jagode, maline, kupine i trešnje bez pesticida. Krajem ljeta kuhamo džemove, kompote i sirupe po starim receptima moje majke. Posebnost je sirup od bazge koji skupljamo ručno na početku juna. Dostava u Banja Luku svakim danom, poštom širom BiH.',
+            'city'        => 'banja_luka',
+            'address'     => 'Lazarevo bb, Banja Luka',
+            'is_active'   => true,
+        ]);
+
+        $this->savePhoto($mirsada->id, $mirsadaProfile->id, 'strawberry,woman,garden', 123, 0);
+        $this->savePhoto($mirsada->id, $mirsadaProfile->id, 'strawberry,raspberry,garden', 129, 1, 800, 600);
+
+        $p = Product::create(['user_id' => $mirsada->id, 'category' => 'voce',    'name' => 'Jagode svježe',               'description' => 'Slatke sorte "Clery" i "Alba", svježe ubrane svako jutro. Bez pesticida, prodajemo u korpicama od 0,5 kg ili 1 kg. Sezona april–jun.', 'price' => 3.00, 'price_unit' => 'kg', 'fresh_until' => now()->addHours(24), 'is_active' => true]);
+        $this->saveProductPhoto($mirsada->id, $p->id, 'strawberry,fresh,red', 253);
+
+        $p = Product::create(['user_id' => $mirsada->id, 'category' => 'voce',    'name' => 'Maline svježe',               'description' => 'Sočne domaće maline, sezona juna i jula. Prodajemo u korpicama od 0,5 kg. Ubrane isti dan ujutro — ne stoje dugo, naručite na vrijeme.', 'price' => 4.00, 'price_unit' => 'kg', 'fresh_until' => now()->addHours(24), 'is_active' => true]);
+        $this->saveProductPhoto($mirsada->id, $p->id, 'raspberry,fresh,red', 254);
+
+        $p = Product::create(['user_id' => $mirsada->id, 'category' => 'zimnica', 'name' => 'Džem od jagode (tegla 400g)', 'description' => 'Domaći džem od svježih jagoda, kuhan bez konzervansa. Samo jagode i malo šećera — gust i tamnocrven. Tegla 400g.', 'price' => 3.50, 'price_unit' => 'kom', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($mirsada->id, $p->id, 'strawberry,jam,jar', 255);
+
+        $p = Product::create(['user_id' => $mirsada->id, 'category' => 'zimnica', 'name' => 'Kompot od trešnje (tegla 720ml)', 'description' => 'Trešnje kuhane u laganom šećernom sirupu, bez konzervansa. Tamnocrven, slatko-kiselkast kompot koji miriše na ljeto. Tegla 720ml.', 'price' => 5.00, 'price_unit' => 'kom', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($mirsada->id, $p->id, 'cherry,compote,jar', 256);
+
+        $p = Product::create(['user_id' => $mirsada->id, 'category' => 'ostalo',  'name' => 'Sirup od bazge (0,75L)',       'description' => 'Ručno skupljeni cvjetovi bazge u junu, kuhani u sirupu sa limunom. Osvježavajući, aromatičan, razrijeđen s vodom daje ljetni sok kakav se ne može kupiti. Boca 0,75L.', 'price' => 8.00, 'price_unit' => 'kom', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($mirsada->id, $p->id, 'elderflower,syrup,bottle', 257);
+
+        Review::create(['farmer_id' => $mirsadaProfile->id, 'reviewer_name' => 'Bojana T.', 'body' => 'Jagode su nevjerovatne — slatke, mirisne, bez voštanog premaza. Kupujem svake sedmice dok traje sezona. Djeca obожavaju.',                       'rating' => 5, 'ip_hash' => hash('sha256', '12.1.1.1')]);
+        Review::create(['farmer_id' => $mirsadaProfile->id, 'reviewer_name' => 'Goran N.',  'body' => 'Sirup od bazge je posebno dobar — nije preslatk, pravi ljetni ukus. Kupio sam 4 flaše i nije ni jedna ostala do avgusta.',                     'rating' => 5, 'ip_hash' => hash('sha256', '12.1.1.2')]);
+        Review::create(['farmer_id' => $mirsadaProfile->id, 'reviewer_name' => 'Suzana P.', 'body' => 'Džem od jagode je gust i aromatičan — ništa slično nisam probala. Mirsada je ljubazna i uvijek isporuči na vrijeme.',                           'rating' => 5, 'ip_hash' => hash('sha256', '12.1.1.3')]);
+        Review::create(['farmer_id' => $mirsadaProfile->id, 'reviewer_name' => 'Darko K.',  'body' => 'Maline su svježe i ukusne, ali ponekad nema zaliha jer se brzo rasprodaju. Preporučujem naručiti dan ranije.',                                  'rating' => 4, 'ip_hash' => hash('sha256', '12.1.1.4')]);
+
+        // Farmer 13 — Radoslav Arsenić, živinarska farma, Doboj
+        $radoslav = User::create([
+            'name'            => 'Radoslav Arsenić',
+            'email'           => 'radoslav.arsenic@example.com',
+            'password'        => Hash::make('password'),
+            'role'            => 'farmer',
+            'phone'           => '+38763720400',
+            'viber'           => '+38763720400',
+            'whatsapp'        => null,
+            'onboarding_step' => null,
+        ]);
+
+        $radoslavProfile = FarmerProfile::create([
+            'user_id'     => $radoslav->id,
+            'farm_name'   => 'Živinarska farma Arsenić',
+            'description' => 'U Makljenovcu kod Doboja uzgajam 300 kokoši, 80 ćurki i 50 pačaka na otvorenom sistemu — slobodan izlaz, prirodna hrana bez antibiotika. Pored živih ptičjih mesa, nudim svježa jaja i domaće dimljene kobasice. Isporuka u Doboj svaki dan, okolinu RS poštom ili dogovoreno.',
+            'city'        => 'doboj',
+            'address'     => 'Makljenovac bb',
+            'is_active'   => true,
+        ]);
+
+        $this->savePhoto($radoslav->id, $radoslavProfile->id, 'chicken,farmer,man', 124, 0);
+        $this->savePhoto($radoslav->id, $radoslavProfile->id, 'chicken,poultry,farm', 130, 1, 800, 600);
+
+        $p = Product::create(['user_id' => $radoslav->id, 'category' => 'meso',   'name' => 'Svježe pileće meso',            'description' => 'Pile slobodnog uzgoja, hranjeno kukuruzom i pšenicom bez antibiotika. Meso žuto i čvrsto, prirodan miris. Klanje po narudžbi, eviscerirano i vakuumski pakovano. Minimum 1,5 kg.', 'price' => 6.50, 'price_unit' => 'kg', 'fresh_until' => now()->addHours(24), 'is_active' => true]);
+        $this->saveProductPhoto($radoslav->id, $p->id, 'chicken,meat,fresh', 258);
+
+        $p = Product::create(['user_id' => $radoslav->id, 'category' => 'meso',   'name' => 'Ćureće meso svježe',            'description' => 'Ćurka slobodnog uzgoja, prirodna ishrana. Meso bijelo i sočno, nisko masno. Prodajemo cijelu ćurku (3–5 kg) ili dijelove. Klanje po narudžbi uz 2 dana unaprijed.', 'price' => 7.50, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($radoslav->id, $p->id, 'turkey,meat,farm', 259);
+
+        $p = Product::create(['user_id' => $radoslav->id, 'category' => 'jaja',   'name' => 'Svježa jaja slobodnih kokoši',  'description' => 'Jaja kokoši koje izlaze napolje svaki dan i hrane se prirodnom hranom. Žumanjak tamno narandžast. Skupljamo svakog jutra — uvijek svježe. Kutija 10 ili 30 komada.', 'price' => 0.40, 'price_unit' => 'kom', 'fresh_until' => now()->addHours(48), 'is_active' => true]);
+        $this->saveProductPhoto($radoslav->id, $p->id, 'eggs,fresh,farm,orange', 260);
+
+        $p = Product::create(['user_id' => $radoslav->id, 'category' => 'meso',   'name' => 'Pileća kobasica dimljena',       'description' => 'Kobasica od pilećeg mesa sa začinima, dimljena hladnim dimom bukovine. Laka, niskomasna alternativa svinjskoj kobasici. Kilogram — 5 do 6 komada.', 'price' => 9.00, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($radoslav->id, $p->id, 'sausage,chicken,smoked', 261);
+
+        $p = Product::create(['user_id' => $radoslav->id, 'category' => 'meso',   'name' => 'Pačja mast (tegla 0,5 kg)',      'description' => 'Topljena pačja mast od slobodnih pačaka, čista i zlatnožuta. Nezamjenjiva za prženje krumpira i pripremu pečenja. Blažeg ukusa od svinjske, manje zasićenih masti.', 'price' => 7.00, 'price_unit' => 'kom', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($radoslav->id, $p->id, 'duck,fat,jar,golden', 262);
+
+        Review::create(['farmer_id' => $radoslavProfile->id, 'reviewer_name' => 'Tatjana R.',  'body' => 'Pileće meso je žuto i čvrsto — odmah se vidi da je slobodnog uzgoja. Čorba od ovog pileta je nevjerovatna, sasvim drugačija od supermarketskog.',           'rating' => 5, 'ip_hash' => hash('sha256', '13.1.1.1')]);
+        Review::create(['farmer_id' => $radoslavProfile->id, 'reviewer_name' => 'Vladan M.',   'body' => 'Jaja su odlična — žumanjak narandžast i gust. Kupujem za cjelu porodicu i nikad razočaran. Radoslav uvijek isporuči na dogovoreno vrijeme.',               'rating' => 5, 'ip_hash' => hash('sha256', '13.1.1.2')]);
+        Review::create(['farmer_id' => $radoslavProfile->id, 'reviewer_name' => 'Maja S.',     'body' => 'Pileća kobasica je fenomenalna — laka, ukusna, nije masna. Djeca je vole više od svinjske. Pravi domaći dim.',                                              'rating' => 5, 'ip_hash' => hash('sha256', '13.1.1.3')]);
+        Review::create(['farmer_id' => $radoslavProfile->id, 'reviewer_name' => 'Boško J.',    'body' => 'Ćurka za slavu bila je savršena — bijelo meso, sočno, mekano. Radoslav je pouzdan i ljubazan. Jedino bi trebalo više fleksibilnosti s veličinom.',          'rating' => 4, 'ip_hash' => hash('sha256', '13.1.1.4')]);
+
+        // Farmer 14 — Nataša Đorđić, šumsko voće i zimnica, Doboj
+        $natasa = User::create([
+            'name'            => 'Nataša Đorđić',
+            'email'           => 'natasa.djordic@example.com',
+            'password'        => Hash::make('password'),
+            'role'            => 'farmer',
+            'phone'           => '+38765330450',
+            'viber'           => '+38765330450',
+            'whatsapp'        => '+38765330450',
+            'onboarding_step' => null,
+        ]);
+
+        $natasaProfile = FarmerProfile::create([
+            'user_id'     => $natasa->id,
+            'farm_name'   => 'Šumska bašta Đorđić',
+            'description' => 'Imam malu šumsku baštu na sjevernim padinama Ozrena gdje rastu kupine, borovnice i divlje maline. Pored šumskog voća, uzgajam jabuke i kruške stare sorte. Krajem ljeta radim džemove i sokove po receptima koje sam naslijedila od bake. Sve isporučujem poštom — pakujem pažljivo da stigne zdravo.',
+            'city'        => 'doboj',
+            'address'     => 'Ozren bb',
+            'is_active'   => true,
+        ]);
+
+        $this->savePhoto($natasa->id, $natasaProfile->id, 'berries,woman,garden', 125, 0);
+        $this->savePhoto($natasa->id, $natasaProfile->id, 'blueberry,blackberry,forest', 131, 1, 800, 600);
+
+        $p = Product::create(['user_id' => $natasa->id, 'category' => 'voce',    'name' => 'Kupine svježe',                  'description' => 'Krupne, tamne kupine sa sjenovitih padina Ozrena. Slatke i aromatične, sezona jula i avgusta. Prodajemo u korpicama od 0,5 kg. Ubrane isti dan.', 'price' => 4.50, 'price_unit' => 'kg', 'fresh_until' => now()->addHours(24), 'is_active' => true]);
+        $this->saveProductPhoto($natasa->id, $p->id, 'blackberry,fresh,dark', 263);
+
+        $p = Product::create(['user_id' => $natasa->id, 'category' => 'voce',    'name' => 'Borovnice svježe',               'description' => 'Divlje borovnice sa ozrenskih šuma, sitne ali izuzetno aromatične i bogate antioksidansima. Sezona jula. Prodajemo u korpicama od 0,25 ili 0,5 kg.', 'price' => 6.00, 'price_unit' => 'kg', 'fresh_until' => now()->addHours(24), 'is_active' => true]);
+        $this->saveProductPhoto($natasa->id, $p->id, 'blueberry,fresh,wild', 264);
+
+        $p = Product::create(['user_id' => $natasa->id, 'category' => 'zimnica', 'name' => 'Džem od kupine (tegla 400g)',     'description' => 'Džem kuhan od svježih kupina sa Ozrena, bez konzervansa. Intenzivno ljubičastone boje i jakog aromata. Savršen uz sir, palačinke i kolače. Tegla 400g.', 'price' => 4.00, 'price_unit' => 'kom', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($natasa->id, $p->id, 'blackberry,jam,jar,purple', 265);
+
+        $p = Product::create(['user_id' => $natasa->id, 'category' => 'zimnica', 'name' => 'Džem od borovnice (tegla 400g)',  'description' => 'Džem od divljih borovnica — rijedak i dragocjen. Tamnomodre boje, gustog konzistencija i intenzivnog ukusa. Bogat prirodnim pigmentima. Tegla 400g.', 'price' => 4.50, 'price_unit' => 'kom', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($natasa->id, $p->id, 'blueberry,jam,jar,dark', 266);
+
+        $p = Product::create(['user_id' => $natasa->id, 'category' => 'med',     'name' => 'Med od livadskog cvijeća',        'description' => 'Miješani livadski med sakupljen sa ozrenskih livada u saradnji s lokalnim pčelarom. Tamnobraon, kristalizira brzo, pun aroma divljeg cvijeća. Tegla 0,5 kg.', 'price' => 15.00, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($natasa->id, $p->id, 'wildflower,honey,jar', 267);
+
+        Review::create(['farmer_id' => $natasaProfile->id, 'reviewer_name' => 'Senka B.',   'body' => 'Borovnice sa Ozrena su posebne — sitne ali nevjerovatnog ukusa i mirisa. Ništa slično ne može se naći u prodavnicama. Redovno naručujem.',                  'rating' => 5, 'ip_hash' => hash('sha256', '14.1.1.1')]);
+        Review::create(['farmer_id' => $natasaProfile->id, 'reviewer_name' => 'Nenad V.',   'body' => 'Kupine su sočne i krupne. Džem od kupine je posebno gust i aromatičan — kupio sam 8 tegli za zimu.',                                                         'rating' => 5, 'ip_hash' => hash('sha256', '14.1.1.2')]);
+        Review::create(['farmer_id' => $natasaProfile->id, 'reviewer_name' => 'Kristina M.','body' => 'Nataša je ljubazna i pedantna — pakovanje uredno, voće svježe. Džem od borovnice koristim kao namaz i u jogurt. Preporučujem svima.',                         'rating' => 5, 'ip_hash' => hash('sha256', '14.1.1.3')]);
+        Review::create(['farmer_id' => $natasaProfile->id, 'reviewer_name' => 'Dragan S.',  'body' => 'Odlična ponuda šumskog voća. Jedini minus — mala količina, brzo se rasprodaje u sezoni. Vrijedi naručiti unaprijed.',                                         'rating' => 4, 'ip_hash' => hash('sha256', '14.1.1.4')]);
+
+        // Farmer 15 — Milenko Đurić, povrće i krompir, Prijedor
+        $milenko = User::create([
+            'name'            => 'Milenko Đurić',
+            'email'           => 'milenko.djuric@example.com',
+            'password'        => Hash::make('password'),
+            'role'            => 'farmer',
+            'phone'           => '+38766810500',
+            'viber'           => '+38766810500',
+            'whatsapp'        => '+38766810500',
+            'onboarding_step' => null,
+        ]);
+
+        $milenkoProfile = FarmerProfile::create([
+            'user_id'     => $milenko->id,
+            'farm_name'   => 'Imanje Đurić — Prijedor',
+            'description' => 'Na 5 hektara posavske crnice u Ljubiji uzgajamo krompir, luk, šargarepu i cveklu. Sve sorte su provjerene i domaće — sjeme čuvamo sami već 15 godina. Bez hemije i bez vještačkih đubriva — samo stajnjak i kompost. Dostavljamo u Prijedor srijedom i subotom, veće narudžbe možemo dostavljati i u Banja Luku.',
+            'city'        => 'prijedor',
+            'address'     => 'Ljubija bb',
+            'is_active'   => true,
+        ]);
+
+        $this->savePhoto($milenko->id, $milenkoProfile->id, 'farmer,man,vegetable,field', 126, 0);
+        $this->savePhoto($milenko->id, $milenkoProfile->id, 'potato,field,harvest,farm', 132, 1, 800, 600);
+
+        $p = Product::create(['user_id' => $milenko->id, 'category' => 'povrce', 'name' => 'Krompir crveni "Romano"',        'description' => 'Crveni krompir sorte Romano — čvrst, nisko vodeni, ne raspada se pri kuhanju. Idealan za čorbu, varivo i prilog. Kopamo u septembru i čuvamo u hladnom podrumu. Džakovi od 5, 10 ili 25 kg.', 'price' => 0.80, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($milenko->id, $p->id, 'potato,red,romano,harvest', 268);
+
+        $p = Product::create(['user_id' => $milenko->id, 'category' => 'povrce', 'name' => 'Crni luk krupan',                'description' => 'Krupan domaći crni luk, čuva se do 8 mjeseci na suhom. Uzgojen bez pesticida na crnici. Idealan za kuhanje i kiseljenje. Prodajemo na komad ili u mrežama od 5 kg.', 'price' => 0.85, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($milenko->id, $p->id, 'onion,red,organic,farm', 269);
+
+        $p = Product::create(['user_id' => $milenko->id, 'category' => 'povrce', 'name' => 'Bijeli luk domaći',              'description' => 'Krupan bijeli luk stare posavske sorte. Suho čuvan u pletenicama, traje do 6 mjeseci. Snažan i oštar — ideal za sve kuhane i sirove namjene. Prodajemo na komad ili pletenica (10 glavica).', 'price' => 3.50, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($milenko->id, $p->id, 'garlic,white,organic,braid', 270);
+
+        $p = Product::create(['user_id' => $milenko->id, 'category' => 'povrce', 'name' => 'Šargarepa krupna svježa',        'description' => 'Krupna narančasta šargarepa, slatka i hrskava. Svježe povučena iz crnice — veća i sočnija od industrijske. Idealna za juhu, gulaš i svježe sokove. Mreže od 2 ili 5 kg.', 'price' => 0.90, 'price_unit' => 'kg', 'fresh_until' => now()->addHours(48), 'is_active' => true]);
+        $this->saveProductPhoto($milenko->id, $p->id, 'carrot,fresh,orange,harvest', 271);
+
+        $p = Product::create(['user_id' => $milenko->id, 'category' => 'povrce', 'name' => 'Cvekla (cikla) svježa',          'description' => 'Tamnocrvena cvekla bez pesticida, niska i krupna. Kuha se brzo, idealna za salate, kompote i cveklinu čorbu. Dostupna od septembra. Mreže od 1 ili 3 kg.', 'price' => 0.70, 'price_unit' => 'kg', 'fresh_until' => now()->addHours(48), 'is_active' => true]);
+        $this->saveProductPhoto($milenko->id, $p->id, 'beetroot,red,organic,fresh', 272);
+
+        Review::create(['farmer_id' => $milenkoProfile->id, 'reviewer_name' => 'Jelka P.',    'body' => 'Krompir "Romano" je savršen — ne raspada se pri kuhanju i okus je poseban. Kupujem 25 kg za zimu svake jeseni.',                                             'rating' => 5, 'ip_hash' => hash('sha256', '15.1.1.1')]);
+        Review::create(['farmer_id' => $milenkoProfile->id, 'reviewer_name' => 'Mirko V.',    'body' => 'Šargarepa je slatka i hrskava — djeca je jedu i sirovu. Ništa slično nisam dobio u prodavnici. Bijeli luk odlično čuvan cijelu zimu.',                        'rating' => 5, 'ip_hash' => hash('sha256', '15.1.1.2')]);
+        Review::create(['farmer_id' => $milenkoProfile->id, 'reviewer_name' => 'Radmila B.',  'body' => 'Cvekla je tamnocrvena i prirodno slatka. Napravila sam salatu i svi su pitali odakle sam nabavila. Milenko je pouzdan i tačan.',                               'rating' => 5, 'ip_hash' => hash('sha256', '15.1.1.3')]);
+        Review::create(['farmer_id' => $milenkoProfile->id, 'reviewer_name' => 'Rade T.',     'body' => 'Dobra cijena za kvalitetno domaće povrće. Jedino bi trebalo organizovati dostavu i do Prijedora češće nego dvaput sedmično.',                                  'rating' => 4, 'ip_hash' => hash('sha256', '15.1.1.4')]);
+
+        // Farmer 16 — Spasenija Vukić, kozarstvo i sirevi, Gradiška
+        $spasenija = User::create([
+            'name'            => 'Spasenija Vukić',
+            'email'           => 'spasenija.vukic@example.com',
+            'password'        => Hash::make('password'),
+            'role'            => 'farmer',
+            'phone'           => '+38765920600',
+            'viber'           => '+38765920600',
+            'whatsapp'        => null,
+            'onboarding_step' => null,
+        ]);
+
+        $spasenijaProfile = FarmerProfile::create([
+            'user_id'     => $spasenija->id,
+            'farm_name'   => 'Kozarstvo Vukić',
+            'description' => 'Na imanju kraj Save kod Gradiške uzgajam 22 koze Alpine rase — jedne od najboljih mliječnih koza na svijetu. Krave daju do 4 litre mlijeka dnevno. Od kozjeg mlijeka pravim svježi i odležani sir, jogurt i maslo po tradicionalnim receptima. Kozje mlijeko je idealnog ukusa i odlično podnosi ga i onaj ko ima problema s kravljim. Dostava u Gradišku i Banja Luku.',
+            'city'        => 'gradiska',
+            'address'     => 'Mačkovac bb',
+            'is_active'   => true,
+        ]);
+
+        $this->savePhoto($spasenija->id, $spasenijaProfile->id, 'goat,farm,woman', 127, 0);
+        $this->savePhoto($spasenija->id, $spasenijaProfile->id, 'goat,meadow,farm,alpine', 133, 1, 800, 600);
+
+        $p = Product::create(['user_id' => $spasenija->id, 'category' => 'mlijeko', 'name' => 'Kozje mlijeko svježe (1L)',       'description' => 'Svježe pasterizirano kozje mlijeko Alpine rase. Blaži ukus od kravljeg, lako probavljivo. Idealno za djecu i osobe s intolerancijom na kravlje mlijeko. Flaša 1L, preuzimanje svako jutro.', 'price' => 2.00, 'price_unit' => 'l', 'fresh_until' => now()->addHours(24), 'is_active' => true]);
+        $this->saveProductPhoto($spasenija->id, $p->id, 'goat,milk,fresh,bottle', 273);
+
+        $p = Product::create(['user_id' => $spasenija->id, 'category' => 'mlijeko', 'name' => 'Kozji sir svježi (0,3 kg)',        'description' => 'Mekani bijeli kozji sir bez kore, kremastog ukusa i blage kiselosti. Pravi se ručno svaki dan. Odličan kao namaz na hljeb ili u salatama. Vakuumski pakovan 300g.', 'price' => 12.00, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($spasenija->id, $p->id, 'goat,cheese,fresh,white', 274);
+
+        $p = Product::create(['user_id' => $spasenija->id, 'category' => 'mlijeko', 'name' => 'Kozji sir odležani (0,3 kg)',      'description' => 'Tvrdi kozji sir odležan 3 do 6 meseci u podrumu. Intenzivan, kompleksan ukus koji se razvija duljim odležavanjem. Pogodan za ribanje i uz vino. Pakovanje 300g.', 'price' => 16.00, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($spasenija->id, $p->id, 'goat,cheese,aged,hard', 275);
+
+        $p = Product::create(['user_id' => $spasenija->id, 'category' => 'mlijeko', 'name' => 'Kozji jogurt (250g)',               'description' => 'Prirodno fermentovani kozji jogurt bez aditiva i stabilizatora. Kremast, blag, lako probavljiv. Idealan za doručak ili kao prilog jelima. Pakovanje 250g.', 'price' => 2.50, 'price_unit' => 'kom', 'fresh_until' => now()->addHours(48), 'is_active' => true]);
+        $this->saveProductPhoto($spasenija->id, $p->id, 'goat,yogurt,fresh,dairy', 276);
+
+        $p = Product::create(['user_id' => $spasenija->id, 'category' => 'mlijeko', 'name' => 'Kozje maslo (200g)',                'description' => 'Pravo kozje maslo bućkano od vrhnja kozjeg mlijeka. Bijele boje i blagog ukusa. Bez soli. Topi se na hljeb savršeno i daje poseban ukus pečenim jelima. Tegla 200g.', 'price' => 18.00, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($spasenija->id, $p->id, 'goat,butter,dairy,white', 277);
+
+        Review::create(['farmer_id' => $spasenijaProfile->id, 'reviewer_name' => 'Vesna A.',   'body' => 'Kozje mlijeko je spasilo mog sina koji nije mogao piti kravlje. Blag ukus, ne miriše jako, djeca ga vole. Hvala Spaseniji!',                                'rating' => 5, 'ip_hash' => hash('sha256', '16.1.1.1')]);
+        Review::create(['farmer_id' => $spasenijaProfile->id, 'reviewer_name' => 'Boro K.',    'body' => 'Svježi kozji sir je kremast i ukusan — kosi mi kao namaz uz domaći hljeb. Odležani sir je posebno dobar uz crveno vino.',                                   'rating' => 5, 'ip_hash' => hash('sha256', '16.1.1.2')]);
+        Review::create(['farmer_id' => $spasenijaProfile->id, 'reviewer_name' => 'Anita P.',   'body' => 'Jogurt je kremast i prirodno kiseo — bez onog vještačkog ukusa iz prodavnice. Koristim ga i za torte. Spasenija je odlična domaćica.',                       'rating' => 5, 'ip_hash' => hash('sha256', '16.1.1.3')]);
+        Review::create(['farmer_id' => $spasenijaProfile->id, 'reviewer_name' => 'Stanko M.',  'body' => 'Kozje maslo je bijelo i kremasto, posebnog ukusa. Dostava u Banja Luku odlična. Jedino bih volio da ima i tvrdog sira u malo većim komadima.',               'rating' => 4, 'ip_hash' => hash('sha256', '16.1.1.4')]);
+
+        // Farmer 17 — Đorđe Petrić, žitarice i ulja, Brčko
+        $djordje = User::create([
+            'name'            => 'Đorđe Petrić',
+            'email'           => 'djordje.petric@example.com',
+            'password'        => Hash::make('password'),
+            'role'            => 'farmer',
+            'phone'           => '+38763430700',
+            'viber'           => '+38763430700',
+            'whatsapp'        => '+38763430700',
+            'onboarding_step' => null,
+        ]);
+
+        $djordjeProfile = FarmerProfile::create([
+            'user_id'     => $djordje->id,
+            'farm_name'   => 'Polje Petrić — Brčko',
+            'description' => 'Na 12 hektara brčanske ravnice uzgajam suncokret, kukuruz i pšenicu. Poseban ponos mi je hladno cijeđeno suncokretovo ulje koje pravim u vlastitoj preši — tamno, mirišljavo, kakvo se u prodavnici ne može naći. Pored ulja nudim sjemenke suncokreta za jelo i pečenje, kao i ekološki uzgojenu pšenicu za domaću pripremu. Dostava u Brčko i okolinu svaki petak.',
+            'city'        => 'brcko',
+            'address'     => 'Gornji Rahić bb',
+            'is_active'   => true,
+        ]);
+
+        $this->savePhoto($djordje->id, $djordjeProfile->id, 'sunflower,farmer,man', 128, 0);
+        $this->savePhoto($djordje->id, $djordjeProfile->id, 'sunflower,field,farm,yellow', 134, 1, 800, 600);
+
+        $p = Product::create(['user_id' => $djordje->id, 'category' => 'ostalo',   'name' => 'Suncokretovo ulje hladno cijeđeno (1L)', 'description' => 'Hladno cijeđeno suncokretovo ulje u vlastitoj preši. Tamnoamber boje, intenzivnog mirisa suncokreta. Bez rafiniranja i hemije. Savršeno za salate i dressing. Boca 1L ili 5L.', 'price' => 7.00, 'price_unit' => 'l', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($djordje->id, $p->id, 'sunflower,oil,cold,pressed,bottle', 278);
+
+        $p = Product::create(['user_id' => $djordje->id, 'category' => 'zitarice', 'name' => 'Pšenica ekološka (kg)',               'description' => 'Ekološki uzgojena pšenica bez pesticida i herbicida. Idealna za klijanje, domaće brašno ili kuhanje cjelovitih žitarica. Džakovi od 5 ili 25 kg.', 'price' => 0.65, 'price_unit' => 'kg', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($djordje->id, $p->id, 'wheat,grain,ecological,natural', 279);
+
+        $p = Product::create(['user_id' => $djordje->id, 'category' => 'zitarice', 'name' => 'Kukuruz bijeli šećerac',               'description' => 'Slatki bijeli kukuruz šećerac, bere se mlad i sočan. Pravo za kuhanje i roštilj. Sezona jula i avgusta. Prodajemo na klip ili zrno (kilogram). Svježe beran svaki dan.', 'price' => 0.50, 'price_unit' => 'kg', 'fresh_until' => now()->addHours(24), 'is_active' => true]);
+        $this->saveProductPhoto($djordje->id, $p->id, 'corn,white,sweet,fresh,cob', 280);
+
+        $p = Product::create(['user_id' => $djordje->id, 'category' => 'ostalo',   'name' => 'Sjemenke suncokreta pržene (250g)',   'description' => 'Sjemenke suncokreta s naše njive, lako pržene na suvoj tavi bez ulja. Hrskave, prirodnog ukusa bez soli. Pakovanje 250g, idealno za grickanje i pečenje hljeba.', 'price' => 2.50, 'price_unit' => 'kom', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($djordje->id, $p->id, 'sunflower,seeds,roasted,natural', 281);
+
+        $p = Product::create(['user_id' => $djordje->id, 'category' => 'ostalo',   'name' => 'Bundevino sjeme za ulje (200g)',        'description' => 'Sjeme tikve bundeve, hladnoprešano za ulje ili direktno za jelo. Bogato cinkom i omega masnim kiselinama. Tamno i hrskavo. Pakovanje 200g.', 'price' => 3.00, 'price_unit' => 'kom', 'fresh_until' => null, 'is_active' => true]);
+        $this->saveProductPhoto($djordje->id, $p->id, 'pumpkin,seeds,green,natural', 282);
+
+        Review::create(['farmer_id' => $djordjeProfile->id, 'reviewer_name' => 'Tamara V.',  'body' => 'Suncokretovo ulje je tamno i mirišljavo — odmah se osjeti da je hladno cijeđeno. Salata s ovim uljem je na potpuno drugom nivou.',                           'rating' => 5, 'ip_hash' => hash('sha256', '17.1.1.1')]);
+        Review::create(['farmer_id' => $djordjeProfile->id, 'reviewer_name' => 'Slađan M.',  'body' => 'Kukuruz šećerac je sočan i sladak — kuhali smo na roštilju i svi oduševljeni. Svježe beran, odmah dostavljen.',                                              'rating' => 5, 'ip_hash' => hash('sha256', '17.1.1.2')]);
+        Review::create(['farmer_id' => $djordjeProfile->id, 'reviewer_name' => 'Andrijana K.','body' => 'Pržene sjemenke suncokreta su ukusne i hrskave. Koristim ih u hljeb i musli. Đorđe je tačan i uvijek pakovano uredno.',                                      'rating' => 5, 'ip_hash' => hash('sha256', '17.1.1.3')]);
+        Review::create(['farmer_id' => $djordjeProfile->id, 'reviewer_name' => 'Vojin R.',   'body' => 'Ekološka pšenica za klijanje je odlična — klijanci zdravi i brzo nicaju. Ulje malo skuplje od kupovnog ali vrijednost je daleko veća.',                       'rating' => 4, 'ip_hash' => hash('sha256', '17.1.1.4')]);
     }
 
     private function savePhoto(int $userId, int $profileId, string $keyword, int $lock, int $position = 0, int $width = 400, int $height = 400): void

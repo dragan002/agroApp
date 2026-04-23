@@ -147,7 +147,7 @@
     <div id="screen-home" class="screen active">
         <!-- Top bar -->
         <div class="top-bar" style="background:#faf6ef;border-bottom:1px solid #ece5d6;">
-            <div class="top-bar-logo">🌿 AgroApp</div>
+            <div class="top-bar-logo">🌿 SeljakRS</div>
             <button class="icon-btn" onclick="onLoginIconTap()" id="home-auth-btn" title="Prijava">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
             </button>
