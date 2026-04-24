@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Politika privatnosti — AgroApp</title>
+    <title>Politika privatnosti — SeljakRS</title>
     <style>
         body { font-family: sans-serif; max-width: 680px; margin: 40px auto; padding: 0 20px; color: #2a2218; line-height: 1.7; }
         h1 { color: #3d5a3a; }
@@ -11,11 +11,11 @@
     </style>
 </head>
 <body>
-    <h1>Politika privatnosti — AgroApp</h1>
+    <h1>Politika privatnosti — SeljakRS</h1>
     <p>Datum primjene: 22. april 2026.</p>
 
     <h2>Ko smo mi</h2>
-    <p>AgroApp je digitalna tržnica koja povezuje farmere iz Prnjavora i okoline sa kupcima. Aplikacija je dostupna na adresi <a href="https://agroapp-production-54a0.up.railway.app">agroapp-production-54a0.up.railway.app</a>.</p>
+    <p>SeljakRS je digitalna tržnica koja povezuje farmere iz Republike Srpske sa kupcima. Aplikacija je dostupna na adresi <a href="https://agroapp-production-54a0.up.railway.app">agroapp-production-54a0.up.railway.app</a>.</p>
 
     <h2>Koje podatke prikupljamo</h2>
     <p><strong>Farmeri (registrovani korisnici):</strong> Ime, e-mail adresa, lozinka (kriptovana), broj telefona, Viber i WhatsApp kontakt, fotografije farme i proizvoda, lokacija (grad/adresa).</p>

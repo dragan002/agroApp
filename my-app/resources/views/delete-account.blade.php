@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brisanje naloga — AgroApp</title>
+    <title>Brisanje naloga — SeljakRS</title>
     <style>
         body { font-family: sans-serif; max-width: 680px; margin: 40px auto; padding: 0 20px; color: #2a2218; line-height: 1.7; }
         h1 { color: #3d5a3a; }
@@ -13,7 +13,7 @@
 </head>
 <body>
     <h1>Zahtjev za brisanje naloga</h1>
-    <p>Ako želite izbrisati svoj nalog i sve povezane podatke iz AgroApp aplikacije, pošaljite e-mail na adresu ispod.</p>
+    <p>Ako želite izbrisati svoj nalog i sve povezane podatke iz SeljakRS aplikacije, pošaljite e-mail na adresu ispod.</p>
 
     <div class="box">
         <strong>E-mail za zahtjev:</strong><br>

@@ -1,7 +1,7 @@
 {
-  "name": "AgroApp Prnjavor",
-  "short_name": "AgroApp",
-  "description": "Pijaca svježe hrane — farmeri iz Prnjavora",
+  "name": "SeljakRS",
+  "short_name": "SeljakRS",
+  "description": "Tržnica domaćih proizvoda — Republika Srpska",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

@@ -4,7 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>AgroApp Prnjavor</title>
+    <title>SeljakRS</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NTTVHSWED5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NTTVHSWED5');
+    </script>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "wgll2gxmr3");
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -463,7 +479,7 @@
         </div>
         <div style="padding:24px 16px 80px;">
             <div style="font-size:22px;font-weight:700;margin-bottom:4px;">Dobrodošli nazad</div>
-            <div style="font-size:14px;color:var(--color-text-muted);margin-bottom:24px;">Prijavite se u vaš AgroApp nalog</div>
+            <div style="font-size:14px;color:var(--color-text-muted);margin-bottom:24px;">Prijavite se u vaš SeljakRS nalog</div>
             <div class="form-group">
                 <label class="form-label">Email adresa</label>
                 <input id="login-email" type="email" class="form-input" placeholder="email@primjer.com" autocomplete="email">
@@ -1830,7 +1846,7 @@ async function submitSignupComplete() {
         state.auth = user;
         localStorage.setItem('agroapp_state', JSON.stringify({ auth: state.auth, farmers: state.farmers, categories: state.categories }));
         state.pendingFarmPhotos = [];
-        showToast('Profil je objavljen! Dobrodošli na AgroApp!');
+        showToast('Profil je objavljen! Dobrodošli na SeljakRS!');
         showFarmerDashboard();
     } catch(e) {
         showToast(e.message, 'error');
@@ -1938,7 +1954,7 @@ async function showFarmerDashboard(tab) {
                     </div>
                 </div>
                 <div style="margin-top:20px;padding:14px;background:var(--color-surface-alt);border-radius:10px;font-size:13px;color:var(--color-text-muted);text-align:center;line-height:1.5;">
-                    Verzija aplikacije: 1.0<br>AgroApp © 2025 — Tržnica domaćih proizvoda RS
+                    Verzija aplikacije: 1.0<br>SeljakRS © 2025 — Tržnica domaćih proizvoda RS
                 </div>
             </div>
         </div>
@@ -2642,7 +2658,7 @@ async function shareFarmerProfile(id, farmName) {
     const url = `${window.location.origin}/farmer/${id}`;
     if (navigator.share) {
         try {
-            await navigator.share({ title: farmName, text: `Pogledajte ${farmName} na AgroApp-u`, url });
+            await navigator.share({ title: farmName, text: `Pogledajte ${farmName} na SeljakRS-u`, url });
         } catch(e) {}
     } else {
         try {
