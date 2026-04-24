@@ -1,2 +1,4 @@
-.claude/
+.claude/settings.local.json
+.claude/memory/
 screenshoots/
+sastanak-trkulja.md
