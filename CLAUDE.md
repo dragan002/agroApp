@@ -217,6 +217,15 @@ Photos stored via `Storage::disk()` (no argument — disk is driven by `FILESYST
 
 **Product image fallback:** All product image tags use a "layered" pattern — the category emoji sits in the background div and the `<img>` overlays it absolutely. `onerror="this.style.display='none'"` reveals the emoji when the image fails to load. This is implemented in `productCardHtml()`, `productGridCard()`, `renderProductDetail()`, `myProductRowHtml()`, and the admin panel product list. Apply the same pattern for any new product image context.
 
+### Analytics
+
+Two tracking scripts are loaded in the `<head>` of `welcome.blade.php`, before the Google Fonts `<link>`:
+
+- **Google Analytics 4** — measurement ID `G-NTTVHSWED5`
+- **Microsoft Clarity** — project ID `wgll2gxmr3` (session recordings + heatmaps)
+
+Both load asynchronously and do not block rendering. The privacy policy at `/privacy` discloses data collection as required by the Play Store.
+
 ### Reviews
 
 Guest reviews: `POST /api/farmers/{id}/reviews` (no auth, rate-limited 1/IP/farmer/24h via `RateLimiter`). IP is stored as `sha256` hash, never raw. Admin delete: `DELETE /api/admin/reviews/{id}` (admin middleware). The reviews tab in FarmerProfile lazy-loads on tab switch via `fpLoadReviews(farmerId)`.
@@ -239,6 +248,7 @@ Guest reviews: `POST /api/farmers/{id}/reviews` (no auth, rate-limited 1/IP/farm
 | `tests/Feature/` | Pest tests: Auth, Farmer, Product, Search, State |
 | `Dockerfile` | Production build — FrankenPHP on PHP 8.4 bookworm |
 | `Caddyfile` | FrankenPHP server config — listens on `$PORT` (Railway sets this to target port, configured as 8080) |
+| `public/manifest.json` | PWA manifest — name, icons, theme colour |
 | `public/.well-known/assetlinks.json` | Play Store TWA domain verification |
 | `resources/views/privacy.blade.php` | Privacy policy at `/privacy` (required by Play Store) |
 | `resources/views/delete-account.blade.php` | Account deletion instructions at `/delete-account` (required by Play Store) |
