@@ -785,7 +785,8 @@ const state = {
     adminTab: 'farmers',
 };
 
-const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+function updateCsrf(token) { if (token) csrfMeta.setAttribute('content', token); }
 
 // =====================================================================
 // API HELPER
@@ -793,7 +794,7 @@ const CSRF = document.querySelector('meta[name="csrf-token"]').getAttribute('con
 async function api(method, url, body = null) {
     const opts = {
         method,
-        headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': CSRF },
+        headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfMeta.getAttribute('content') },
         credentials: 'same-origin',
     };
     if (body instanceof FormData) {
@@ -1681,6 +1682,7 @@ async function submitLogin() {
     setLoading(true);
     try {
         const user = await api('POST', '/api/auth/login', { email, password });
+        updateCsrf(user.csrf_token);
         state.auth = user;
         localStorage.setItem('agroapp_state', JSON.stringify({ auth: state.auth, farmers: state.farmers, categories: state.categories }));
         updateAuthButton();
@@ -1758,6 +1760,7 @@ async function submitSignupStep1() {
         const user = await api('POST', '/api/auth/register', {
             name, email, password, password_confirmation: password2
         });
+        updateCsrf(user.csrf_token);
         state.auth = user;
         updateAuthButton();
         setSignupStep(2);

@@ -30,7 +30,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return response()->json($user->toApiArray(), 201);
+        return response()->json(array_merge($user->toApiArray(), ['csrf_token' => csrf_token()]), 201);
     }
 
     public function login(Request $request): JsonResponse
@@ -48,7 +48,7 @@ class AuthController extends Controller
 
         $user = auth()->user()->load('farmerProfile.photos');
 
-        return response()->json($user->toApiArray());
+        return response()->json(array_merge($user->toApiArray(), ['csrf_token' => csrf_token()]));
     }
 
     public function logout(Request $request): JsonResponse
