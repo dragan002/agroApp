@@ -46,6 +46,12 @@ Route::prefix('api')->group(function () {
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::get('auth/me', [AuthController::class, 'me']);
 
+        // Onboarding — auth only (farmer middleware blocks incomplete onboarding)
+        Route::post('onboarding/step/2', [OnboardingController::class, 'step2']);
+        Route::post('onboarding/step/3', [OnboardingController::class, 'step3']);
+        Route::post('onboarding/step/4', [OnboardingController::class, 'step4']);
+        Route::post('onboarding/complete', [OnboardingController::class, 'complete']);
+
         // Admin only
         Route::middleware('admin')->prefix('admin')->group(function () {
             Route::get('farmers', [AdminController::class, 'farmers']);
@@ -57,12 +63,8 @@ Route::prefix('api')->group(function () {
             Route::delete('reviews/{id}', [ReviewController::class, 'destroy']);
         });
 
-        // Farmer only
+        // Farmer only (onboarding must be complete)
         Route::middleware('farmer')->group(function () {
-            Route::post('onboarding/step/2', [OnboardingController::class, 'step2']);
-            Route::post('onboarding/step/3', [OnboardingController::class, 'step3']);
-            Route::post('onboarding/step/4', [OnboardingController::class, 'step4']);
-            Route::post('onboarding/complete', [OnboardingController::class, 'complete']);
             Route::match(['POST', 'PATCH'], 'farmer/profile', [FarmerController::class, 'update']);
             Route::post('farmer/photos', [FarmerController::class, 'addPhotos']);
             Route::delete('farmer/photos/{photoId}', [FarmerController::class, 'deletePhoto']);
