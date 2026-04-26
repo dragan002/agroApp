@@ -12,8 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'farmer' => \App\Http\Middleware\EnsureFarmer::class,
-            'admin'  => \App\Http\Middleware\EnsureAdmin::class,
+            'farmer'            => \App\Http\Middleware\EnsureFarmer::class,
+            'farmer.onboarding' => \App\Http\Middleware\EnsureFarmerOnboarding::class,
+            'admin'             => \App\Http\Middleware\EnsureAdmin::class,
         ]);
         // Public read-only endpoints don't need CSRF; all mutating routes do
         $middleware->validateCsrfTokens(except: [

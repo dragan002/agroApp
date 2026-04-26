@@ -46,11 +46,13 @@ Route::prefix('api')->group(function () {
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::get('auth/me', [AuthController::class, 'me']);
 
-        // Onboarding — auth only (farmer middleware blocks incomplete onboarding)
-        Route::post('onboarding/step/2', [OnboardingController::class, 'step2']);
-        Route::post('onboarding/step/3', [OnboardingController::class, 'step3']);
-        Route::post('onboarding/step/4', [OnboardingController::class, 'step4']);
-        Route::post('onboarding/complete', [OnboardingController::class, 'complete']);
+        // Onboarding — farmer role required but onboarding need not be complete
+        Route::middleware('farmer.onboarding')->group(function () {
+            Route::post('onboarding/step/2', [OnboardingController::class, 'step2']);
+            Route::post('onboarding/step/3', [OnboardingController::class, 'step3']);
+            Route::post('onboarding/step/4', [OnboardingController::class, 'step4']);
+            Route::post('onboarding/complete', [OnboardingController::class, 'complete']);
+        });
 
         // Admin only
         Route::middleware('admin')->prefix('admin')->group(function () {
