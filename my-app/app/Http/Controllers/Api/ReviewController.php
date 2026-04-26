@@ -27,7 +27,7 @@ class ReviewController extends Controller
         $farmer = FarmerProfile::active()->findOrFail($id);
 
         $ip = $request->ip();
-        $key = 'review:' . $id . ':' . md5($ip);
+        $key = 'review:' . $id . ':' . hash('sha256', $ip);
 
         if (RateLimiter::tooManyAttempts($key, 1)) {
             return response()->json(['message' => 'Možete ostaviti jednu recenziju po farmi u 24 sata.'], 429);

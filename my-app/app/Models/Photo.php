@@ -45,7 +45,6 @@ class Photo extends Model
         return [
             'id'       => $this->id,
             'url'      => $this->url,
-            'path'     => $this->path,
             'position' => $this->position,
         ];
     }

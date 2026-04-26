@@ -88,7 +88,7 @@ class Product extends Model
     public function getThumbnailUrlAttribute(): ?string
     {
         if ($this->relationLoaded('photos') && $this->photos->isNotEmpty()) {
-            return Storage::disk('public')->url($this->photos->first()->path);
+            return Storage::disk()->url($this->photos->first()->path);
         }
         return null;
     }

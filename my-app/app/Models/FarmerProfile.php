@@ -95,6 +95,10 @@ class FarmerProfile extends Model
             'avatarUrl'   => $this->avatar_url,
             'isActive'    => $this->is_active,
             'createdAt'   => $this->created_at?->toDateString(),
+            'reviewCount' => (int) ($this->reviews_count ?? 0),
+            'avgRating'   => isset($this->reviews_avg_rating) && $this->reviews_avg_rating !== null
+                ? round((float) $this->reviews_avg_rating, 1)
+                : null,
             'photos'      => $this->relationLoaded('photos')
                 ? $this->photos->map(fn($p) => $p->toApiArray())->values()->all()
                 : [],
@@ -127,6 +131,10 @@ class FarmerProfile extends Model
             'productCount' => $this->relationLoaded('user') && $this->user
                 ? ($this->user->products_count ?? 0)
                 : 0,
+            'reviewCount'  => (int) ($this->reviews_count ?? 0),
+            'avgRating'    => isset($this->reviews_avg_rating) && $this->reviews_avg_rating !== null
+                ? round((float) $this->reviews_avg_rating, 1)
+                : null,
             'coverPhoto'   => $this->relationLoaded('photos') && $this->photos->isNotEmpty()
                 ? $this->photos->first()->toApiArray()
                 : null,

@@ -57,7 +57,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'Odjavljeni ste.']);
+        return response()->json(['message' => 'Odjavljeni ste.', 'csrf_token' => csrf_token()]);
     }
 
     public function me(Request $request): JsonResponse

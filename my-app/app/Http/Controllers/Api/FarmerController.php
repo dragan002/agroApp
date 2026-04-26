@@ -13,10 +13,13 @@ class FarmerController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = FarmerProfile::active()->with([
-            'photos' => fn($q) => $q->orderBy('position')->limit(1),
-            'user'   => fn($q) => $q->withCount(['products as products_count' => fn($q2) => $q2->where('is_active', true)]),
-        ]);
+        $query = FarmerProfile::active()
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->with([
+                'photos' => fn($q) => $q->orderBy('position')->limit(1),
+                'user'   => fn($q) => $q->withCount(['products as products_count' => fn($q2) => $q2->where('is_active', true)]),
+            ]);
 
         if ($search = $request->query('search')) {
             $query->searchName($search);
@@ -40,13 +43,16 @@ class FarmerController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $profile = FarmerProfile::active()->with([
-            'user',
-            'photos',
-            'user.products' => fn($q) => $q->active()->with(
-                ['photos' => fn($pq) => $pq->orderBy('position')->limit(1)]
-            ),
-        ])->findOrFail($id);
+        $profile = FarmerProfile::active()
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->with([
+                'user',
+                'photos',
+                'user.products' => fn($q) => $q->active()->with(
+                    ['photos' => fn($pq) => $pq->orderBy('position')->limit(1)]
+                ),
+            ])->findOrFail($id);
 
         return response()->json($profile->toApiArray());
     }
@@ -61,7 +67,7 @@ class FarmerController extends Controller
         }
 
         $data = $request->validate([
-            'farmName'    => 'nullable|string|max:255',
+            'farmName'    => 'nullable|string|min:1|max:255',
             'city'        => 'nullable|string|in:' . implode(',', \App\Enums\City::VALUES),
             'address'     => 'nullable|string|max:255',
             'description' => 'nullable|string|max:2000',
@@ -90,7 +96,7 @@ class FarmerController extends Controller
     public function addPhotos(Request $request): JsonResponse
     {
         $request->validate([
-            'photos'   => 'required|array',
+            'photos'   => 'required|array|max:30',
             'photos.*' => 'mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 

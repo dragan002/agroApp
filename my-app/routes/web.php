@@ -31,15 +31,15 @@ Route::prefix('api')->group(function () {
 
     // Public
     Route::get('state', [StateController::class, 'index']);
-    Route::post('auth/register', [AuthController::class, 'register']);
-    Route::post('auth/login', [AuthController::class, 'login']);
+    Route::post('auth/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
+    Route::post('auth/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
     Route::get('farmers', [FarmerController::class, 'index']);
     Route::get('farmers/{id}', [FarmerController::class, 'show']);
     Route::get('farmers/{id}/reviews', [ReviewController::class, 'index']);
     Route::post('farmers/{id}/reviews', [ReviewController::class, 'store']);
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/{id}', [ProductController::class, 'show']);
-    Route::get('search', [SearchController::class, 'search']);
+    Route::get('search', [SearchController::class, 'search'])->middleware('throttle:60,1');
 
     // Auth required
     Route::middleware('auth')->group(function () {

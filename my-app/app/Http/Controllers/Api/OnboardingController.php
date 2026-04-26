@@ -13,9 +13,9 @@ class OnboardingController extends Controller
     public function step2(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'phone'    => 'required|string|max:30',
-            'viber'    => 'nullable|string|max:30',
-            'whatsapp' => 'nullable|string|max:30',
+            'phone'    => ['required', 'string', 'max:30', 'regex:/^[+\d\s\-().]+$/'],
+            'viber'    => ['nullable', 'string', 'max:30', 'regex:/^[+\d\s\-().]+$/'],
+            'whatsapp' => ['nullable', 'string', 'max:30', 'regex:/^[+\d\s\-().]+$/'],
         ]);
 
         $user = $request->user();

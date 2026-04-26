@@ -212,6 +212,15 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
 
+        <!-- Farmer CTA (hidden for logged-in farmers) -->
+        <div id="farmer-cta-banner" style="margin:4px 16px 10px;background:linear-gradient(135deg,#3d5a3a,#4a6a3a);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="showScreen('screen-farmer-signup')">
+            <div>
+                <div style="font-family:var(--font-sans);font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;">Imate farmu ili gazdinstvo?</div>
+                <div style="font-family:var(--font-sans);font-size:12px;color:rgba(255,255,255,0.75);">Objavite se besplatno →</div>
+            </div>
+            <span style="font-size:28px;">🌾</span>
+        </div>
+
         <!-- Farmers section -->
         <div class="section-title">Farmeri</div>
         <div id="home-farmers-list" style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 16px 16px;display:flex;gap:12px;scrollbar-width:none;">
@@ -275,6 +284,11 @@
             <button class="chip" data-cat="rakija" onclick="selectSearchCategory(this,'rakija')">Rakija</button>
             <button class="chip" data-cat="zimnica" onclick="selectSearchCategory(this,'zimnica')">Zimnica</button>
             <button class="chip" data-cat="ostalo" onclick="selectSearchCategory(this,'ostalo')">Ostalo</button>
+        </div>
+
+        <!-- City filter chips -->
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 16px 8px;display:flex;gap:8px;scrollbar-width:none;" id="search-city-chips">
+            <button class="chip active" data-city="" onclick="selectSearchCity(this,'')">Svi gradovi</button>
         </div>
 
         <!-- Fresh toggle -->
@@ -765,6 +779,7 @@ const state = {
     myProducts: [],
     categories: [],
     searchQuery: '',
+    searchCity: '',
     selectedCategory: '',
     freshOnly: false,
     browseAll: false,
@@ -837,6 +852,9 @@ function setLoading(v) {
 // SCREEN NAVIGATION
 // =====================================================================
 function showScreen(name, pushHistory = true) {
+    const contactSheet = document.getElementById('contact-sheet-overlay');
+    if (contactSheet) contactSheet.remove();
+
     const all = document.querySelectorAll('.screen');
     all.forEach(s => s.classList.remove('active'));
     const target = document.getElementById(name);
@@ -912,6 +930,7 @@ async function init() {
         localStorage.setItem('agroapp_state', JSON.stringify({ auth: state.auth, farmers: state.farmers, categories: state.categories, cities: state.cities }));
         renderHomeFarmers(state.farmers);
         renderCityChips();
+        renderSearchCityChips();
         updateAuthButton();
         if (state.auth && state.auth.role === 'admin') {
             showAdminScreen();
@@ -944,6 +963,8 @@ function updateAuthButton() {
         btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`;
         btn.style.color = '';
     }
+    const cta = document.getElementById('farmer-cta-banner');
+    if (cta) cta.style.display = (state.auth?.role === 'farmer') ? 'none' : 'flex';
 }
 
 function onLoginIconTap() {
@@ -964,6 +985,8 @@ function onProfileNavTap() {
     if (state.auth) {
         if (state.auth.role === 'farmer' && !state.auth.onboardingStep) {
             showFarmerDashboard();
+        } else if (state.auth.role === 'farmer' && state.auth.onboardingStep) {
+            resumeOnboarding();
         } else {
             showScreen('screen-login');
         }
@@ -996,7 +1019,10 @@ function farmerCardHtml(f) {
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 ${esc(formatLocation(f))}
             </div>
-            <div style="font-size:11px;color:#a89a85;margin-top:3px;">${f.productCount || 0} proizvoda</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+                <div style="font-size:11px;color:#a89a85;">${f.productCount || 0} proiz.</div>
+                ${f.avgRating ? `<div style="font-size:11px;color:#b8902a;font-weight:600;">★ ${f.avgRating.toFixed(1)}</div>` : ''}
+            </div>
         </div>
     </div>`;
 }
@@ -1036,6 +1062,7 @@ function showAllProducts() {
     setNavActive('nav-customer', 1);
     state.searchQuery = '';
     state.selectedCategory = '';
+    state.searchCity = '';
     state.freshOnly = false;
     state.browseAll = true;
     const input = document.getElementById('search-input');
@@ -1130,6 +1157,23 @@ function renderCityChips() {
     container.innerHTML = allBtn + cityBtns;
 }
 
+function renderSearchCityChips() {
+    const container = document.getElementById('search-city-chips');
+    if (!container || !Object.keys(state.cities).length) return;
+    const allBtn = `<button class="chip ${state.searchCity === '' ? 'active' : ''}" data-city="" onclick="selectSearchCity(this,'')">Svi gradovi</button>`;
+    const cityBtns = Object.entries(state.cities)
+        .map(([slug, label]) => `<button class="chip ${state.searchCity === slug ? 'active' : ''}" data-city="${slug}" onclick="selectSearchCity(this,'${slug}')">${label}</button>`)
+        .join('');
+    container.innerHTML = allBtn + cityBtns;
+}
+
+function selectSearchCity(btn, city) {
+    document.querySelectorAll('#search-city-chips .chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    state.searchCity = city;
+    doSearch();
+}
+
 async function loadHomeFarmersByCity(city) {
     const el = document.getElementById('home-farmers-list');
     if (!el) return;
@@ -1150,6 +1194,7 @@ async function loadFarmerProfile(id) {
         const data = await api('GET', `/api/farmers/${id}`);
         state.selectedFarmer = data;
         _fpCurrentFarmerId = data.id;
+        _fpReviewsLoaded = false;
         renderFarmerProfile(data);
         showScreen('screen-farmer-profile');
     } catch(e) {
@@ -1194,7 +1239,7 @@ function renderFarmerProfile(f) {
                 <button onclick="goBack()" style="width:40px;height:40px;border-radius:100px;border:none;background:rgba(26,20,16,0.55);backdrop-filter:blur(8px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><path d="m15 18-6-6 6-6"/></svg>
                 </button>
-                <button onclick="shareFarmerProfile(${f.id},'${esc(f.farmName)}')" style="width:40px;height:40px;border-radius:100px;border:none;background:rgba(26,20,16,0.55);backdrop-filter:blur(8px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                <button onclick="shareFarmerProfile(${f.id})" style="width:40px;height:40px;border-radius:100px;border:none;background:rgba(26,20,16,0.55);backdrop-filter:blur(8px);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="19" height="19"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                 </button>
             </div>
@@ -1218,21 +1263,21 @@ function renderFarmerProfile(f) {
                 </div>
                 <div style="width:1px;height:26px;background:#ece5d6;margin:0 18px;"></div>
                 <div style="flex:1;">
-                    <div style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;line-height:1;margin-bottom:4px;">—</div>
-                    <div style="font-family:var(--font-sans);font-size:11px;color:#a89a85;letter-spacing:0.3px;">pratilaca</div>
+                    <div style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;line-height:1;margin-bottom:4px;">${f.createdAt ? f.createdAt.substring(0,4) : '—'}</div>
+                    <div style="font-family:var(--font-sans);font-size:11px;color:#a89a85;letter-spacing:0.3px;">od godine</div>
                 </div>
                 <div style="width:1px;height:26px;background:#ece5d6;margin:0 18px;"></div>
                 <div style="flex:1;">
-                    <div id="fp-rating-stat" style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;line-height:1;margin-bottom:4px;">★ —</div>
+                    <div id="fp-rating-stat" style="font-family:var(--font-serif);font-size:20px;font-weight:500;color:#2a2218;line-height:1;margin-bottom:4px;">${f.avgRating ? '★ ' + f.avgRating.toFixed(1) + ' (' + f.reviewCount + ')' : '★ —'}</div>
                     <div style="font-family:var(--font-sans);font-size:11px;color:#a89a85;letter-spacing:0.3px;">recenzija</div>
                 </div>
             </div>
 
             <div style="display:flex;gap:10px;margin-bottom:22px;">
-                ${user.phone ? `<button onclick="window.location='tel:${esc(user.phone)}'" style="flex:1;height:46px;border:none;border-radius:100px;background:#3d5a3a;color:#fff;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+                ${user.phone ? `<a href="tel:${esc(user.phone)}" style="flex:1;height:46px;border:none;border-radius:100px;background:#3d5a3a;color:#fff;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6.29 6.29l1.83-1.83a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     Pozovi
-                </button>` : `<div style="flex:1;"></div>`}
+                </a>` : `<div style="flex:1;"></div>`}
                 <button onclick="typeof showChatWithFarmer==='function'&&showChatWithFarmer(${f.id})" style="flex:1;height:46px;border:1px solid #e4ddd0;border-radius:100px;background:#fff;color:#1f1a14;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     Poruka
@@ -1280,6 +1325,7 @@ function renderFarmerProfile(f) {
 }
 
 let _fpCurrentFarmerId = null;
+let _fpReviewsLoaded = false;
 
 function fpSwitchTab(tab) {
     ['products','story','reviews'].forEach(t => {
@@ -1293,12 +1339,13 @@ function fpSwitchTab(tab) {
         }
         if (content) content.style.display = active ? '' : 'none';
     });
-    if (tab === 'reviews' && _fpCurrentFarmerId) fpLoadReviews(_fpCurrentFarmerId);
+    if (tab === 'reviews' && _fpCurrentFarmerId && !_fpReviewsLoaded) fpLoadReviews(_fpCurrentFarmerId);
 }
 
 async function fpLoadReviews(farmerId) {
     const list = document.getElementById('fp-reviews-list');
     if (!list) return;
+    _fpReviewsLoaded = true;
     try {
         const data = await api('GET', `/api/farmers/${farmerId}/reviews`);
         const reviews = data.reviews || [];
@@ -1523,9 +1570,9 @@ function setupGallery(galleryId, onSlide) {
 // =====================================================================
 function buildContactBtns(phone, viber, whatsapp) {
     let html = '';
-    if (phone) html += `<button class="btn-call" onclick="window.location='tel:${esc(phone)}'">📞 Pozovi</button>`;
-    if (viber) html += `<button class="btn-viber" onclick="window.location='viber://chat?number=${esc(viber.replace(/\D/g,''))}'">💜 Viber</button>`;
-    if (whatsapp) html += `<button class="btn-whatsapp" onclick="window.open('https://wa.me/${esc(whatsapp.replace(/\D/g,''))}','_blank')">💚 WhatsApp</button>`;
+    if (phone) html += `<a href="tel:${esc(phone)}" class="btn-call" style="text-decoration:none;">📞 Pozovi</a>`;
+    if (viber) html += `<a href="viber://chat?number=${esc(viber.replace(/\D/g,''))}" class="btn-viber" style="text-decoration:none;">💜 Viber</a>`;
+    if (whatsapp) html += `<a href="https://wa.me/${esc(whatsapp.replace(/\D/g,''))}" target="_blank" rel="noopener" class="btn-whatsapp" style="text-decoration:none;">💚 WhatsApp</a>`;
     if (!phone && !viber && !whatsapp) html = `<div style="flex:1;text-align:center;color:var(--color-text-muted);font-size:14px;">Nema kontakt podataka</div>`;
     return html;
 }
@@ -1614,21 +1661,26 @@ async function doSearch() {
     const q = state.searchQuery;
     const category = state.selectedCategory;
     const freshOnly = state.freshOnly;
+    const city = state.searchCity;
 
-    if (!state.browseAll && !q && !category && !freshOnly) {
+    if (!state.browseAll && !q && !category && !freshOnly && !city) {
         document.getElementById('search-results').innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon">🔍</div>
                 <div class="empty-state-text">Unesite pojam za pretragu</div>
-                <div class="empty-state-sub">ili pregledajte po kategoriji</div>
+                <div class="empty-state-sub">ili pregledajte po kategoriji ili gradu</div>
             </div>`;
         return;
     }
+
+    const el = document.getElementById('search-results');
+    el.innerHTML = '<div style="color:var(--color-text-muted);font-size:14px;padding:16px 0;text-align:center;">Tražim…</div>';
 
     let url = '/api/search?';
     if (q) url += `q=${encodeURIComponent(q)}&`;
     if (category) url += `category=${encodeURIComponent(category)}&`;
     if (freshOnly) url += 'freshOnly=1&';
+    if (city) url += `city=${encodeURIComponent(city)}&`;
 
     try {
         const data = await api('GET', url);
@@ -1636,6 +1688,7 @@ async function doSearch() {
         renderSearchResults(data);
     } catch(e) {
         showToast('Greška pri pretrazi', 'error');
+        el.innerHTML = '<div style="color:var(--color-danger);font-size:14px;padding:16px 0;text-align:center;">Greška pri pretrazi</div>';
     }
 }
 
@@ -1710,7 +1763,8 @@ async function submitLogin() {
 async function doLogout() {
     setLoading(true);
     try {
-        await api('POST', '/api/auth/logout');
+        const res = await api('POST', '/api/auth/logout');
+        updateCsrf(res.csrf_token);
     } catch(e) {}
     state.auth = null;
     localStorage.removeItem('agroapp_state');
@@ -2659,7 +2713,8 @@ async function adminLogout() {
 // =====================================================================
 // HELPERS
 // =====================================================================
-async function shareFarmerProfile(id, farmName) {
+async function shareFarmerProfile(id) {
+    const farmName = state.selectedFarmer?.farmName || 'farmu';
     const url = `${window.location.origin}/farmer/${id}`;
     if (navigator.share) {
         try {

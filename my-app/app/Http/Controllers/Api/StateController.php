@@ -15,6 +15,8 @@ class StateController extends Controller
         $user = auth()->user();
 
         $farmers = FarmerProfile::active()
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->with([
                 'photos' => fn($q) => $q->orderBy('position')->limit(1),
                 'user'   => fn($q) => $q->withCount(['products as products_count' => fn($q2) => $q2->where('is_active', true)]),

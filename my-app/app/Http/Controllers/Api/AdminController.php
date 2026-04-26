@@ -14,12 +14,8 @@ class AdminController extends Controller
     public function farmers(): JsonResponse
     {
         $farmers = FarmerProfile::with([
-            'user',
+            'user' => fn($q) => $q->withCount(['products as products_count' => fn($q2) => $q2->where('is_active', true)]),
             'photos' => fn($q) => $q->orderBy('position')->limit(1),
-        ])
-        ->withCount(['user as products_count' => fn($q) => $q
-            ->join('products', 'products.user_id', '=', 'users.id')
-            ->where('products.is_active', true)
         ])
         ->orderByDesc('created_at')
         ->get()
@@ -30,7 +26,7 @@ class AdminController extends Controller
             'location'     => $fp->address ? "{$fp->address}, {$fp->city}" : $fp->city,
             'isActive'     => $fp->is_active,
             'createdAt'    => $fp->created_at?->toDateString(),
-            'productCount' => $fp->products_count ?? 0,
+            'productCount' => $fp->user->products_count ?? 0,
             'coverPhoto'   => $fp->photos->isNotEmpty() ? $fp->photos->first()->toApiArray() : null,
             'user'         => $fp->user ? [
                 'id'    => $fp->user->id,
